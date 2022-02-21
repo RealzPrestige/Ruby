@@ -1,0 +1,41 @@
+{
+  "required": true,
+  "compatibilityLevel": "JAVA_8",
+  "package": "dev.zprestige.ruby.mixins",
+  "refmap": "mixins.ruby.refmap.json",
+  "mixins": [
+    "entity.MixinContainerPlayer",
+    "entity.MixinEntity",
+    "entity.MixinEntityOtherPlayerMP",
+    "entity.MixinEntityPlayer",
+    "entity.MixinEntityPlayerSP",
+    "entity.MixinPlayerControllerMP",
+
+    "gui.MixinGuiButton",
+    "gui.MixinGuiContainer",
+    "gui.MixinGuiIngame",
+    "gui.MixinGuiMainMenu",
+    "gui.MixinGuiNewChat",
+    "gui.MixinGuiScreen",
+    "gui.MixinTabOverlay",
+
+    "minecraft.IMixinMinecraft",
+    "minecraft.MixinKey",
+    "minecraft.MixinMinecraft",
+
+    "network.MixinNetworkManager",
+
+    "render.MixinEntityRenderer",
+    "render.IEntityRenderer",
+    "render.MixinItemRenderer",
+    "render.MixinRenderArmor",
+    "render.MixinRenderEnderCrystal",
+    "render.MixinRenderItem",
+    "render.MixinRenderLivingBase",
+    "render.MixinRenderPlayer",
+
+    "world.MixinChunkRenderDispatcher",
+    "world.MixinParticleManager",
+    "world.MixinWorld"
+  ]
+}
