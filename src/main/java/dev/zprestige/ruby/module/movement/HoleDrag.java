@@ -1,6 +1,7 @@
 package dev.zprestige.ruby.module.movement;
 
 import dev.zprestige.ruby.Ruby;
+import dev.zprestige.ruby.manager.HoleManager;
 import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
 import dev.zprestige.ruby.module.ModuleInfo;
@@ -9,12 +10,12 @@ import dev.zprestige.ruby.setting.impl.FloatSetting;
 import dev.zprestige.ruby.setting.impl.ModeSetting;
 import dev.zprestige.ruby.util.BlockUtil;
 import dev.zprestige.ruby.util.Timer;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @ModuleInfo(name = "HoleDrag", category = Category.Movement, description = "drags yo ass into holes")
 public class HoleDrag extends Module {
@@ -34,49 +35,26 @@ public class HoleDrag extends Module {
             return;
         if (onGroundOnly.getValue() && !mc.player.onGround)
             return;
-        ArrayList<BlockPos> bedrockHoles = Ruby.holeManager.getBedrockHoles(holeRange.getValue());
-        if (bedrockHoles != null) {
-            ArrayList<BlockPos> bedrockHoles2 = new ArrayList<>(bedrockHoles);
-            for (BlockPos pos : bedrockHoles2) {
-                String s = dragMode.getValue();
-                switch (s) {
-                    case "Smooth":
-                        if (mc.player.posX > pos.up().x + 0.5)
-                            mc.player.motionX = -smoothSpeed.getValue() / 10.0f;
-                        else if (mc.player.posX < pos.up().x + 0.5)
-                            mc.player.motionX = smoothSpeed.getValue() / 10.0f;
-                        if (mc.player.posZ > pos.up().z + 0.5)
-                            mc.player.motionZ = -smoothSpeed.getValue() / 10.0f;
-                        else if (mc.player.posZ < pos.up().z + 0.5)
-                            mc.player.motionZ = smoothSpeed.getValue() / 10.0f;
-                        break;
-                    case "Teleport":
-                        mc.player.setPosition(pos.up().x + 0.5, pos.up().y, pos.up().z + 0.5);
-                        break;
+        ArrayList<HoleManager.HolePos> holes = Ruby.holeManager.holes.stream().filter(holePos -> mc.player.getDistanceSq(holePos.pos) / 2 < holeRange.getValue()).collect(Collectors.toCollection(ArrayList::new));
+        for (HoleManager.HolePos holePos : holes) {
+            final BlockPos pos = holePos.pos;
+            switch (dragMode.getValue()) {
+                case "Smooth":
+                    if (mc.player.posX > pos.up().x + 0.5) {
+                        mc.player.motionX = -smoothSpeed.getValue() / 10.0f;
+                    } else if (mc.player.posX < pos.up().x + 0.5) {
+                        mc.player.motionX = smoothSpeed.getValue() / 10.0f;
+                    }
+                    if (mc.player.posZ > pos.up().z + 0.5) {
+                        mc.player.motionZ = -smoothSpeed.getValue() / 10.0f;
+                    } else if (mc.player.posZ < pos.up().z + 0.5) {
+                        mc.player.motionZ = smoothSpeed.getValue() / 10.0f;
+                    }
+                    break;
+                case "Teleport":
+                    mc.player.setPosition(pos.up().x + 0.5, pos.up().y, pos.up().z + 0.5);
+                    break;
 
-                }
-            }
-        }
-        ArrayList<BlockPos> obsidianHoles = Ruby.holeManager.getObsidianHoles(holeRange.getValue());
-        if (obsidianHoles != null) {
-            ArrayList<BlockPos> obsidianHoles2 = new ArrayList<>(obsidianHoles);
-            for (BlockPos pos : obsidianHoles2) {
-                String s2 = dragMode.getValue();
-                switch (s2) {
-                    case "Smooth":
-                        if (mc.player.posX > pos.up().x + 0.5)
-                            mc.player.motionX = -smoothSpeed.getValue() / 10.0f;
-                        else if (mc.player.posX < pos.up().x + 0.5)
-                            mc.player.motionX = smoothSpeed.getValue() / 10.0f;
-                        if (mc.player.posZ > pos.up().z + 0.5)
-                            mc.player.motionZ = -smoothSpeed.getValue() / 10.0f;
-                        else if (mc.player.posZ < pos.up().z + 0.5)
-                            mc.player.motionZ = smoothSpeed.getValue() / 10.0f;
-                        break;
-                    case "Teleport":
-                        mc.player.setPosition(pos.up().x + 0.5, pos.up().y, pos.up().z + 0.5);
-                        break;
-                }
             }
         }
     }
