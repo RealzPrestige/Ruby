@@ -1,15 +1,12 @@
 package dev.zprestige.ruby.module.movement;
 
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.FloatSetting;
 import dev.zprestige.ruby.setting.impl.ModeSetting;
 
 import java.util.Arrays;
 import java.util.function.Predicate;
 
-@ModuleInfo(name = "AntiWeb", category = Category.Movement, description = "Ok, i like team web but non-teamwebbers cant be webbing so we counter.")
 public class AntiWeb extends Module {
     public ModeSetting mode = createSetting("Mode", "Vanilla", Arrays.asList("Vanilla", "Motion", "Timer"));
     public FloatSetting horizontalSpeed = createSetting("Horizontal Speed", 1.0f, 0.1f, 2.0f, (Predicate<Float>) v-> mode.getValue().equals("Motion"));

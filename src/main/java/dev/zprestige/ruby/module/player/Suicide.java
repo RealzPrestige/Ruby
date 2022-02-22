@@ -1,8 +1,6 @@
 package dev.zprestige.ruby.module.player;
 
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.*;
 import dev.zprestige.ruby.util.BlockUtil;
 import dev.zprestige.ruby.util.EntityUtil;
@@ -27,7 +25,6 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.TreeMap;
 
-@ModuleInfo(name = "Suicide" , category = Category.Player, description = "be like neo")
 public class Suicide extends Module {
     public IntegerSetting throwDelay = createSetting("Throw Delay", 100, 0, 500);
 

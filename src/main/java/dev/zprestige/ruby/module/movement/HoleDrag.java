@@ -2,9 +2,7 @@ package dev.zprestige.ruby.module.movement;
 
 import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.manager.HoleManager;
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.BooleanSetting;
 import dev.zprestige.ruby.setting.impl.FloatSetting;
 import dev.zprestige.ruby.setting.impl.ModeSetting;
@@ -17,7 +15,6 @@ import java.util.Arrays;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-@ModuleInfo(name = "HoleDrag", category = Category.Movement, description = "drags yo ass into holes")
 public class HoleDrag extends Module {
     public FloatSetting holeRange = createSetting("Hole Range", 1.0f, 0.1f, 3.0f);
     public ModeSetting dragMode = createSetting("Drag Mode", "Smooth", Arrays.asList("Smooth", "Teleport"));

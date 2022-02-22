@@ -5,9 +5,7 @@ import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.MotionUpdateEvent;
 import dev.zprestige.ruby.events.MoveEvent;
 import dev.zprestige.ruby.events.PacketEvent;
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.BooleanSetting;
 import dev.zprestige.ruby.setting.impl.DoubleSetting;
 import dev.zprestige.ruby.setting.impl.FloatSetting;
@@ -18,7 +16,6 @@ import net.minecraft.network.play.server.SPacketPlayerPosLook;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-@ModuleInfo(name = "LongJump", category = Category.Movement, description = "makes you jump go off")
 public class LongJump extends Module {
     public DoubleSetting speed = createSetting("Speed", 2000.0, 0.1, 3000.0);
     public BooleanSetting disableOnLag = createSetting("Disable On Lag", false);

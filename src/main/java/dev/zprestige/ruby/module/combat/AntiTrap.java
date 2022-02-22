@@ -1,8 +1,6 @@
 package dev.zprestige.ruby.module.combat;
 
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.BooleanSetting;
 import dev.zprestige.ruby.setting.impl.FloatSetting;
 import dev.zprestige.ruby.setting.impl.IntegerSetting;
@@ -21,7 +19,6 @@ import net.minecraft.util.math.BlockPos;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
-@ModuleInfo(name = "AntiTrap", category = Category.Combat, description = "no trapping faggot")
 public class AntiTrap extends Module {
     public IntegerSetting placeDelay = createSetting("Place Delay", 0, 0, 500);
     public FloatSetting targetRange = createSetting("Target Range", 9.0f, 0.1f, 15.0f);

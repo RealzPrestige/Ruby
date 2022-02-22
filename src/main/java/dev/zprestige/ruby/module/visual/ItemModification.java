@@ -3,20 +3,16 @@ package dev.zprestige.ruby.module.visual;
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.PacketEvent;
 import dev.zprestige.ruby.events.RenderItemEvent;
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.*;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.network.play.client.CPacketAnimation;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 import java.util.Arrays;
 import java.util.function.Predicate;
 
-@ModuleInfo(name = "ItemModification", category = Category.Visual, description = "mods items")
 public class ItemModification extends Module {
     public static ItemModification Instance;
     public ParentSetting misc = createSetting("Misc");

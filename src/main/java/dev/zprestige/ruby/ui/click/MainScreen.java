@@ -1,11 +1,11 @@
 package dev.zprestige.ruby.ui.click;
 
 import dev.zprestige.ruby.Ruby;
+import dev.zprestige.ruby.module.Module;
 import dev.zprestige.ruby.module.client.NewGui;
 import dev.zprestige.ruby.setting.impl.KeySetting;
 import dev.zprestige.ruby.ui.buttons.BlurButton;
 import dev.zprestige.ruby.ui.buttons.ConfigButton;
-import dev.zprestige.ruby.ui.click.setting.GuiSetting;
 import dev.zprestige.ruby.ui.click.setting.impl.GuiColor;
 import dev.zprestige.ruby.util.RenderUtil;
 import dev.zprestige.ruby.util.Timer;
@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class MainScreen extends GuiScreen {
-    public ArrayList<GuiCategory> newCategories = new ArrayList<>();
+    public ArrayList<GuiCategory> guiCategories = new ArrayList<>();
     public BlurButton blurButton;
     public ConfigButton configButton;
     public int deltaX;
@@ -33,7 +33,7 @@ public class MainScreen extends GuiScreen {
         deltaX = 26;
         blurButton = new BlurButton(NewGui.Instance.color.getValue(), 929, 509, 30, 30);
         configButton = new ConfigButton(NewGui.Instance.color.getValue(), 897, 509, 30, 30);
-        Ruby.moduleManager.getCategories().forEach(category -> newCategories.add(new GuiCategory(category, deltaX += 101, 2, 100, 13)));
+        Ruby.moduleManager.getCategories().forEach(category -> guiCategories.add(new GuiCategory(category, deltaX += 101, 2, 100, 13)));
     }
 
     @Override
@@ -53,10 +53,10 @@ public class MainScreen extends GuiScreen {
         }
         blurButton.drawScreen(mouseX, mouseY, partialTicks);
         configButton.drawScreen(mouseX, mouseY);
-        newCategories.forEach(newCategory -> newCategory.drawScreen(mouseX, mouseY));
-        for (GuiCategory newCategory : newCategories) {
+        guiCategories.forEach(newCategory -> newCategory.drawScreen(mouseX, mouseY));
+        for (GuiCategory newCategory : guiCategories) {
             for (GuiModule newModule : newCategory.newModuleArrayList) {
-                newModule.newSettings.stream().filter(newSetting -> newSetting.isInside(mouseX, mouseY)).forEach(newSetting -> {
+                newModule.newSettings.stream().filter(newSetting -> newSetting.isInside(mouseX, mouseY) && getGuiModuleByModule(newSetting.getSetting().getModule()).isOpened).forEach(newSetting -> {
                     if (newSetting.getSetting() instanceof KeySetting) {
                         KeySetting setting = (KeySetting) newSetting.getSetting();
                         Ruby.rubyFont.drawStringWithShadow(newSetting.getSetting().name + " | " + (setting.getValue().equals(-1) ? "None" : Keyboard.getKeyName(setting.getValue())), new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth() / 2f - (Ruby.rubyFont.getStringWidth((setting.getValue().equals(-1) ? "None" : Keyboard.getKeyName(setting.getValue()))) / 2f), 530 - (Ruby.rubyFont.getHeight((setting.getValue().equals(-1) ? "None" : Keyboard.getKeyName(setting.getValue()))) / 2f), -1);
@@ -79,6 +79,10 @@ public class MainScreen extends GuiScreen {
         }
     }
 
+    protected GuiModule getGuiModuleByModule(Module module){
+        return guiCategories.stream().filter(guiCategory -> guiCategory.category.equals(module.getCategory())).flatMap(guiCategory -> guiCategory.newModuleArrayList.stream()).findFirst().orElse(null);
+    }
+
     @Override
     public void onGuiClosed() {
         if (mc.entityRenderer.getShaderGroup() != null)
@@ -88,19 +92,19 @@ public class MainScreen extends GuiScreen {
     @Override
     public void keyTyped(char typedChar, int keyCode) throws IOException {
         super.keyTyped(typedChar, keyCode);
-        newCategories.forEach(newCategory -> newCategory.keyTyped(typedChar, keyCode));
+        guiCategories.forEach(newCategory -> newCategory.keyTyped(typedChar, keyCode));
     }
 
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
         blurButton.mouseClicked(mouseX, mouseY, mouseButton);
         configButton.mouseClicked(mouseX, mouseY, mouseButton);
-        newCategories.forEach(newCategory -> newCategory.mouseClicked(mouseX, mouseY, mouseButton));
+        guiCategories.forEach(newCategory -> newCategory.mouseClicked(mouseX, mouseY, mouseButton));
     }
 
     @Override
     public void mouseReleased(int mouseX, int mouseY, int state) {
-        newCategories.forEach(newCategory -> newCategory.mouseReleased(mouseX, mouseY, state));
+        guiCategories.forEach(newCategory -> newCategory.mouseReleased(mouseX, mouseY, state));
     }
 
     @Override

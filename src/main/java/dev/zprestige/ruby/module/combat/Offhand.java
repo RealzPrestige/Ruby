@@ -2,9 +2,7 @@ package dev.zprestige.ruby.module.combat;
 
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.PlayerChangeEvent;
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.*;
 import dev.zprestige.ruby.util.BlockUtil;
 import dev.zprestige.ruby.util.EntityUtil;
@@ -13,12 +11,10 @@ import dev.zprestige.ruby.util.Timer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.item.Item;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.Arrays;
 import java.util.function.Predicate;
 
-@ModuleInfo(name = "Offhand", category = Category.Combat, description = "Offhand Items")
 public class Offhand extends Module {
     public ModeSetting item = createSetting("Item", "Crystal", Arrays.asList("Crystal", "Totem"));
 

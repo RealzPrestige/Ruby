@@ -1,8 +1,6 @@
 package dev.zprestige.ruby.module.visual;
 
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.BooleanSetting;
 import dev.zprestige.ruby.setting.impl.ColorSetting;
 import dev.zprestige.ruby.setting.impl.FloatSetting;
@@ -27,7 +25,6 @@ import java.util.stream.IntStream;
 
 import static org.lwjgl.opengl.GL11.glEnable;
 
-@ModuleInfo(name = "EntityTrails", category = Category.Visual, description = "crumble")
 public class EntityTrails extends Module {
 
     public BooleanSetting self = createSetting("Self", false);

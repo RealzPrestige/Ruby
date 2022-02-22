@@ -3,12 +3,9 @@ package dev.zprestige.ruby.module.misc;
 import com.google.common.io.ByteStreams;
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.PacketEvent;
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.FloatSetting;
 import net.minecraft.network.play.client.CPacketUseEntity;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -18,7 +15,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
-@ModuleInfo(name = "HitmarkerSounds" , category = Category.Misc, description = "plays hitmarker soudn when u hit sumn")
 public class HitmarkerSounds extends Module {
     public FloatSetting volume = createSetting("Volume", 2.0f, 0.1f, 5.0f);
     public File hitFile = new File(mc.gameDir + File.separator + "Ruby" + File.separator + "hitmarker.wav");

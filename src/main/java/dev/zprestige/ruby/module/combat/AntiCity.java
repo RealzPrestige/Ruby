@@ -1,8 +1,6 @@
 package dev.zprestige.ruby.module.combat;
 
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.BooleanSetting;
 import dev.zprestige.ruby.setting.impl.FloatSetting;
 import dev.zprestige.ruby.setting.impl.IntegerSetting;
@@ -18,7 +16,6 @@ import net.minecraft.util.math.BlockPos;
 
 import java.util.TreeMap;
 
-@ModuleInfo(name = "AntiCity", category = Category.Combat, description = "Build a house")
 public class AntiCity extends Module {
     public ParentSetting timing = createSetting("Timing");
      public IntegerSetting placeDelay = createSetting("Place Delay", 50, 0, 1000).setParent(timing);

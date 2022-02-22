@@ -1,8 +1,6 @@
 package dev.zprestige.ruby.module.combat;
 
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.*;
 import dev.zprestige.ruby.util.*;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.function.Predicate;
 
-@ModuleInfo(name = "Trap" , category = Category.Combat, description = "traps nerds")
 public class Trap extends Module {
     public static Trap Instance;
     public ParentSetting placing = createSetting("Placing");

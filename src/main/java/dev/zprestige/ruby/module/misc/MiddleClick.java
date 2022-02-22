@@ -1,11 +1,8 @@
 package dev.zprestige.ruby.module.misc;
 
-import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.ui.buttons.MiddleClickInterface;
 import dev.zprestige.ruby.events.PacketEvent;
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,7 +14,6 @@ import org.lwjgl.input.Mouse;
 
 import java.util.ArrayList;
 
-@ModuleInfo(name = "MiddleClick" , category = Category.Misc, description = "Middle click peopel")
 public class MiddleClick extends Module {
     public ArrayList<EntityPlayer> blockedList = new ArrayList<>();
     public static MiddleClick Instance;

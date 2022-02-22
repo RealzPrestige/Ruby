@@ -4,22 +4,18 @@ import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.LogoutEvent;
 import dev.zprestige.ruby.events.Render3DEvent;
 import dev.zprestige.ruby.events.SelfLogoutEvent;
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.util.RenderUtil;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.culling.ICamera;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Objects;
 
-@ModuleInfo(name = "LogoutSpots", category = Category.Misc, description = "shows where shitters log to not die ezz")
 public class LogoutSpots extends Module {
     public ArrayList<LoggedKid> loggedKids = new ArrayList<>();
     public ICamera camera = new Frustum();

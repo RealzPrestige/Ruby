@@ -5,9 +5,7 @@ import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.MoveEvent;
 import dev.zprestige.ruby.events.PacketEvent;
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.module.visual.ESP;
 import dev.zprestige.ruby.setting.impl.*;
 import dev.zprestige.ruby.util.EntityUtil;
@@ -22,12 +20,10 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import org.lwjgl.input.Keyboard;
 
-import java.awt.*;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-@ModuleInfo(name = "Speed", category = Category.Movement, description = "Moves the speed")
 public class Speed extends Module {
     public static Speed Instance;
     public ParentSetting modes = createSetting("Modes");

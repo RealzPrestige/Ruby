@@ -2,16 +2,13 @@ package dev.zprestige.ruby.module.visual;
 
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.PlayerChangeEvent;
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.*;
 import dev.zprestige.ruby.util.RenderUtil;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -21,7 +18,6 @@ import java.util.function.Predicate;
 /**
  * creds to le phobos
  */
-@ModuleInfo(name = "PopChams", category = Category.Visual, description = "pops the chams")
 public class PopChams extends Module {
     public ParentSetting misc = createSetting("Misc");
     public IntegerSetting fadeTime = createSetting("Fade Time", 1500, 0, 5000).setParent(misc);

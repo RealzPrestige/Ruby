@@ -3,9 +3,7 @@ package dev.zprestige.ruby.module.combat;
 import dev.zprestige.ruby.eventbus.annotation.Priority;
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.PacketEvent;
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.FloatSetting;
 import dev.zprestige.ruby.util.BlockUtil;
 import dev.zprestige.ruby.util.EntityUtil;
@@ -28,8 +26,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -38,7 +34,6 @@ import java.util.Objects;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-@ModuleInfo(name = "SimpleCa", category = Category.Combat, description = "Very simple ca")
 public class SimpleCa extends Module {
     public static SimpleCa Instance;
     public FloatSetting targetRange = createSetting("Target Range", 9.0f, 0.1f, 15.0f);

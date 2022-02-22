@@ -1,8 +1,6 @@
 package dev.zprestige.ruby.module.misc;
 
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.BooleanSetting;
 import dev.zprestige.ruby.setting.impl.ColorSetting;
 import dev.zprestige.ruby.util.BlockUtil;
@@ -12,7 +10,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 
 import java.awt.*;
 
-@ModuleInfo(name = "AutoRespawn" , category = Category.Misc, description = "automaticclee keeps you aliv")
 public class AutoRespawn extends Module {
     public BooleanSetting showDeath = createSetting("Show Death", false);
     public ColorSetting color = createSetting("Color", new Color(-1), v -> showDeath.getValue());

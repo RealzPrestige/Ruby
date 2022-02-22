@@ -3,9 +3,7 @@ package dev.zprestige.ruby.module.client;
 import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.PacketEvent;
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.BooleanSetting;
 import dev.zprestige.ruby.setting.impl.ColorSetting;
 import dev.zprestige.ruby.setting.impl.IntegerSetting;
@@ -30,7 +28,6 @@ import java.util.List;
 import java.util.*;
 import java.util.function.Predicate;
 
-@ModuleInfo(name = "Hud", category = Category.Client, description = "hudificationatifilationaticationizes the hud")
 public class Hud extends Module {
     public static Hud Instance;
     public ColorSetting color = createSetting("Color", new Color(-1));

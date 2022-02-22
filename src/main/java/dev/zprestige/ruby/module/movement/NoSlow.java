@@ -2,9 +2,7 @@ package dev.zprestige.ruby.module.movement;
 
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.KeyEvent;
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.BooleanSetting;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -15,7 +13,6 @@ import org.lwjgl.input.Keyboard;
 
 import java.util.Arrays;
 
-@ModuleInfo(name = "NoSlow", category = Category.Movement, description = "cancels slows")
 public class NoSlow extends Module {
     public static NoSlow Instance;
     public BooleanSetting items = createSetting("Items", false);

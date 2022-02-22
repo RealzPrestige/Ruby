@@ -2,14 +2,11 @@ package dev.zprestige.ruby.module.visual;
 
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.PacketEvent;
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.BooleanSetting;
 import net.minecraft.network.play.server.SPacketExplosion;
 import net.minecraftforge.client.event.RenderBlockOverlayEvent;
 
-@ModuleInfo(name = "NoRender", category = Category.Visual, description = "doesnt rener selected stuff")
 public class NoRender extends Module {
     public static NoRender Instance;
     public BooleanSetting hurtCam = createSetting("Hurt Cam", false);

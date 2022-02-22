@@ -1,8 +1,6 @@
 package dev.zprestige.ruby.module.combat;
 
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.BooleanSetting;
 import dev.zprestige.ruby.setting.impl.FloatSetting;
 import dev.zprestige.ruby.setting.impl.IntegerSetting;
@@ -16,7 +14,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 
-@ModuleInfo(name = "AutoWeb", category = Category.Combat, description = "autowebbers team web")
 public class AutoWeb extends Module {
     public FloatSetting targetRange = createSetting("Target Range", 9.0f, 0.1f, 15.0f);
     public FloatSetting placeRange = createSetting("Place Range", 5.0f, 0.1f, 6.0f);

@@ -1,8 +1,6 @@
 package dev.zprestige.ruby.module.player;
 
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.util.InventoryUtil;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.PotionTypes;
@@ -15,7 +13,6 @@ import net.minecraft.network.play.client.CPacketPlayerDigging;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.math.BlockPos;
 
-@ModuleInfo(name = "Quiver", category = Category.Player, description = "arrow suicide")
 public class Quiver extends Module {
     public static Quiver Instance;
     public int timer = 0;

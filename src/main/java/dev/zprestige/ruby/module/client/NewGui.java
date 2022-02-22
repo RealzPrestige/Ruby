@@ -1,9 +1,7 @@
 package dev.zprestige.ruby.module.client;
 
 import dev.zprestige.ruby.Ruby;
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.BooleanSetting;
 import dev.zprestige.ruby.setting.impl.ColorSetting;
 import dev.zprestige.ruby.setting.impl.IntegerSetting;
@@ -15,7 +13,6 @@ import org.lwjgl.input.Keyboard;
 
 import java.awt.*;
 
-@ModuleInfo(name = "NewGui", category = Category.Client, description = "show new gui")
 public class NewGui extends Module {
     public static NewGui Instance;
     public ColorSetting color = createSetting("Color", new Color(0x65A778));

@@ -1,8 +1,6 @@
 package dev.zprestige.ruby.module.misc;
 
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.BooleanSetting;
 import dev.zprestige.ruby.setting.impl.FloatSetting;
 import dev.zprestige.ruby.setting.impl.IntegerSetting;
@@ -20,7 +18,6 @@ import net.minecraft.util.math.BlockPos;
 import java.awt.*;
 import java.util.TreeMap;
 
-@ModuleInfo(name = "AutoWither", category = Category.Misc, description = "Automatically does liov")
 public class AutoWither extends Module {
     public IntegerSetting placeDelay = createSetting("Place Delay", 100, 0, 1000);
     public FloatSetting placeRange = createSetting("Place Range", 5.0f, 0.1f, 6.0f);

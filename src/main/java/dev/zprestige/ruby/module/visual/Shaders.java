@@ -4,9 +4,7 @@ import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.Render3DEvent;
 import dev.zprestige.ruby.events.RenderItemInFirstPersonEvent;
 import dev.zprestige.ruby.mixins.render.IEntityRenderer;
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.BooleanSetting;
 import dev.zprestige.ruby.setting.impl.ColorSetting;
 import dev.zprestige.ruby.setting.impl.FloatSetting;
@@ -20,12 +18,10 @@ import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.item.EntityExpBottle;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.opengl.Display;
 
 import java.awt.*;
 
-@ModuleInfo(name = "Shaders", category = Category.Visual, description = "Chams the items in the items chams")
 public class Shaders extends Module {
     public ParentSetting targets = createSetting("Targets");
     public BooleanSetting players = createSetting("Players", false).setParent(targets);

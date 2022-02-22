@@ -1,9 +1,7 @@
 package dev.zprestige.ruby.module.visual;
 
 import dev.zprestige.ruby.Ruby;
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.ColorSetting;
 import dev.zprestige.ruby.setting.impl.FloatSetting;
 import dev.zprestige.ruby.util.RenderUtil;
@@ -17,7 +15,6 @@ import net.minecraft.util.math.BlockPos;
 
 import java.awt.*;
 
-@ModuleInfo(name = "Interactions", category = Category.Visual, description = "Shows when stuff gets interactificationizationified")
 public class Interactions extends Module {
     public FloatSetting range = createSetting("Range", 100.0f, 0.1f, 300.0f);
     public ColorSetting color = createSetting("Color", new Color(-1));

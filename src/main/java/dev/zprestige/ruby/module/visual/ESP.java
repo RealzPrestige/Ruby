@@ -3,9 +3,7 @@ package dev.zprestige.ruby.module.visual;
 import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.RenderLivingEntityEvent;
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.*;
 import dev.zprestige.ruby.util.RenderUtil;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -17,7 +15,6 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.opengl.EXTFramebufferObject;
 import org.lwjgl.opengl.EXTPackedDepthStencil;
 
@@ -29,7 +26,6 @@ import java.util.function.Predicate;
 
 import static org.lwjgl.opengl.GL11.*;
 
-@ModuleInfo(name = "ESP", category = Category.Visual, description = "renders stuff for things ")
 public class ESP extends Module {
     public static ESP Instance;
 

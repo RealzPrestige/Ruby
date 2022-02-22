@@ -1,8 +1,6 @@
 package dev.zprestige.ruby.module.player;
 
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.BooleanSetting;
 import dev.zprestige.ruby.setting.impl.DoubleSetting;
 import dev.zprestige.ruby.setting.impl.ModeSetting;
@@ -16,7 +14,6 @@ import net.minecraft.util.math.BlockPos;
 
 import java.util.Arrays;
 
-@ModuleInfo(name = "SelfFiller", category = Category.Player, description = "cringe as said in skitttyyhack vidoe")
 public class SelfFiller extends Module {
     public DoubleSetting force = createSetting("Force", 1.5, -5.0, 10.0);
     public BooleanSetting rotate = createSetting("Rotate", false);

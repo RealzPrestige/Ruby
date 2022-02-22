@@ -2,9 +2,7 @@ package dev.zprestige.ruby.module.movement;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 import dev.zprestige.ruby.Ruby;
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.module.client.Hud;
 import dev.zprestige.ruby.setting.impl.IntegerSetting;
 import dev.zprestige.ruby.util.MessageUtil;
@@ -15,7 +13,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Calendar;
 
-@ModuleInfo(name = "StashHunter", category = Category.Movement, description = "Finds stash for u wu")
 public class StashHunter extends Module {
     protected final IntegerSetting leftRightSeconds = createSetting("Left Right (S)", 10, 1, 60);
     protected final IntegerSetting forwardsSeconds = createSetting("Forwards (S)", 3, 1, 10);

@@ -3,22 +3,18 @@ package dev.zprestige.ruby.module.visual;
 import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.PlayerChangeEvent;
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.ColorSetting;
 import dev.zprestige.ruby.setting.impl.FloatSetting;
 import dev.zprestige.ruby.setting.impl.IntegerSetting;
 import dev.zprestige.ruby.util.RenderUtil;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.opengl.Display;
 
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
-@ModuleInfo(name = "HudNotifications", category = Category.Visual, description = "huds the notifications")
 public class HudNotifications extends Module {
     public ColorSetting backgroundColor = createSetting("Background Color", new Color(0x646363));
     public ColorSetting surroundColor = createSetting("Surround Color", new Color(0xA091FF));

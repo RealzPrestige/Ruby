@@ -3,9 +3,7 @@ package dev.zprestige.ruby.module.visual;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.events.Render3DEvent;
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.module.misc.FakePlayer;
 import dev.zprestige.ruby.setting.impl.BooleanSetting;
 import dev.zprestige.ruby.util.EntityUtil;
@@ -20,7 +18,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
 import org.lwjgl.opengl.GL11;
 
-import java.awt.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -29,7 +26,6 @@ import java.util.Objects;
 
 import static org.lwjgl.opengl.GL11.*;
 
-@ModuleInfo(name = "Nametags", category = Category.Visual, description = "names tags")
 public class Nametags extends Module {
     public static Nametags Instance;
     public BooleanSetting multiThreaded = createSetting("Multi Threaded", false);

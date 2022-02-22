@@ -1,9 +1,7 @@
 package dev.zprestige.ruby.module.combat;
 
 import dev.zprestige.ruby.Ruby;
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.*;
 import dev.zprestige.ruby.util.BlockUtil;
 import dev.zprestige.ruby.util.EntityUtil;
@@ -28,7 +26,6 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.TreeMap;
 
-@ModuleInfo(name = "TrapCrystal", category = Category.Combat, description = "traps people and fuck m with crystal")
 public class TrapCrystal extends Module {
 
     public ParentSetting timing = createSetting("Timing");

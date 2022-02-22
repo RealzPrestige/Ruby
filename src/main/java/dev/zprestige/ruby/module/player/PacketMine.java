@@ -2,9 +2,7 @@ package dev.zprestige.ruby.module.player;
 
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.BlockInteractEvent;
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.*;
 import dev.zprestige.ruby.util.InventoryUtil;
 import dev.zprestige.ruby.util.RenderUtil;
@@ -15,14 +13,12 @@ import net.minecraft.network.play.client.CPacketPlayerDigging;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.awt.*;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-@ModuleInfo(name = "PacketMine", category = Category.Player, description = "vroom miner")
 public class PacketMine extends Module {
     public static PacketMine Instance;
     public Timer timer = new Timer();

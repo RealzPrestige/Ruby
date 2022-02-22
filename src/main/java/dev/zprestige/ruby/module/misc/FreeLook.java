@@ -2,16 +2,13 @@ package dev.zprestige.ruby.module.misc;
 
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.TurnEvent;
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.KeySetting;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Keyboard;
 
-@ModuleInfo(name = "FreeLook", category = Category.Misc, description = "lets u look freee")
 public class FreeLook extends Module {
     public KeySetting holdBind = createSetting("Hold Bind", Keyboard.KEY_NONE);
     public float yaw = 0F;

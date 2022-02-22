@@ -1,8 +1,6 @@
 package dev.zprestige.ruby.module.visual;
 
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.BooleanSetting;
 import dev.zprestige.ruby.setting.impl.ColorSetting;
 import dev.zprestige.ruby.setting.impl.FloatSetting;
@@ -21,7 +19,6 @@ import org.lwjgl.opengl.GL11;
 import java.awt.*;
 import java.util.function.Predicate;
 
-@ModuleInfo(name = "Crosshair", category = Category.Visual, description = "Renders le custom crossballhair")
 public class Crosshair extends Module {
     public IntegerSetting distance = createSetting("Gap", 30, 0, 100);
     public IntegerSetting length = createSetting("Length", 40, 0, 100);

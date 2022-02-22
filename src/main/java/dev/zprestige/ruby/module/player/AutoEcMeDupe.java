@@ -3,9 +3,7 @@ package dev.zprestige.ruby.module.player;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.PacketEvent;
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.BooleanSetting;
 import dev.zprestige.ruby.setting.impl.IntegerSetting;
 import dev.zprestige.ruby.util.BlockUtil;
@@ -25,13 +23,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.CPacketEntityAction;
 import net.minecraft.network.play.client.CPacketPlayerTryUseItemOnBlock;
 import net.minecraft.util.EnumHand;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.TreeMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-@ModuleInfo(name = "AutoEcMeDupe", category = Category.Player, description = "automatically dupes on endcrystal.me")
 public class AutoEcMeDupe extends Module {
     public IntegerSetting actionDelay = createSetting("Action Delay (MS)", 100, 1, 1000);
     public IntegerSetting timeoutTime = createSetting("Timeout Time (S)", 3, 1, 15);

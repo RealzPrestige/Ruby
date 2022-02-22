@@ -2,17 +2,13 @@ package dev.zprestige.ruby.module.visual;
 
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.RenderLivingEntityEvent;
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.opengl.GL11;
 
 import java.util.Objects;
 
-@ModuleInfo(name = "DistanceAlpha", category = Category.Visual, description = "Makes players see-through up close")
 public class DistanceAlpha extends Module {
     public Frustum camera = new Frustum();
 

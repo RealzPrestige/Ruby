@@ -2,9 +2,7 @@ package dev.zprestige.ruby.module.player;
 
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.PacketEvent;
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.BooleanSetting;
 import dev.zprestige.ruby.setting.impl.FloatSetting;
 import dev.zprestige.ruby.util.EntityUtil;
@@ -12,7 +10,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.network.play.client.CPacketUseEntity;
 
-@ModuleInfo(name = "Criticals", category = Category.Player, description = "Turns hits into crit hits yea")
 public class Criticals extends Module {
 
     public FloatSetting offset = createSetting("Offset", 0.1f, 0.1f, 1.0f);

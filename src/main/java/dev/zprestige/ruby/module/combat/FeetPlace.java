@@ -2,9 +2,7 @@ package dev.zprestige.ruby.module.combat;
 
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.PacketEvent;
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.BooleanSetting;
 import dev.zprestige.ruby.setting.impl.IntegerSetting;
 import dev.zprestige.ruby.setting.impl.ModeSetting;
@@ -26,7 +24,6 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-@ModuleInfo(name = "FeetPlace", category = Category.Combat, description = "surrounds u in obsidian")
 public class FeetPlace extends Module {
     public static FeetPlace Instance;
     public ParentSetting placing = createSetting("Placing");

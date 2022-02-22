@@ -1,9 +1,7 @@
 package dev.zprestige.ruby.module.combat;
 
 import dev.zprestige.ruby.Ruby;
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.*;
 import dev.zprestige.ruby.util.*;
 import net.minecraft.entity.Entity;
@@ -26,7 +24,6 @@ import java.util.TreeMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-@ModuleInfo(name = "HolePushRewrite", category = Category.Combat, description = "Pushes kids out of holes.")
 public class HolePushRewrite extends Module {
 
     public ParentSetting ranges = createSetting("Ranges");

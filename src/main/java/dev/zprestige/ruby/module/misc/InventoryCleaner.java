@@ -1,8 +1,6 @@
 package dev.zprestige.ruby.module.misc;
 
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.BooleanSetting;
 import dev.zprestige.ruby.setting.impl.IntegerSetting;
 import dev.zprestige.ruby.setting.impl.ParentSetting;
@@ -13,7 +11,6 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.item.Item;
 
-@ModuleInfo(name = "InventoryCleaner", category = Category.Misc, description = "Removes useless shit from inventory")
 public class InventoryCleaner extends Module {
     public IntegerSetting throwDelay = createSetting("Throw Delay", 100, 0, 500);
     public ParentSetting items = createSetting("Items");

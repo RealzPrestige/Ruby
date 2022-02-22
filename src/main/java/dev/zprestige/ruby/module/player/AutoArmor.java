@@ -1,15 +1,12 @@
 package dev.zprestige.ruby.module.player;
 
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.IntegerSetting;
 import dev.zprestige.ruby.util.InventoryUtil;
 import dev.zprestige.ruby.util.Timer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.ClickType;
 
-@ModuleInfo(name = "AutoArmor", category = Category.Player, description = "automatically puts armor on for uuu")
 public class AutoArmor extends Module {
     public static AutoArmor Instance;
     public IntegerSetting takeOnDelay = createSetting("Take On Delay", 50, 0, 500);

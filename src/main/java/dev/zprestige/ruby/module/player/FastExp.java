@@ -1,8 +1,6 @@
 package dev.zprestige.ruby.module.player;
 
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.BooleanSetting;
 import dev.zprestige.ruby.setting.impl.IntegerSetting;
 import dev.zprestige.ruby.setting.impl.KeySetting;
@@ -15,12 +13,10 @@ import net.minecraft.util.EnumHand;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import java.awt.*;
 import java.util.Arrays;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
-@ModuleInfo(name = "FastExp", category = Category.Player, description = "Uses fast to fast use exp")
 public class FastExp extends Module {
     public static FastExp Instance;
     public ModeSetting mode = createSetting("Mode", "Vanilla", Arrays.asList("Vanilla", "Packet"));

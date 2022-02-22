@@ -1,8 +1,6 @@
 package dev.zprestige.ruby.module.misc;
 
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.BooleanSetting;
 import dev.zprestige.ruby.setting.impl.ColorSetting;
 import dev.zprestige.ruby.setting.impl.FloatSetting;
@@ -23,7 +21,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
 
-@ModuleInfo(name = "AutoMine", category = Category.Misc, description = "Mines Auto!")
 public class AutoMine extends Module {
     public ModeSetting mineMode = createSetting("Mine Mode", "Vanilla", Arrays.asList("Vanilla", "Packet", "EcMe"));
     public ModeSetting priority = createSetting("Priority", "City > Surround > AnvilBurrow", Arrays.asList(

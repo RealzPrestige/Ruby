@@ -1,8 +1,6 @@
 package dev.zprestige.ruby.module.combat;
 
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.*;
 import dev.zprestige.ruby.util.*;
 import net.minecraft.entity.Entity;
@@ -24,7 +22,6 @@ import net.minecraft.util.math.Vec3d;
 import java.util.Arrays;
 import java.util.Objects;
 
-@ModuleInfo(name = "AutoEcMeMainFucker", category = Category.Combat, description = "Fucks bad 1.18 ec me kiddies")
 public class AutoEcMeMainFucker extends Module {
     public ParentSetting timing = createSetting("Timing");
     public IntegerSetting actionDelay = createSetting("Action Delay", 50, 0, 1000).setParent(timing);

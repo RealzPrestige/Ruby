@@ -1,15 +1,12 @@
 package dev.zprestige.ruby.module.player;
 
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.BooleanSetting;
 import dev.zprestige.ruby.setting.impl.StringSetting;
 import dev.zprestige.ruby.util.BlockUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumHand;
 
-@ModuleInfo(name = "FakeHacker", category = Category.Player, description = "makes people fake haxxors")
 public class FakeHacker extends Module {
     public StringSetting target = createSetting("Target", "John");
     public BooleanSetting rotate = createSetting("Rotate", false);

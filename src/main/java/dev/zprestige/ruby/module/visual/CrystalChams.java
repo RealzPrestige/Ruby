@@ -1,8 +1,6 @@
 package dev.zprestige.ruby.module.visual;
 
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.BooleanSetting;
 import dev.zprestige.ruby.setting.impl.ColorSetting;
 import dev.zprestige.ruby.setting.impl.FloatSetting;
@@ -11,7 +9,6 @@ import net.minecraft.util.ResourceLocation;
 
 import java.awt.*;
 import java.util.Arrays;
-@ModuleInfo(name = "CrystalChams" , category = Category.Visual, description = "Changes the way crystal looks.")
 public class CrystalChams extends Module {
     public static CrystalChams Instance;
     public ModeSetting glintMode = createSetting("Glint Mode", "None", Arrays.asList("None", "Vanilla", "Custom"));

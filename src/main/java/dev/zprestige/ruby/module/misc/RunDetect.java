@@ -1,8 +1,6 @@
 package dev.zprestige.ruby.module.misc;
 
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.FloatSetting;
 import dev.zprestige.ruby.util.BlockUtil;
 import dev.zprestige.ruby.util.EntityUtil;
@@ -15,7 +13,6 @@ import java.util.ArrayList;
 
 import static org.lwjgl.opengl.GL11.*;
 
-@ModuleInfo(name = "RunDetect" , category = Category.Misc, description = "detects when fat kids who previously sworded go run vroom vroom and make m kaboom")
 public class RunDetect extends Module {
     public static RunDetect Instance;
     public FloatSetting radius = createSetting("Radius", 5.0f, 0.1f, 15.0f);

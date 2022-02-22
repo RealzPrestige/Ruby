@@ -1,8 +1,6 @@
 package dev.zprestige.ruby.module.combat;
 
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.BooleanSetting;
 import dev.zprestige.ruby.setting.impl.FloatSetting;
 import dev.zprestige.ruby.setting.impl.IntegerSetting;
@@ -15,7 +13,6 @@ import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 
-@ModuleInfo(name = "HolePush", category = Category.Combat, description = "pushes fat kids outta they hole")
 public class HolePush extends Module {
     public IntegerSetting placeDelay = createSetting("Place Delay", 50, 0, 500);
     public ParentSetting ranges = createSetting("Ranges");

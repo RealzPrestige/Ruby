@@ -4,9 +4,7 @@ import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.PacketEvent;
 import dev.zprestige.ruby.manager.HoleManager;
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.module.movement.NoSlow;
 import dev.zprestige.ruby.module.movement.Speed;
 import dev.zprestige.ruby.module.movement.Step;
@@ -38,13 +36,11 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-@ModuleInfo(name = "Robot", category = Category.Combat, description = "robot")
 public class Robot extends Module {
     public double prevHealth = 0.0, totalDamagePerSecond1 = 0.0, prevPosX = 0.0, prevPosZ = 0.0;
     public int prevGapples = 0, packets = 1, targetObsidian = 11, targetExpPercent, prevChorus = 0, xt = 0, zt = 0, st = 0, bowTicks = 0;

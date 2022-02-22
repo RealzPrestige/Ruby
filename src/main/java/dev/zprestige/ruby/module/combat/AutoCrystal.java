@@ -5,9 +5,7 @@ import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.ChorusEvent;
 import dev.zprestige.ruby.events.MoveEvent;
 import dev.zprestige.ruby.events.PacketEvent;
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.module.misc.RunDetect;
 import dev.zprestige.ruby.setting.impl.*;
 import dev.zprestige.ruby.util.Timer;
@@ -38,7 +36,6 @@ import java.util.List;
 import java.util.*;
 import java.util.function.Predicate;
 
-@ModuleInfo(name = "AutoCrystal", category = Category.Combat, description = "crazy ca")
 public class AutoCrystal extends Module {
     public ParentSetting targets = createSetting("Targets");
     public FloatSetting targetRange = createSetting("Target Range", 10.0f, 0.0f, 15.0f).setParent(targets);

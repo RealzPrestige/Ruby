@@ -1,9 +1,7 @@
 package dev.zprestige.ruby.module.combat;
 
 import dev.zprestige.ruby.Ruby;
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.*;
 import dev.zprestige.ruby.util.EntityUtil;
 import dev.zprestige.ruby.util.InventoryUtil;
@@ -16,7 +14,6 @@ import java.util.Arrays;
 import java.util.TreeMap;
 import java.util.function.Predicate;
 
-@ModuleInfo(name = "Aura" , category = Category.Combat, description = "kill people with big stick")
 public class Aura extends Module {
     public static Aura Instance;
     public ParentSetting ranges = createSetting("Ranges");

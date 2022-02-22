@@ -2,21 +2,17 @@ package dev.zprestige.ruby.module.misc;
 
 import com.google.gson.JsonParser;
 import com.mojang.authlib.GameProfile;
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.BooleanSetting;
 import dev.zprestige.ruby.setting.impl.StringSetting;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
 
-import java.awt.*;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.UUID;
 
-@ModuleInfo(name = "FakePlayer", category = Category.Misc, description = "release your anger after dying to zPrestige_ by raping a fake player")
 public class FakePlayer extends Module {
     public static FakePlayer Instance;
     public StringSetting name = createSetting("Name", "zPrestige_");

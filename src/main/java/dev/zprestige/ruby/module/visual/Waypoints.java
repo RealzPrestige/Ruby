@@ -1,9 +1,7 @@
 package dev.zprestige.ruby.module.visual;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.ColorSetting;
 import dev.zprestige.ruby.util.RenderUtil;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -12,7 +10,6 @@ import net.minecraft.util.math.BlockPos;
 import java.awt.*;
 import java.util.HashMap;
 
-@ModuleInfo(name = "Waypoints", category = Category.Visual, description = "Shows waypoints n shit")
 public class Waypoints extends Module {
     public static Waypoints Instance;
     public ColorSetting color = createSetting("Color", new Color(-1));

@@ -6,9 +6,7 @@ import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.EntityAddedEvent;
 import dev.zprestige.ruby.events.PacketEvent;
 import dev.zprestige.ruby.events.PlayerChangeEvent;
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.BooleanSetting;
 import dev.zprestige.ruby.util.EntityUtil;
 import dev.zprestige.ruby.util.MessageUtil;
@@ -21,7 +19,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.network.play.client.CPacketPlayerTryUseItemOnBlock;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.awt.*;
 import java.io.*;
@@ -31,7 +28,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@ModuleInfo(name = "Analyzer", category = Category.Misc, description = "Analyzes people's crystal and exp usage")
 public class Analyzer extends Module {
     public BooleanSetting announce = createSetting("Announce", false);
     public int exp = 0, crystals = 0, crystalStacks = 0, expStacks = 0;

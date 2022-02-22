@@ -1,12 +1,8 @@
 package dev.zprestige.ruby.module.client;
 
-import dev.zprestige.ruby.Ruby;
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.ui.config.ConfigGuiScreen;
 
-@ModuleInfo(name = "Configs", category = Category.Client, description = "configs stuff")
 public class Configs extends Module {
     public static Configs Instance;
 

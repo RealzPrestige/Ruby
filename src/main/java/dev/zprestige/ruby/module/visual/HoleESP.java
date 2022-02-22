@@ -2,9 +2,7 @@ package dev.zprestige.ruby.module.visual;
 
 import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.manager.HoleManager;
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.BooleanSetting;
 import dev.zprestige.ruby.setting.impl.ColorSetting;
 import dev.zprestige.ruby.setting.impl.FloatSetting;
@@ -21,7 +19,6 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-@ModuleInfo(name = "HoleESP", category = Category.Visual, description = "Shows holes")
 public class HoleESP extends Module {
     protected final FloatSetting radius = createSetting("Radius", 50.0f, 1.0f, 50.0f);
     protected final FloatSetting height = createSetting("Height", 1.0f, 0.0f, 2.0f);

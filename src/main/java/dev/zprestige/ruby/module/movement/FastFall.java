@@ -2,22 +2,17 @@ package dev.zprestige.ruby.module.movement;
 
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.MoveEvent;
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.module.exploit.Timer;
 import dev.zprestige.ruby.setting.impl.BooleanSetting;
 import dev.zprestige.ruby.setting.impl.FloatSetting;
 import dev.zprestige.ruby.setting.impl.ModeSetting;
 import dev.zprestige.ruby.util.BlockUtil;
 import net.minecraft.init.Blocks;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import java.awt.*;
 import java.util.Arrays;
 import java.util.function.Predicate;
 
-@ModuleInfo(name = "Fast Fall", category = Category.Movement, description = "Falls faster LAd")
 public class FastFall extends Module {
     public ModeSetting mode = createSetting("Mode", "Motion", Arrays.asList("Motion", "Timer"));
     public FloatSetting timerAmount = createSetting("Timer Amount", 1.0f, 0.1f, 10.0f, (Predicate<Float>) v -> mode.getValue().equals("Timer"));

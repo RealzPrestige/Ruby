@@ -1,8 +1,6 @@
 package dev.zprestige.ruby.module.player;
 
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.BooleanSetting;
 import dev.zprestige.ruby.setting.impl.IntegerSetting;
 import dev.zprestige.ruby.setting.impl.ParentSetting;
@@ -19,7 +17,6 @@ import net.minecraft.util.EnumHand;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
-@ModuleInfo(name = "AutoSingleMend", category = Category.Player, description = "Single mends ur armor automatically")
 public class AutoSingleMend extends Module {
     public IntegerSetting threshold = createSetting("Threshold", 90, 1, 100);
     public IntegerSetting actionDelay = createSetting("Action Delay", 50, 0, 1000);

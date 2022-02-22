@@ -4,16 +4,12 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.ModuleToggleEvent;
 import dev.zprestige.ruby.events.PacketEvent;
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.BooleanSetting;
 import dev.zprestige.ruby.util.MessageUtil;
 import net.minecraft.network.play.server.SPacketChat;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 
-@ModuleInfo(name = "Notify", category = Category.Client, description = "Notifies when modules get enabled.")
 public class Notify extends Module {
     public static Notify Instance;
     public BooleanSetting modules = createSetting("Modules", false);

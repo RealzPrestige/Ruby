@@ -24,10 +24,6 @@ public class Module {
     protected final Minecraft mc = Minecraft.getMinecraft();
     public int scrollY;
 
-    public ModuleInfo getModuleInfo() {
-        return getClass().getAnnotation(ModuleInfo.class);
-    }
-
     public void onEnable() {
     }
 

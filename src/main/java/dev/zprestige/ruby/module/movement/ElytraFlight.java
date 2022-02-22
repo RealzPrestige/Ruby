@@ -3,9 +3,7 @@ package dev.zprestige.ruby.module.movement;
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.MoveEvent;
 import dev.zprestige.ruby.events.PacketEvent;
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.BooleanSetting;
 import dev.zprestige.ruby.setting.impl.FloatSetting;
 import dev.zprestige.ruby.setting.impl.IntegerSetting;
@@ -16,11 +14,9 @@ import net.minecraft.init.Items;
 import net.minecraft.network.play.client.CPacketPlayerTryUseItem;
 import net.minecraft.network.play.server.SPacketPlayerPosLook;
 import net.minecraft.util.EnumHand;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.function.Predicate;
 
-@ModuleInfo(name = "ElytraFlight", category = Category.Movement, description = "makes flying with easy")
 public class ElytraFlight extends Module {
     public FloatSetting speed = createSetting("Speed", 1.0f, 0.1f, 10.0f);
     public FloatSetting verticalSpeed = createSetting("Vertical Speed", 1.0f, 0.1f, 10.0f);

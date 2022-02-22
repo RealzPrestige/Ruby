@@ -1,8 +1,6 @@
 package dev.zprestige.ruby.module.combat;
 
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.BooleanSetting;
 import dev.zprestige.ruby.setting.impl.ColorSetting;
 import dev.zprestige.ruby.setting.impl.IntegerSetting;
@@ -18,7 +16,6 @@ import java.util.ArrayList;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
-@ModuleInfo(name = "AntiBed", category = Category.Combat, description = "Fuck ecme niggers")
 public class AntiBed extends Module {
     public ColorSetting color = createSetting("Color", new Color(0xFF6565));
     public BooleanSetting enableTrigger = createSetting("Enable Trigger", false);

@@ -3,9 +3,7 @@ package dev.zprestige.ruby.module.visual;
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.PacketEvent;
 import dev.zprestige.ruby.events.ParticleEvent;
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.*;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.network.play.server.SPacketEffect;
@@ -15,7 +13,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import java.awt.*;
 import java.util.Arrays;
 
-@ModuleInfo(name = "World", category = Category.Visual, description = "Changes THE WORLD")
 public class WorldTweaks extends Module {
     public static WorldTweaks Instance;
     public ParentSetting weather = createSetting("Weather");

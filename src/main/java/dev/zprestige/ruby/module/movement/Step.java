@@ -2,19 +2,15 @@ package dev.zprestige.ruby.module.movement;
 
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.MoveEvent;
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.BooleanSetting;
 import dev.zprestige.ruby.setting.impl.FloatSetting;
 import dev.zprestige.ruby.setting.impl.ModeSetting;
 import dev.zprestige.ruby.util.EntityUtil;
 import net.minecraft.network.play.client.CPacketPlayer;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.Arrays;
 
-@ModuleInfo(name = "Step" , category = Category.Movement, description = "steps you up block")
 public class Step extends Module {
     public static Step Instance;
     public ModeSetting mode = createSetting("Mode", "Vanilla", Arrays.asList("Vanilla", "Ncp"));

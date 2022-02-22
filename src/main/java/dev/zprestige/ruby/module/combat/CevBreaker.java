@@ -1,8 +1,6 @@
 package dev.zprestige.ruby.module.combat;
 
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.*;
 import dev.zprestige.ruby.util.BlockUtil;
 import dev.zprestige.ruby.util.EntityUtil;
@@ -26,7 +24,6 @@ import net.minecraft.util.math.Vec3d;
 import java.util.Arrays;
 import java.util.Objects;
 
-@ModuleInfo(name = "CevBreaker", category = Category.Combat, description = "")
 public class CevBreaker extends Module {
 
     public FloatSetting targetRange = createSetting("Target Range", 5.0f, 0.1f, 6.0f);

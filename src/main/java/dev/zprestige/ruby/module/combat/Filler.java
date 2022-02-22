@@ -1,8 +1,6 @@
 package dev.zprestige.ruby.module.combat;
 
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.*;
 import dev.zprestige.ruby.util.*;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,7 +17,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 
-@ModuleInfo(name = "Filler" , category = Category.Combat, description = "fills stuff like 19xp mom")
 public class Filler extends Module {
     public static Filler Instance;
     public ParentSetting ranges = createSetting("Ranges");
