@@ -11,67 +11,32 @@ import dev.zprestige.ruby.util.MessageUtil;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.tileentity.TileEntityChest;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Calendar;
 
 @ModuleInfo(name = "StashHunter", category = Category.Movement, description = "Finds stash for u wu")
 public class StashHunter extends Module {
-    public IntegerSetting leftRightSeconds = createSetting("Left Right (S)", 10, 1, 60);
-    public IntegerSetting forwardsSeconds = createSetting("Forwards (S)", 3, 1, 10);
-    public IntegerSetting minimumChests = createSetting("Minimum Chests", 10, 1, 100);
-    public int ticks = 0;
-    public Stage stage = Stage.LeftRight;
-    public LeftRightStage leftRightStage = LeftRightStage.Right;
-    File path;
-    File currentFile;
-    BufferedWriter bufferedWriter;
-    Calendar calendar = Calendar.getInstance();
-
-    public StashHunter() {
-        path = new File(Ruby.mc.gameDir + File.separator + "Ruby" + File.separator + "StashHunter");
-        if (!path.exists())
-            path.mkdir();
-    }
+    protected final IntegerSetting leftRightSeconds = createSetting("Left Right (S)", 10, 1, 60);
+    protected final IntegerSetting forwardsSeconds = createSetting("Forwards (S)", 3, 1, 10);
+    protected final IntegerSetting minimumChests = createSetting("Minimum Chests", 10, 1, 100);
+    protected final Calendar calendar = Calendar.getInstance();
+    protected int ticks = 0;
+    protected Stage stage = Stage.LeftRight;
+    protected LeftRightStage leftRightStage = LeftRightStage.Right;
 
     @Override
     public void onEnable() {
-        currentFile = new File(Ruby.mc.gameDir + File.separator + "Ruby" + File.separator + "StashHunter" + File.separator + "latest.txt");
-        try {
-            currentFile.createNewFile();
-            bufferedWriter = new BufferedWriter(new FileWriter(currentFile));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         stage = Stage.LeftRight;
         leftRightStage = LeftRightStage.Right;
     }
 
     @Override
-    public void onDisable() {
-        try {
-            bufferedWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
     public void onTick() {
         ticks++;
-        long chests = mc.world.loadedTileEntityList.stream().filter(e -> e instanceof TileEntityChest).count();
+        final long chests = mc.world.loadedTileEntityList.stream().filter(e -> e instanceof TileEntityChest).count();
         if (chests >= minimumChests.getValue()) {
-            try {
-                FileWriter writer = new FileWriter(currentFile, true);
-                writer.write("[" + calendar.getTime() + "] " + chests + " Chests found when flying at X: " + roundNumber(mc.player.posX, 1) + " | Z: " + roundNumber(mc.player.posZ, 1) + "\n");
-                writer.close();
-                MessageUtil.sendMessage("[StashHunter] " + ChatFormatting.WHITE + "[" + calendar.getTime() + "] " + chests + " Chests found when flying at X: " + roundNumber(mc.player.posX, 1) + " | Z: " + roundNumber(mc.player.posZ, 1));
-            } catch (Exception ignored) {
-            }
+            MessageUtil.sendMessage("[StashHunter] " + ChatFormatting.WHITE + "[" + calendar.getTime() + "] " + chests + " Chests found when flying at X: " + roundNumber(mc.player.posX, 1) + " | Z: " + roundNumber(mc.player.posZ, 1));
         }
         switch (stage) {
             case LeftRight:
@@ -112,7 +77,7 @@ public class StashHunter extends Module {
 
     @Override
     public void onOverlayTick() {
-        String string = "Stage: " + stage.toString() + (stage.equals(Stage.LeftRight) ? " " + leftRightStage.toString() : "");
+        final String string = "Stage: " + stage.toString() + (stage.equals(Stage.LeftRight) ? " " + leftRightStage.toString() : "");
         Ruby.rubyFont.drawStringWithShadow(string, new ScaledResolution(mc).getScaledWidth() / 2f - (Ruby.rubyFont.getStringWidth(string) / 2f), Hud.Instance.welcomer.getValue() ? 10 : 0, -1);
     }
 
