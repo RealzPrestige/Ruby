@@ -11,7 +11,7 @@ import java.awt.*;
 import java.util.Arrays;
 public class CrystalChams extends Module {
     public static CrystalChams Instance;
-    public ModeSetting glintMode = createSetting("Glint Mode", "None", Arrays.asList("None", "Vanilla", "Custom"));
+    public BooleanSetting glint = createSetting("Glint", false);
     public BooleanSetting glintDepth = createSetting("Glint Depth", false);
     public FloatSetting glintSpeed = createSetting("Glint Speed", 5.0f, 0.1f, 20.0f);
     public FloatSetting glintScale = createSetting("Glint Scale", 1.0f, 0.1f, 10.0f);

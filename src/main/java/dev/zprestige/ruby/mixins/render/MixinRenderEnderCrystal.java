@@ -126,11 +126,11 @@ public abstract class MixinRenderEnderCrystal extends Render<EntityEnderCrystal>
                 GL11.glPopAttrib();
                 GL11.glPopMatrix();
             }
-            if (!CrystalChams.Instance.glintMode.getValue().equals("None")) {
+            if (CrystalChams.Instance.glint.getValue()) {
                 float f3 = entity.innerRotation + partialTicks;
                 GlStateManager.pushMatrix();
                 GlStateManager.translate(x, y, z);
-                Minecraft.getMinecraft().getRenderManager().renderEngine.bindTexture(CrystalChams.Instance.glintMode.getValue().equals("Custom") ? CrystalChams.LIGHTNING_TEXTURE : CrystalChams.ENCHANTED_ITEM_GLINT_RES);
+                Minecraft.getMinecraft().getRenderManager().renderEngine.bindTexture(CrystalChams.ENCHANTED_ITEM_GLINT_RES);
                 float f4 = MathHelper.sin(f3 * 0.2f) / 2.0f + 0.5f;
                 f4 += f4 * f4;
                 GL11.glPushAttrib(1048575);
