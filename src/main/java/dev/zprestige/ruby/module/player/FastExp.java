@@ -64,7 +64,5 @@ public class FastExp extends Module {
                 mc.player.connection.sendPacket(new CPacketHeldItemChange(mc.player.inventory.currentItem));
                 break;
         }
-        setHudString(mode.getValue());
-        setHudStringColor(new Color(255, 255, 255));
     }
 }

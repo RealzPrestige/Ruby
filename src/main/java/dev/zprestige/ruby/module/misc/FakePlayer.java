@@ -36,8 +36,6 @@ public class FakePlayer extends Module {
         }
         fakePlayer.setHealth(36);
         mc.world.addEntityToWorld(-100, fakePlayer);
-        setHudString(name.getValue());
-        setHudStringColor(new Color(0, 255, 0));
     }
 
     @Override

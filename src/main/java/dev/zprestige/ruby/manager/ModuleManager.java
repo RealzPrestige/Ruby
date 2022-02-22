@@ -8,8 +8,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ModuleManager {
     public ArrayList<Module> moduleList = new ArrayList<>();
@@ -32,7 +32,8 @@ public class ModuleManager {
             for (Class<?> clazz : classes) {
                 if (!Modifier.isAbstract(clazz.getModifiers()) && Module.class.isAssignableFrom(clazz)) {
                     for (Constructor<?> constructor : clazz.getConstructors()) {
-                        Module instance = (Module) constructor.newInstance();
+                        final String moduleName = clazz.getName().split("\\.")[5];
+                        final Module instance = ((Module) constructor.newInstance()).withSuper(moduleName, getCategoryByName(folder));
                         Arrays.stream(instance.getClass().getDeclaredFields()).filter(field -> !field.isAccessible()).forEach(field -> field.setAccessible(true));
                         moduleList.add(instance);
                     }
@@ -43,11 +44,12 @@ public class ModuleManager {
         }
     }
 
+    public List<Module> getModulesInCategory(Category category) {
+        return moduleList.stream().filter(module -> module.getCategory().equals(category)).collect(Collectors.toList());
+    }
 
-    public ArrayList<Module> getOrderedModuleListByLength() {
-        ArrayList<Module> lengthOrdered = new ArrayList<>(moduleList);
-        lengthOrdered.sort(Comparator.comparing(Module::getModuleNameWidth).reversed());
-        return lengthOrdered;
+    public Category getCategoryByName(String name) {
+        return Arrays.stream(Category.values()).filter(category -> category.toString().toLowerCase().equals(name)).findFirst().orElse(null);
     }
 
     public List<Category> getCategories() {

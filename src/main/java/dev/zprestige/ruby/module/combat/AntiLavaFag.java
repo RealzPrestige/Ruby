@@ -22,7 +22,7 @@ import net.minecraft.util.math.Vec3i;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-@ModuleInfo(name = "Anti Lava Fag", description = "Fuck lava pvpers", category = Category.Combat)
+@ModuleInfo(name = "AntiLavaFag", description = "Fuck lava pvpers", category = Category.Combat)
 public class AntiLavaFag extends Module {
     protected final IntegerSetting placeDelay = createSetting("Place Delay", 50, 0, 500);
     protected final FloatSetting targetRange = createSetting("Target Range", 10.0f, 0.1f, 15.0f);

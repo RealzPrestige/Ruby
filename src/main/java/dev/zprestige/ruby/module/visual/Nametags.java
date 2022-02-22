@@ -69,8 +69,6 @@ public class Nametags extends Module {
                 }
                 glColor4f(1f, 1f, 1f, 1f);
                 glPopMatrix();
-                setHudString(entityPlayers.size() + "");
-                setHudStringColor(new Color(255, 255, 255));
             }
         }
     }

@@ -14,8 +14,8 @@ public class Ruby {
     public static EventBus eventBus;
     public static ThreadManager threadManager;
     public static HoleManager holeManager;
-    public static EventListener eventListener;
     public static ModuleManager moduleManager;
+    public static EventListener eventListener;
     public static FriendManager friendManager;
     public static EnemyManager enemyManager;
     public static TickManager tickManager;
@@ -29,8 +29,8 @@ public class Ruby {
         eventBus = new EventBus();
         threadManager = new ThreadManager();
         holeManager = new HoleManager();
-        eventListener = new EventListener();
         moduleManager = new ModuleManager();
+        eventListener = new EventListener();
         friendManager = new FriendManager();
         enemyManager = new EnemyManager();
         tickManager = new TickManager();

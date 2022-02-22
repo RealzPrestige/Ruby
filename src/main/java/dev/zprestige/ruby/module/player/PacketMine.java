@@ -99,8 +99,6 @@ public class PacketMine extends Module {
         else if (mc.player.getDistanceSq(currentPos) > (setNullRange.getValue() * setNullRange.getValue())) {
             currentPos = null;
         }
-        setHudString("Semi-Bypass");
-        setHudStringColor(new Color(255, 255, 255));
     }
 
     @Override

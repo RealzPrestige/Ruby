@@ -16,15 +16,13 @@ import java.util.function.Predicate;
 
 public class Module {
     public boolean open, drawn = true;
-    String name = getModuleInfo().name();
-    String hudString = "";
-    Color hudStringColor = new Color(0x939393);
-    Category category = getModuleInfo().category();
-    String description = getModuleInfo().description();
-    List<Setting<?>> settingList = new ArrayList<>();
-    KeySetting keybind = createSetting("Keybind", Keyboard.KEY_NONE);
-    BooleanSetting enabled = createSetting("Enabled", false);
-    public Minecraft mc = Minecraft.getMinecraft();
+    protected String name;//= getModuleInfo().name();
+    protected Category category; //= getModuleInfo().category();
+    protected String description = getModuleInfo().description();
+    protected final List<Setting<?>> settingList = new ArrayList<>();
+    protected final  KeySetting keybind = createSetting("Keybind", Keyboard.KEY_NONE);
+    protected final BooleanSetting enabled = createSetting("Enabled", false);
+    protected final Minecraft mc = Minecraft.getMinecraft();
     public int scrollY;
 
     public ModuleInfo getModuleInfo() {
@@ -48,10 +46,6 @@ public class Module {
     }
 
     public void onGlobalRenderTick(Render3DEvent event) {
-    }
-
-    public void setHudString(String hudString) {
-        this.hudString = hudString;
     }
 
     public void enableModule() {
@@ -114,20 +108,10 @@ public class Module {
         return mc.world == null || mc.player == null;
     }
 
-    public String getHudString() {
-        return hudString;
-    }
-
-    public void setHudStringColor(Color hudStringColor) {
-        this.hudStringColor = hudStringColor;
-    }
-
-    public Color getHudStringColor() {
-        return hudStringColor;
-    }
-
-    public Float getModuleNameWidth() {
-        return Ruby.rubyFont.getStringWidth("[" + name + hudString + "]");
+    public Module withSuper(String name, Category category){
+        this.name = name;
+        this.category = category;
+        return this;
     }
 
     public BooleanSetting createSetting(String name, boolean value) {

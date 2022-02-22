@@ -59,7 +59,6 @@ public class Filler extends Module {
     public void onTick() {
         EntityPlayer entityPlayer = EntityUtil.getTarget(targetRange.getValue());
         if (entityPlayer == null) {
-            setHudString("");
             return;
         }
         BlockPos targetPos = BlockUtil.getClosestHoleToPlayer(entityPlayer, smartRange.getValue(), doubleHoles.getValue());
@@ -97,8 +96,6 @@ public class Filler extends Module {
             return;
         }
         filledBlocks.put(targetPos, boxColor.getValue().getAlpha());
-        setHudString(entityPlayer.getName());
-        setHudStringColor(new Color(255, 255, 255));
     }
 
     @Override

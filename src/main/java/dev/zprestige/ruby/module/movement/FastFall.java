@@ -57,12 +57,6 @@ public class FastFall extends Module {
                 mc.player.motionY = strict.getValue() ? -1 : -5;
                 break;
         }
-        if (strict.getValue()) {
-            setHudString("Strict");
-            setHudStringColor(new Color(255, 255, 255));
-        } else {
-            setHudString("");
-        }
     }
 
     @RegisterListener

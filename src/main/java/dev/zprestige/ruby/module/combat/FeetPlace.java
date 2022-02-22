@@ -19,9 +19,7 @@ import net.minecraft.network.play.server.SPacketBlockBreakAnim;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -45,7 +43,7 @@ public class FeetPlace extends Module {
     public BooleanSetting smartExtend = createSetting("Smart Extend", false).setParent(misc);
     public BooleanSetting hitboxCheck = createSetting("Hitbox Check", false, v -> !smartExtend.getValue()).setParent(misc);
     public BooleanSetting retry = createSetting("Retry", false, v -> placeMode.getValue().equals("Instant")).setParent(misc);
-    public IntegerSetting retries = createSetting("Retries", 1, 1, 10, (Predicate<Integer>) v-> placeMode.getValue().equals("Instant") && retry.getValue()).setParent(misc);
+    public IntegerSetting retries = createSetting("Retries", 1, 1, 10, (Predicate<Integer>) v -> placeMode.getValue().equals("Instant") && retry.getValue()).setParent(misc);
     public ArrayList<BlockPos> blockPosList = new ArrayList<>();
     public ArrayList<BlockPos> upperPosList = new ArrayList<>();
     public ArrayList<BlockPos> bottomPosList = new ArrayList<>();
@@ -54,7 +52,7 @@ public class FeetPlace extends Module {
     public BlockPos startPos = null;
     public BlockPos supportPos = null;
 
-    public FeetPlace(){
+    public FeetPlace() {
         Instance = this;
     }
 
@@ -115,7 +113,7 @@ public class FeetPlace extends Module {
             return;
         }
         int finalSlot = slot;
-        if (reCalcOnMove.getValue() && EntityUtil.isMoving()){
+        if (reCalcOnMove.getValue() && EntityUtil.isMoving()) {
             BlockPos pos = BlockUtil.getPlayerPos();
             addPossesMainList(pos.down(), pos.down().north(), pos.down().east(), pos.down().south(), pos.down().west(), pos.north(), pos.east(), pos.south(), pos.west());
         }
@@ -154,12 +152,10 @@ public class FeetPlace extends Module {
             if (!canPlace(supportPos))
                 supportPos = null;
         }
-        setHudString(placeMode.getValue());
-        setHudStringColor(BlockUtil.isPlayerSafe(mc.player) ? new Color(0, 255, 0) : new Color(255, 0, 0));
     }
 
-    public boolean canPlace(BlockPos pos){
-        return mc.world.getBlockState(pos).getBlock().equals(Blocks.AIR) || (inLiquids.getValue() && ((mc.world.getBlockState(pos).getBlock().equals(Blocks.WATER) || mc.world.getBlockState(pos).getBlock().equals(Blocks.FLOWING_WATER))|| (mc.world.getBlockState(pos).getBlock().equals(Blocks.LAVA) || mc.world.getBlockState(pos).getBlock().equals(Blocks.FLOWING_LAVA))));
+    public boolean canPlace(BlockPos pos) {
+        return mc.world.getBlockState(pos).getBlock().equals(Blocks.AIR) || (inLiquids.getValue() && ((mc.world.getBlockState(pos).getBlock().equals(Blocks.WATER) || mc.world.getBlockState(pos).getBlock().equals(Blocks.FLOWING_WATER)) || (mc.world.getBlockState(pos).getBlock().equals(Blocks.LAVA) || mc.world.getBlockState(pos).getBlock().equals(Blocks.FLOWING_LAVA))));
     }
 
     public void addExtendedPosses() {
@@ -187,7 +183,7 @@ public class FeetPlace extends Module {
                 if (!mc.player.getEntityBoundingBox().intersects(new AxisAlignedBB(pos.west()))) {
                     if (isPosSurroundedByBlocks(pos.down().west()) && canPlace(pos.down().west()))
                         extendBlocks.add(pos.down().west());
-                    if (isPosSurroundedByBlocks(pos.west())  && canPlace(pos.west()))
+                    if (isPosSurroundedByBlocks(pos.west()) && canPlace(pos.west()))
                         extendBlocks.add(pos.west());
                 }
             }

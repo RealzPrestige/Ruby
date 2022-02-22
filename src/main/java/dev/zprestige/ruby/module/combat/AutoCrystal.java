@@ -172,7 +172,6 @@ public class AutoCrystal extends Module {
             return;
         target = EntityUtil.getTarget(targetRange.getValue());
         if (target == null) {
-            setHudString("");
             return;
         }
         if (onMoveCalcPlace.getValue()) {
@@ -221,7 +220,6 @@ public class AutoCrystal extends Module {
             return;
         target = EntityUtil.getTarget(targetRange.getValue());
         if (target == null) {
-            setHudString("");
             return;
         }
         BlockPos currPos = null;
@@ -244,8 +242,6 @@ public class AutoCrystal extends Module {
             pos = placePosition.getBlockPos();
         if (placePosition != null && placePosition.getBlockPos() != null && bb == null)
             bb = new AxisAlignedBB(placePosition.getBlockPos());
-        setHudString(target.getName());
-        setHudStringColor(new Color(255, 255, 255));
     }
 
     public void explodeCrystal() {

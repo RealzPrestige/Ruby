@@ -109,8 +109,6 @@ public class Speed extends Module {
         }
         if (switchPullToGround.getValue() && postSwitchTimer.getTimeSub(20))
             mc.player.motionY = -1;
-        setHudString(speedMode.getValue());
-        setHudStringColor(new Color(255, 255, 255));
         if (slowdownOnGroundNearHoles.getValue()) {
             isCloseToHole = false;
             if (ESP.Instance.bedrockHoles != null)
