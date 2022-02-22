@@ -36,7 +36,7 @@ public class Ruby {
         enemyManager = new EnemyManager();
         tickManager = new TickManager();
         totemPopManager = new TotemPopManager();
-        configManager = new ConfigManager();
+        configManager = new ConfigManager().loadFromActiveConfig().readAndSetSocials();
     }
 }
 

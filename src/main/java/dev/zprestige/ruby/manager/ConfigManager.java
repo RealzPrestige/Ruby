@@ -20,12 +20,13 @@ public class ConfigManager {
     protected final ArrayList<Module> moduleList = Ruby.moduleManager.moduleList;
     protected File configPath = new File(mc.gameDir + separator + "Ruby" + separator + "Configs");
 
-    public void loadFromActiveConfig() {
+    public ConfigManager loadFromActiveConfig() {
         String activeConfig = readActiveConfig();
         if (!activeConfig.equals("NONE")) {
             configPath = new File(configPath + separator + activeConfig);
             loadModules(false);
         }
+        return this;
     }
 
     public void load(String folder, boolean onlyVisuals) {
@@ -59,7 +60,7 @@ public class ConfigManager {
         }
     }
 
-    public void readAndSetSocials(){
+    public ConfigManager readAndSetSocials(){
         final File file = registerPathAndCreate(mc.gameDir + separator + "Ruby" + separator + "Socials");
         final File friends = registerPathAndCreate(file + separator + "Friends.txt");
         final File enemies = registerPathAndCreate(file + separator + "Enemies.txt");
@@ -72,6 +73,7 @@ public class ConfigManager {
             bufferReader2.lines().forEach(line -> Ruby.enemyManager.addEnemy(line));
         } catch (IOException ignored) {
         }
+        return this;
     }
 
     protected String readActiveConfig() {
