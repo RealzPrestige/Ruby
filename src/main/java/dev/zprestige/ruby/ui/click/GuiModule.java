@@ -8,7 +8,6 @@ import dev.zprestige.ruby.setting.impl.*;
 import dev.zprestige.ruby.ui.click.setting.GuiSetting;
 import dev.zprestige.ruby.ui.click.setting.impl.*;
 import dev.zprestige.ruby.util.AnimationUtil;
-import dev.zprestige.ruby.util.MessageUtil;
 import dev.zprestige.ruby.util.RenderUtil;
 
 import java.awt.*;
@@ -131,7 +130,7 @@ public class GuiModule {
                     break;
                 case 2:
                     module.drawn = !module.drawn;
-                    MessageUtil.sendMessage(ChatFormatting.WHITE + "" + ChatFormatting.BOLD + module.getName() + ChatFormatting.WHITE + " drawn: " + module.drawn + ".");
+                    Ruby.chatManager.sendMessage(ChatFormatting.WHITE + "" + ChatFormatting.BOLD + module.getName() + ChatFormatting.WHITE + " drawn: " + module.drawn + ".");
                     break;
             }
         }

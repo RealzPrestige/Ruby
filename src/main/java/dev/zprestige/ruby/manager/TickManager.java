@@ -3,7 +3,6 @@ package dev.zprestige.ruby.manager;
 import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.events.PacketEvent;
 import dev.zprestige.ruby.module.client.Hud;
-import dev.zprestige.ruby.util.MessageUtil;
 import net.minecraft.network.play.server.SPacketTimeUpdate;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;

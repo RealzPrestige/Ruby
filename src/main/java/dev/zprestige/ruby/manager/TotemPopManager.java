@@ -2,10 +2,10 @@ package dev.zprestige.ruby.manager;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 import dev.zprestige.ruby.Ruby;
+import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.PacketEvent;
 import dev.zprestige.ruby.events.PlayerChangeEvent;
 import dev.zprestige.ruby.module.client.Notify;
-import dev.zprestige.ruby.util.MessageUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.play.server.SPacketEntityStatus;
@@ -27,7 +27,7 @@ public class TotemPopManager {
         }
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onPacketReceive(PacketEvent.PacketReceiveEvent event) {
         if (Ruby.mc.world == null || Ruby.mc.player == null)
             return;
@@ -40,7 +40,7 @@ public class TotemPopManager {
         }
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onDeath(PlayerChangeEvent.Death event) {
         if (popMap.containsKey(event.entityPlayer.getName())) {
             int pops = popMap.get(event.entityPlayer.getName());
@@ -51,11 +51,11 @@ public class TotemPopManager {
                 line *= 10;
             }
             if (Notify.Instance.isEnabled() && Notify.Instance.totemPops.getValue())
-                MessageUtil.sendRemovableMessage(ChatFormatting.WHITE + "" + ChatFormatting.BOLD + event.entityPlayer.getName() + ChatFormatting.WHITE + " has died after popping " + ChatFormatting.RED + pops + ChatFormatting.WHITE + (pops == 1 ? " totem." : " totems."), line);
+                Ruby.chatManager.sendRemovableMessage(ChatFormatting.WHITE + "" + ChatFormatting.BOLD + event.entityPlayer.getName() + ChatFormatting.WHITE + " has died after popping " + ChatFormatting.RED + pops + ChatFormatting.WHITE + (pops == 1 ? " totem." : " totems."), line);
         }
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onTotemPop(PlayerChangeEvent.TotemPop event) {
         int pops = 1;
         if (popMap.containsKey(event.entityPlayer.getName())) {
@@ -70,7 +70,7 @@ public class TotemPopManager {
                 line *= 10;
             }
             if (Notify.Instance.isEnabled() && Notify.Instance.totemPops.getValue())
-                MessageUtil.sendRemovableMessage(ChatFormatting.WHITE + "" + ChatFormatting.BOLD + event.entityPlayer.getName() + ChatFormatting.WHITE + " has popped " + ChatFormatting.RED + pops + ChatFormatting.WHITE + (pops == 1 ? " totem." : " totems."), line);
+                Ruby.chatManager.sendRemovableMessage(ChatFormatting.WHITE + "" + ChatFormatting.BOLD + event.entityPlayer.getName() + ChatFormatting.WHITE + " has popped " + ChatFormatting.RED + pops + ChatFormatting.WHITE + (pops == 1 ? " totem." : " totems."), line);
         }
     }
 

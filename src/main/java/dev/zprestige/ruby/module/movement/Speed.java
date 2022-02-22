@@ -9,7 +9,6 @@ import dev.zprestige.ruby.module.Module;
 import dev.zprestige.ruby.module.visual.ESP;
 import dev.zprestige.ruby.setting.impl.*;
 import dev.zprestige.ruby.util.EntityUtil;
-import dev.zprestige.ruby.util.MessageUtil;
 import dev.zprestige.ruby.util.Timer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.network.play.server.SPacketPlayerPosLook;
@@ -83,7 +82,7 @@ public class Speed extends Module {
                         break;
                 }
             if (announceSwitch.getValue())
-                MessageUtil.sendRemovableMessage(ChatFormatting.BOLD + "Speed " + ChatFormatting.RESET + "switched mode to " + ChatFormatting.RED + speedMode.getValue() + ChatFormatting.RESET + ".", 1);
+                Ruby.chatManager.sendRemovableMessage(ChatFormatting.BOLD + "Speed " + ChatFormatting.RESET + "switched mode to " + ChatFormatting.RED + speedMode.getValue() + ChatFormatting.RESET + ".", 1);
         }
     }
 

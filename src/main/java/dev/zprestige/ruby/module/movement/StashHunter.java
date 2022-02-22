@@ -5,7 +5,6 @@ import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.module.Module;
 import dev.zprestige.ruby.module.client.Hud;
 import dev.zprestige.ruby.setting.impl.IntegerSetting;
-import dev.zprestige.ruby.util.MessageUtil;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.tileentity.TileEntityChest;
 
@@ -33,7 +32,7 @@ public class StashHunter extends Module {
         ticks++;
         final long chests = mc.world.loadedTileEntityList.stream().filter(e -> e instanceof TileEntityChest).count();
         if (chests >= minimumChests.getValue()) {
-            MessageUtil.sendMessage("[StashHunter] " + ChatFormatting.WHITE + "[" + calendar.getTime() + "] " + chests + " Chests found when flying at X: " + roundNumber(mc.player.posX, 1) + " | Z: " + roundNumber(mc.player.posZ, 1));
+            Ruby.chatManager.sendMessage("[StashHunter] " + ChatFormatting.WHITE + "[" + calendar.getTime() + "] " + chests + " Chests found when flying at X: " + roundNumber(mc.player.posX, 1) + " | Z: " + roundNumber(mc.player.posZ, 1));
         }
         switch (stage) {
             case LeftRight:

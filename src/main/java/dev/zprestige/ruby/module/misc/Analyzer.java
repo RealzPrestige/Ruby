@@ -9,7 +9,6 @@ import dev.zprestige.ruby.events.PlayerChangeEvent;
 import dev.zprestige.ruby.module.Module;
 import dev.zprestige.ruby.setting.impl.BooleanSetting;
 import dev.zprestige.ruby.util.EntityUtil;
-import dev.zprestige.ruby.util.MessageUtil;
 import dev.zprestige.ruby.util.RenderUtil;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
@@ -87,19 +86,19 @@ public class Analyzer extends Module {
             if (entityPlayer == null)
                 return;
             playerName = entityPlayer.getName();
-            MessageUtil.sendMessage("[Analyzer] " + ChatFormatting.WHITE + "Started analyzing " + ChatFormatting.BOLD + playerName + ChatFormatting.WHITE + ".");
+            Ruby.chatManager.sendMessage("[Analyzer] " + ChatFormatting.WHITE + "Started analyzing " + ChatFormatting.BOLD + playerName + ChatFormatting.WHITE + ".");
             int i = (int) Arrays.stream(Objects.requireNonNull(path.list())).filter(file -> file.contains(playerName)).count();
             if (i == 0) {
-                MessageUtil.sendMessage("[Analyzer] " + ChatFormatting.WHITE + "no results found for " + ChatFormatting.BOLD + playerName + ChatFormatting.WHITE + ".");
+                Ruby.chatManager.sendMessage("[Analyzer] " + ChatFormatting.WHITE + "no results found for " + ChatFormatting.BOLD + playerName + ChatFormatting.WHITE + ".");
                 return;
             }
-            MessageUtil.sendMessage("[Analyzer] " + ChatFormatting.WHITE + "results for " + ChatFormatting.BOLD + playerName + ChatFormatting.WHITE + ":");
+            Ruby.chatManager.sendMessage("[Analyzer] " + ChatFormatting.WHITE + "results for " + ChatFormatting.BOLD + playerName + ChatFormatting.WHITE + ":");
             Arrays.stream(Objects.requireNonNull(path.list())).filter(file -> file.contains(playerName)).forEach(file -> {
                 try {
                     BufferedReader bufferReader = new BufferedReader(new InputStreamReader(new DataInputStream(new FileInputStream(file))));
-                    MessageUtil.sendMessage("[Analyzer] " + ChatFormatting.WHITE + "Results in " + ChatFormatting.BOLD + file + ChatFormatting.WHITE + ":");
+                    Ruby.chatManager.sendMessage("[Analyzer] " + ChatFormatting.WHITE + "Results in " + ChatFormatting.BOLD + file + ChatFormatting.WHITE + ":");
                     AtomicInteger j = new AtomicInteger();
-                    bufferReader.lines().forEach(line -> MessageUtil.sendMessage("[Analyzer] " + ChatFormatting.GRAY + "[" + (j.addAndGet(1)) + "] " + ChatFormatting.WHITE + line));
+                    bufferReader.lines().forEach(line -> Ruby.chatManager.sendMessage("[Analyzer] " + ChatFormatting.GRAY + "[" + (j.addAndGet(1)) + "] " + ChatFormatting.WHITE + line));
                     bufferReader.close();
                 } catch (Exception ignored) {
                 }
@@ -109,9 +108,9 @@ public class Analyzer extends Module {
             return;
         if (announce.getValue()) {
             if (exp != 0 && expStacks != exp / 64)
-                MessageUtil.sendMessage("[Analyzer] " + ChatFormatting.WHITE + "" + ChatFormatting.BOLD + entityPlayer.getName() + ChatFormatting.WHITE + " has used " + ChatFormatting.RED + (expStacks = exp / 64) + ChatFormatting.WHITE + " stacks of exp!");
+                Ruby.chatManager.sendMessage("[Analyzer] " + ChatFormatting.WHITE + "" + ChatFormatting.BOLD + entityPlayer.getName() + ChatFormatting.WHITE + " has used " + ChatFormatting.RED + (expStacks = exp / 64) + ChatFormatting.WHITE + " stacks of exp!");
             if (crystals != 0 && crystalStacks != crystals / 64)
-                MessageUtil.sendMessage("[Analyzer] " + ChatFormatting.WHITE + "" + ChatFormatting.BOLD + entityPlayer.getName() + ChatFormatting.WHITE + " has used " + ChatFormatting.RED + (crystalStacks = crystals / 64) + ChatFormatting.WHITE + " stacks of crystals!");
+                Ruby.chatManager.sendMessage("[Analyzer] " + ChatFormatting.WHITE + "" + ChatFormatting.BOLD + entityPlayer.getName() + ChatFormatting.WHITE + " has used " + ChatFormatting.RED + (crystalStacks = crystals / 64) + ChatFormatting.WHITE + " stacks of crystals!");
         }
     }
 

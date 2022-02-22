@@ -1,5 +1,6 @@
 package dev.zprestige.ruby.module.combat;
 
+import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.module.Module;
 import dev.zprestige.ruby.setting.impl.*;
 import dev.zprestige.ruby.util.*;
@@ -107,7 +108,7 @@ public class Filler extends Module {
                 try {
                     RenderUtil.drawBoxESP(entry.getKey(), new Color(boxColor.getValue().getRed(), boxColor.getValue().getGreen(), boxColor.getValue().getBlue(), entry.getValue()), true, new Color(outlineColor.getValue().getRed(), outlineColor.getValue().getGreen(), outlineColor.getValue().getBlue(), entry.getValue() * 2), lineWidth.getValue(), outline.getValue(), box.getValue(), entry.getValue(), true);
                 } catch (Exception exception){
-                    MessageUtil.sendRemovableMessage("Alpha parameter out of range (Choose a different Alpha)" + exception, 1);
+                    Ruby.chatManager.sendRemovableMessage("Alpha parameter out of range (Choose a different Alpha)" + exception, 1);
                 }
             }
         }

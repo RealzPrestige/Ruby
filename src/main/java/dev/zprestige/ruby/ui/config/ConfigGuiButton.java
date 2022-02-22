@@ -5,7 +5,6 @@ import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.module.client.Configs;
 import dev.zprestige.ruby.module.client.NewGui;
 import dev.zprestige.ruby.util.AnimationUtil;
-import dev.zprestige.ruby.util.MessageUtil;
 import dev.zprestige.ruby.util.RenderUtil;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
@@ -114,15 +113,15 @@ public class ConfigGuiButton {
                 switch (iconType) {
                     case Save:
                         Ruby.configManager.save(name, false);
-                        MessageUtil.sendMessage(ChatFormatting.WHITE + "Successfully saved " + ChatFormatting.GRAY + name + ChatFormatting.WHITE + ".");
+                        Ruby.chatManager.sendMessage(ChatFormatting.WHITE + "Successfully saved " + ChatFormatting.GRAY + name + ChatFormatting.WHITE + ".");
                         break;
                     case Load:
                         Ruby.configManager.load(name, false);
-                        MessageUtil.sendMessage(ChatFormatting.WHITE + "Successfully loaded " + ChatFormatting.GRAY + name + ChatFormatting.WHITE + ".");
+                        Ruby.chatManager.sendMessage(ChatFormatting.WHITE + "Successfully loaded " + ChatFormatting.GRAY + name + ChatFormatting.WHITE + ".");
                         break;
                     case Delete:
                         //Ruby.configManager.deleteFolder(name);
-                        MessageUtil.sendMessage(ChatFormatting.WHITE + "Successfully deleted " + ChatFormatting.GRAY + name + ChatFormatting.WHITE + ".");
+                        Ruby.chatManager.sendMessage(ChatFormatting.WHITE + "Successfully deleted " + ChatFormatting.GRAY + name + ChatFormatting.WHITE + ".");
                         break;
                 }
             }

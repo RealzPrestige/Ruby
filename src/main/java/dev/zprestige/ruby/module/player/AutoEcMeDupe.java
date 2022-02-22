@@ -1,6 +1,7 @@
 package dev.zprestige.ruby.module.player;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
+import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.PacketEvent;
 import dev.zprestige.ruby.module.Module;
@@ -8,7 +9,6 @@ import dev.zprestige.ruby.setting.impl.BooleanSetting;
 import dev.zprestige.ruby.setting.impl.IntegerSetting;
 import dev.zprestige.ruby.util.BlockUtil;
 import dev.zprestige.ruby.util.InventoryUtil;
-import dev.zprestige.ruby.util.MessageUtil;
 import dev.zprestige.ruby.util.Timer;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockShulkerBox;
@@ -80,10 +80,10 @@ public class AutoEcMeDupe extends Module {
                         stage = 1;
                     } else {
                         InventoryUtil.switchToSlot(slot);
-                        MessageUtil.sendMessage("[AutoEcMeDupe]" + ChatFormatting.GRAY + "[Stage][" + ChatFormatting.WHITE + stage + "]" + ChatFormatting.WHITE + " rotating to donkey.");
+                        Ruby.chatManager.sendMessage("[AutoEcMeDupe]" + ChatFormatting.GRAY + "[Stage][" + ChatFormatting.WHITE + stage + "]" + ChatFormatting.WHITE + " rotating to donkey.");
                         entityRotate(entityDonkey);
                         mc.playerController.interactWithEntity(mc.player, entityDonkey, EnumHand.MAIN_HAND);
-                        MessageUtil.sendMessage("[AutoEcMeDupe]" + ChatFormatting.GRAY + "[Stage][" + ChatFormatting.WHITE + stage + "]" + ChatFormatting.WHITE + " chesting donkey.");
+                        Ruby.chatManager.sendMessage("[AutoEcMeDupe]" + ChatFormatting.GRAY + "[Stage][" + ChatFormatting.WHITE + stage + "]" + ChatFormatting.WHITE + " chesting donkey.");
                     }
                     timer.setTime(0);
                 }
@@ -93,7 +93,7 @@ public class AutoEcMeDupe extends Module {
                     mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_SNEAKING));
                     entityRotate(entityDonkey);
                     mc.playerController.interactWithEntity(mc.player, entityDonkey, EnumHand.MAIN_HAND);
-                    MessageUtil.sendMessage("[AutoEcMeDupe]" + ChatFormatting.GRAY + "[Stage][" + ChatFormatting.WHITE + stage + "]" + ChatFormatting.WHITE + " opening donkey.");
+                    Ruby.chatManager.sendMessage("[AutoEcMeDupe]" + ChatFormatting.GRAY + "[Stage][" + ChatFormatting.WHITE + stage + "]" + ChatFormatting.WHITE + " opening donkey.");
                     mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.STOP_SNEAKING));
                     stage = 2;
                     timer.setTime(0);
@@ -104,23 +104,23 @@ public class AutoEcMeDupe extends Module {
                     stage = 3;
                 } else if (timer.getTime(actionDelay.getValue())) {
                     if (mc.currentScreen instanceof GuiScreenHorseInventory) {
-                        MessageUtil.sendMessage("[AutoEcMeDupe]" + ChatFormatting.GRAY + "[Stage][" + ChatFormatting.WHITE + stage + "]" + ChatFormatting.WHITE + " transferring items started.");
+                        Ruby.chatManager.sendMessage("[AutoEcMeDupe]" + ChatFormatting.GRAY + "[Stage][" + ChatFormatting.WHITE + stage + "]" + ChatFormatting.WHITE + " transferring items started.");
                         GuiScreenHorseInventory chest = (GuiScreenHorseInventory) mc.currentScreen;
                         for (int i = 0; i < mc.player.inventoryContainer.inventorySlots.size(); ++i) {
                             ItemStack itemStack = mc.player.inventoryContainer.getSlot(i).getStack();
                             if (itemStack.isEmpty() || itemStack.getItem() == Items.AIR || !(Block.getBlockFromItem(itemStack.getItem()) instanceof BlockShulkerBox))
                                 continue;
                             mc.playerController.windowClick(chest.inventorySlots.windowId, i, 0, ClickType.QUICK_MOVE, mc.player);
-                            MessageUtil.sendMessage("[AutoEcMeDupe]" + ChatFormatting.GRAY + "[Stage][" + ChatFormatting.WHITE + stage + "]" + ChatFormatting.WHITE + " transferring slot " + ChatFormatting.GRAY + i + ChatFormatting.WHITE + ".");
+                            Ruby.chatManager.sendMessage("[AutoEcMeDupe]" + ChatFormatting.GRAY + "[Stage][" + ChatFormatting.WHITE + stage + "]" + ChatFormatting.WHITE + " transferring slot " + ChatFormatting.GRAY + i + ChatFormatting.WHITE + ".");
                             shulkers++;
                         }
-                        MessageUtil.sendMessage("[AutoEcMeDupe]" + ChatFormatting.GRAY + "[Stage][" + ChatFormatting.WHITE + stage + "]" + ChatFormatting.WHITE + " transferring items finished.");
+                        Ruby.chatManager.sendMessage("[AutoEcMeDupe]" + ChatFormatting.GRAY + "[Stage][" + ChatFormatting.WHITE + stage + "]" + ChatFormatting.WHITE + " transferring items finished.");
                     }
                 }
                 break;
             case 3:
                 if (timer.getTime(actionDelay.getValue())) {
-                    MessageUtil.sendMessage("[AutoEcMeDupe]" + ChatFormatting.GRAY + "[Stage][" + ChatFormatting.WHITE + stage + "]" + ChatFormatting.WHITE + " closing donkey.");
+                    Ruby.chatManager.sendMessage("[AutoEcMeDupe]" + ChatFormatting.GRAY + "[Stage][" + ChatFormatting.WHITE + stage + "]" + ChatFormatting.WHITE + " closing donkey.");
                     mc.displayGuiScreen(null);
                     stage = 4;
                     timer.setTime(0);
@@ -128,15 +128,15 @@ public class AutoEcMeDupe extends Module {
                 break;
             case 4:
                 if (restart) {
-                    MessageUtil.sendMessage("[AutoEcMeDupe]" + ChatFormatting.GRAY + "[Stage][" + ChatFormatting.WHITE + stage + "]" + ChatFormatting.WHITE + " setting use item not pressed.");
+                    Ruby.chatManager.sendMessage("[AutoEcMeDupe]" + ChatFormatting.GRAY + "[Stage][" + ChatFormatting.WHITE + stage + "]" + ChatFormatting.WHITE + " setting use item not pressed.");
                     mc.gameSettings.keyBindUseItem.pressed = false;
-                    MessageUtil.sendMessage("[AutoEcMeDupe]" + ChatFormatting.GRAY + "[Stage][" + ChatFormatting.WHITE + stage + "]" + ChatFormatting.WHITE + " finishing up, setting stage to 0.");
+                    Ruby.chatManager.sendMessage("[AutoEcMeDupe]" + ChatFormatting.GRAY + "[Stage][" + ChatFormatting.WHITE + stage + "]" + ChatFormatting.WHITE + " finishing up, setting stage to 0.");
                     stage = 0;
                 }
                 if (timer.getTime(timeoutTime.getValue() * 1000)) {
-                    MessageUtil.sendMessage("[AutoEcMeDupe]" + ChatFormatting.GRAY + "[Stage][" + ChatFormatting.WHITE + stage + "]" + ChatFormatting.WHITE + " rotating to donkey.");
+                    Ruby.chatManager.sendMessage("[AutoEcMeDupe]" + ChatFormatting.GRAY + "[Stage][" + ChatFormatting.WHITE + stage + "]" + ChatFormatting.WHITE + " rotating to donkey.");
                     entityRotate(entityDonkey);
-                    MessageUtil.sendMessage("[AutoEcMeDupe]" + ChatFormatting.GRAY + "[Stage][" + ChatFormatting.WHITE + stage + "]" + ChatFormatting.WHITE + " setting vanilla use item pressed.");
+                    Ruby.chatManager.sendMessage("[AutoEcMeDupe]" + ChatFormatting.GRAY + "[Stage][" + ChatFormatting.WHITE + stage + "]" + ChatFormatting.WHITE + " setting vanilla use item pressed.");
                     mc.gameSettings.keyBindUseItem.pressed = true;
                     timer.setTime(0);
                     shulkers = 0;

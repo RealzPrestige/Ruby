@@ -1,12 +1,12 @@
 package dev.zprestige.ruby.module.client;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
+import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.ModuleToggleEvent;
 import dev.zprestige.ruby.events.PacketEvent;
 import dev.zprestige.ruby.module.Module;
 import dev.zprestige.ruby.setting.impl.BooleanSetting;
-import dev.zprestige.ruby.util.MessageUtil;
 import net.minecraft.network.play.server.SPacketChat;
 
 
@@ -39,7 +39,7 @@ public class Notify extends Module {
                 print = true;
             }
             if (print) {
-                MessageUtil.sendMessage("ZenovJB LOL counter[Literal: " + literalLOLS + ", Containing: " + containingLOLS + "]");
+                Ruby.chatManager.sendMessage("ZenovJB LOL counter[Literal: " + literalLOLS + ", Containing: " + containingLOLS + "]");
             }
         }
     }
@@ -48,14 +48,14 @@ public class Notify extends Module {
     public void onModuleEnable(ModuleToggleEvent.Enable event) {
         if (!isEnabled() || nullCheck() || !modules.getValue())
             return;
-        MessageUtil.sendRemovableMessage(ChatFormatting.WHITE + "" + ChatFormatting.BOLD + event.getModule().getName() + ChatFormatting.RESET + " has been toggled " + ChatFormatting.GREEN + "On" + ChatFormatting.RESET + ".", 1);
+        Ruby.chatManager.sendRemovableMessage(ChatFormatting.WHITE + "" + ChatFormatting.BOLD + event.getModule().getName() + ChatFormatting.RESET + " has been toggled " + ChatFormatting.GREEN + "On" + ChatFormatting.RESET + ".", 1);
     }
 
     @RegisterListener
     public void onModuleDisable(ModuleToggleEvent.Disable event) {
         if (!isEnabled() || nullCheck() || !modules.getValue())
             return;
-        MessageUtil.sendRemovableMessage(ChatFormatting.WHITE + "" + ChatFormatting.BOLD + event.getModule().getName() + ChatFormatting.RESET + " has been toggled " + ChatFormatting.RED + "Off" + ChatFormatting.RESET + ".", 1);
+        Ruby.chatManager.sendRemovableMessage(ChatFormatting.WHITE + "" + ChatFormatting.BOLD + event.getModule().getName() + ChatFormatting.RESET + " has been toggled " + ChatFormatting.RED + "Off" + ChatFormatting.RESET + ".", 1);
     }
 
 }

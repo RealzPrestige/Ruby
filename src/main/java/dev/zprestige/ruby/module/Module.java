@@ -5,7 +5,6 @@ import dev.zprestige.ruby.events.ModuleToggleEvent;
 import dev.zprestige.ruby.events.Render3DEvent;
 import dev.zprestige.ruby.setting.Setting;
 import dev.zprestige.ruby.setting.impl.*;
-import dev.zprestige.ruby.util.MessageUtil;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.input.Keyboard;
 
@@ -59,7 +58,7 @@ public class Module {
 
     public void disableModule(String message) {
         disableModule();
-        MessageUtil.sendMessage(message);
+        Ruby.chatManager.sendMessage(message);
     }
 
 

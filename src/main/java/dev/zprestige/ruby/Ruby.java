@@ -19,7 +19,9 @@ public class Ruby {
     public static FriendManager friendManager;
     public static EnemyManager enemyManager;
     public static TickManager tickManager;
+    public static ChatManager chatManager;
     public static TotemPopManager totemPopManager;
+    public static CommandManager commandManager;
     public static ConfigManager configManager;
     public static RubyFont rubyFont = new RubyFont("Font", 17.0f);
 
@@ -34,7 +36,9 @@ public class Ruby {
         friendManager = new FriendManager();
         enemyManager = new EnemyManager();
         tickManager = new TickManager();
+        chatManager = new ChatManager();
         totemPopManager = new TotemPopManager();
+        commandManager = new CommandManager();
         configManager = new ConfigManager().loadFromActiveConfig().readAndSetSocials();
     }
 }

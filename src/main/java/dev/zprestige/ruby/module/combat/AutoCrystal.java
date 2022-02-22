@@ -1,5 +1,6 @@
 package dev.zprestige.ruby.module.combat;
 
+import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.eventbus.annotation.Priority;
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.ChorusEvent;
@@ -207,7 +208,7 @@ public class AutoCrystal extends Module {
         if (explodePosition != null && explodeTimer.getTime(facePlaceSlowOnCrouch.getValue() && mc.gameSettings.keyBindSneak.isKeyDown() ? 500 : explodeDelay.getValue()))
             explodeCrystal();
         if (runDetectFacePlace.getValue() && !RunDetect.Instance.isEnabled()) {
-            MessageUtil.sendMessage("Run Detect Face Place turned off, RunDetect needs to be enabled!");
+            Ruby.chatManager.sendMessage("Run Detect Face Place turned off, RunDetect needs to be enabled!");
             runDetectFacePlace.setValue(false);
         }
     }
@@ -569,7 +570,7 @@ public class AutoCrystal extends Module {
                     } else try {
                         RenderUtil.drawBoxESP(entry.getKey(), new Color(placeBoxColor.getValue().getRed(), placeBoxColor.getValue().getGreen(), placeBoxColor.getValue().getBlue(), entry.getValue()), true, new Color(placeOutlineColor.getValue().getRed(), placeOutlineColor.getValue().getGreen(), placeOutlineColor.getValue().getBlue(), entry.getValue() * 2), placeLineWidth.getValue(), placeOutline.getValue(), placeBox.getValue(), entry.getValue(), true);
                     } catch (Exception exception) {
-                        MessageUtil.sendRemovableMessage("Alpha parameter out of range (Choose a different Alpha)" + exception, 1);
+                        Ruby.chatManager.sendRemovableMessage("Alpha parameter out of range (Choose a different Alpha)" + exception, 1);
                     }
                 }
                 break;
