@@ -10,13 +10,15 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(value = {ContainerPlayer.class})
+@Mixin(value = ContainerPlayer.class)
 public class MixinContainerPlayer {
+
     @Inject(method = "onContainerClosed", at = @At("HEAD"), cancellable = true)
-    public void onContainerClosed(EntityPlayer entityPlayer, CallbackInfo callbackInfo) {
+    protected void onContainerClosed(EntityPlayer entityPlayer, CallbackInfo callbackInfo) {
         CloseInventoryEvent event = new CloseInventoryEvent();
-        Ruby.RubyEventBus.post(event);
-        if (event.isCanceled())
+        Ruby.eventBus.post(event);
+        if (event.isCancelled()) {
             callbackInfo.cancel();
+        }
     }
 }

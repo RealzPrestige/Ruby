@@ -1,9 +1,9 @@
 package dev.zprestige.ruby.events;
 
-import net.minecraftforge.fml.common.eventhandler.Cancelable;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import dev.zprestige.ruby.eventbus.event.Event;
+import dev.zprestige.ruby.eventbus.event.IsCancellable;
 
-@Cancelable
+@IsCancellable
 public class MotionUpdateEvent extends Event {
     public double x;
     public double y;

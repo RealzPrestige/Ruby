@@ -14,12 +14,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(value = {PlayerControllerMP.class})
 public class MixinPlayerControllerMP {
     @Inject(method = {"clickBlock"}, at = {@At(value = "HEAD")}, cancellable = true)
-    private void clickBlockHook(BlockPos pos, EnumFacing face, CallbackInfoReturnable<Boolean> info) {
-        Ruby.RubyEventBus.post(new BlockInteractEvent.ClickBlock(pos, face));
+    protected void clickBlockHook(BlockPos pos, EnumFacing face, CallbackInfoReturnable<Boolean> info) {
+        Ruby.eventBus.post(new BlockInteractEvent.ClickBlock(pos, face));
     }
 
     @Inject(method = {"onPlayerDamageBlock"}, at = {@At(value = "HEAD")}, cancellable = true)
     private void onPlayerDamageBlockHook(BlockPos pos, EnumFacing face, CallbackInfoReturnable<Boolean> info) {
-        Ruby.RubyEventBus.post(new BlockInteractEvent.DamageBlock(pos, face));
+        Ruby.eventBus.post(new BlockInteractEvent.DamageBlock(pos, face));
     }
 }

@@ -1,7 +1,7 @@
 package dev.zprestige.ruby.events;
 
+import dev.zprestige.ruby.eventbus.event.Event;
 import dev.zprestige.ruby.module.Module;
-import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class ModuleToggleEvent extends Event {
 

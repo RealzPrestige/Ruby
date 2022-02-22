@@ -1,6 +1,7 @@
 package dev.zprestige.ruby.module.visual;
 
 import dev.zprestige.ruby.Ruby;
+import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.PlayerChangeEvent;
 import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
@@ -26,7 +27,7 @@ public class HudNotifications extends Module {
     public HashMap<String, Integer> totemPopMap = new HashMap<>();
     public HashMap<String, Float> notificationMap = new HashMap<>();
 
-    @SubscribeEvent
+    @RegisterListener
     public void onTotemPop(PlayerChangeEvent.TotemPop event) {
         if (nullCheck() || !isEnabled() || event.entityPlayer.equals(mc.player))
             return;
@@ -46,7 +47,7 @@ public class HudNotifications extends Module {
         notificationMap.put(string, Ruby.rubyFont.getStringWidth(string) / 2f);
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onDeath(PlayerChangeEvent.Death event) {
         if (nullCheck() || !isEnabled() || event.entityPlayer.equals(mc.player))
             return;

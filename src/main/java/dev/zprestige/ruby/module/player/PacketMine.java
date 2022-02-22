@@ -1,5 +1,6 @@
 package dev.zprestige.ruby.module.player;
 
+import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.BlockInteractEvent;
 import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
@@ -171,7 +172,7 @@ public class PacketMine extends Module {
         }
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onBlockEvent(BlockInteractEvent.ClickBlock event) {
         if (nullCheck() || !isEnabled())
             return;
@@ -189,7 +190,7 @@ public class PacketMine extends Module {
         }
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onDamageBlock(BlockInteractEvent.DamageBlock event) {
         if (nullCheck() || !isEnabled())
             return;
@@ -213,6 +214,6 @@ public class PacketMine extends Module {
             mc.player.inventory.currentItem = currentItem;
             mc.playerController.updateController();
         }
-        event.setCanceled(true);
+        event.setCancelled(true);
     }
 }

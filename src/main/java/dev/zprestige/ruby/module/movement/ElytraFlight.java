@@ -1,5 +1,6 @@
 package dev.zprestige.ruby.module.movement;
 
+import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.MoveEvent;
 import dev.zprestige.ruby.events.PacketEvent;
 import dev.zprestige.ruby.module.Category;
@@ -30,7 +31,7 @@ public class ElytraFlight extends Module {
     public boolean needsCorrection, needsCorrection2;
     public Timer pitchLength = new Timer();
 
-    @SubscribeEvent
+    @RegisterListener
     public void onMove(MoveEvent event) {
         if (nullCheck() || !isEnabled() || !mc.player.isElytraFlying() || mc.player.movementInput.jump)
             return;
@@ -53,7 +54,7 @@ public class ElytraFlight extends Module {
         EntityUtil.setMoveSpeed(event, speed.getValue());
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onPacketReceive(PacketEvent.PacketReceiveEvent event) {
         if (nullCheck() || !isEnabled() || !rocketOnRubberband.getValue() || !(event.getPacket() instanceof SPacketPlayerPosLook))
             return;

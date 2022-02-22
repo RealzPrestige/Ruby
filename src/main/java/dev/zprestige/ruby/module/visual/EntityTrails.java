@@ -48,11 +48,6 @@ public class EntityTrails extends Module {
     public Map<UUID, ItemTrail> trails = new HashMap<>();
 
     @Override
-    public void onThreadReset() {
-        trails.clear();
-    }
-
-    @Override
     public void onTick() {
         if (entities.getValue()) {
             UUID pearlPos = null;

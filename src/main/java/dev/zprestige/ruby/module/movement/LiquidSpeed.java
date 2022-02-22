@@ -1,5 +1,6 @@
 package dev.zprestige.ruby.module.movement;
 
+import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.MoveEvent;
 import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
@@ -81,10 +82,10 @@ public class LiquidSpeed extends Module {
         lastTickHealth = health;
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onMove(MoveEvent event) {
         if (nullCheck() || !isEnabled() || (!mc.player.isInLava() && !mc.player.isInWater() || mc.world.getBlockState(BlockUtil.getPlayerPos()).getBlock().equals(Blocks.AIR) || mc.world.getBlockState(BlockUtil.getPlayerPos().up()).getBlock().equals(Blocks.AIR)))
             return;
-        event.setCanceled(true);
+        event.setCancelled(true);
     }
 }

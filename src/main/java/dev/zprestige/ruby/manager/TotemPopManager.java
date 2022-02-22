@@ -18,12 +18,12 @@ public class TotemPopManager {
     public HashMap<String, Integer> popMap = new HashMap<>();
 
     public TotemPopManager(){
-        Ruby.RubyEventBus.register(this);
+        Ruby.eventBus.register(this);
     }
     @SubscribeEvent
     public void onLivingUpdateEvent(LivingEvent.LivingUpdateEvent event) {
         if (Ruby.mc.player != null && Ruby.mc.world != null) {
-            Ruby.mc.world.playerEntities.stream().filter(entityPlayer -> entityPlayer != null && !(entityPlayer.getHealth() > 0.0f)).map(PlayerChangeEvent.Death::new).forEach(Ruby.RubyEventBus::post);
+            Ruby.mc.world.playerEntities.stream().filter(entityPlayer -> entityPlayer != null && !(entityPlayer.getHealth() > 0.0f)).map(PlayerChangeEvent.Death::new).forEach(Ruby.eventBus::post);
         }
     }
 
@@ -36,7 +36,7 @@ public class TotemPopManager {
             if (!(entity instanceof EntityPlayer))
                 return;
             if (((SPacketEntityStatus) event.getPacket()).getOpCode() == 35)
-                Ruby.RubyEventBus.post(new PlayerChangeEvent.TotemPop((EntityPlayer) entity));
+                Ruby.eventBus.post(new PlayerChangeEvent.TotemPop((EntityPlayer) entity));
         }
     }
 

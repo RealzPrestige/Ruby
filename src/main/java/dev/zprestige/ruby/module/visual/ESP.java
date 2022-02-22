@@ -1,6 +1,7 @@
 package dev.zprestige.ruby.module.visual;
 
 import dev.zprestige.ruby.Ruby;
+import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.RenderLivingEntityEvent;
 import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
@@ -94,7 +95,7 @@ public class ESP extends Module {
         }
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onRenderLivingEntity(RenderLivingEntityEvent event) {
         if (nullCheck() || !isEnabled() || !(event.getEntityLivingBase() instanceof EntityPlayer) || !players.getValue() || !camera.isBoundingBoxInFrustum(event.getEntityLivingBase().getEntityBoundingBox().grow(2)))
             return;

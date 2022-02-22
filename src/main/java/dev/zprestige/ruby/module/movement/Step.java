@@ -1,5 +1,6 @@
 package dev.zprestige.ruby.module.movement;
 
+import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.MoveEvent;
 import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
@@ -29,7 +30,7 @@ public class Step extends Module {
         mc.player.stepHeight = 0.6f;
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onMove(MoveEvent event) {
         if (nullCheck() || !isEnabled())
             return;

@@ -10,11 +10,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(value = {World.class})
+@Mixin(value = World.class)
 public class MixinWorld {
 
     @Inject(method = {"onEntityAdded"}, at = {@At(value = "HEAD")})
     public void onEntityAdded(Entity entity, CallbackInfo ci) {
-        Ruby.RubyEventBus.post(new EntityAddedEvent(entity));
+        Ruby.eventBus.post(new EntityAddedEvent(entity));
     }
 }

@@ -1,5 +1,6 @@
 package dev.zprestige.ruby.module.player;
 
+import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.PacketEvent;
 import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
@@ -10,7 +11,6 @@ import dev.zprestige.ruby.util.EntityUtil;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.network.play.client.CPacketUseEntity;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @ModuleInfo(name = "Criticals", category = Category.Player, description = "Turns hits into crit hits yea")
 public class Criticals extends Module {
@@ -19,7 +19,7 @@ public class Criticals extends Module {
     public BooleanSetting allowMoving = createSetting("Allow Moving", false);
     public BooleanSetting onGroundOnly = createSetting("On Ground Only", false);
 
-    @SubscribeEvent
+    @RegisterListener
     public void onPacketSend(PacketEvent.PacketSendEvent event) {
         if (nullCheck() || !isEnabled() || !(event.getPacket() instanceof CPacketUseEntity) || !(((CPacketUseEntity) event.getPacket()).getAction() == CPacketUseEntity.Action.ATTACK) || !(((CPacketUseEntity) event.getPacket()).getEntityFromWorld(mc.world) instanceof EntityLivingBase) || !mc.player.onGround || mc.player.isInWater() || mc.player.isInLava())
             return;

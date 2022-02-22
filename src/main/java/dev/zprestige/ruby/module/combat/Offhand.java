@@ -1,5 +1,6 @@
 package dev.zprestige.ruby.module.combat;
 
+import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.PlayerChangeEvent;
 import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
@@ -131,7 +132,7 @@ public class Offhand extends Module {
         return !(EntityUtil.getHealth(mc.player) < totemHealth.getValue());
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onTotemPop(PlayerChangeEvent.TotemPop event) {
         if (nullCheck() || !isEnabled() || !postPopForceTotem.getValue() || !event.entityPlayer.equals(mc.player))
             return;

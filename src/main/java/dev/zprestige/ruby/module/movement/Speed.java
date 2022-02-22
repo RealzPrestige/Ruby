@@ -2,6 +2,7 @@ package dev.zprestige.ruby.module.movement;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 import dev.zprestige.ruby.Ruby;
+import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.MoveEvent;
 import dev.zprestige.ruby.events.PacketEvent;
 import dev.zprestige.ruby.module.Category;
@@ -125,7 +126,7 @@ public class Speed extends Module {
         }
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onMove(MoveEvent event) {
         if (nullCheck() || !isEnabled() || (!liquids.getValue() && (mc.player.isInWater() || mc.player.isInLava() || mc.player.isSpectator())) || (switchPullToGround.getValue() && postSwitchTimer.getTimeSub(20)) || mc.player.isElytraFlying())
             return;
@@ -209,7 +210,7 @@ public class Speed extends Module {
         }
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onPacketReceive(PacketEvent.PacketReceiveEvent event) {
         if (nullCheck() || !isEnabled() || strafeFactorMode.getValue().equals("Manual") || !(event.getPacket() instanceof SPacketPlayerPosLook))
             return;

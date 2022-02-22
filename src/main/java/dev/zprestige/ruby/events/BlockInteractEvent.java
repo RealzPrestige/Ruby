@@ -1,11 +1,11 @@
 package dev.zprestige.ruby.events;
 
+import dev.zprestige.ruby.eventbus.event.Event;
+import dev.zprestige.ruby.eventbus.event.IsCancellable;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.eventhandler.Cancelable;
-import net.minecraftforge.fml.common.eventhandler.Event;
 
-@Cancelable
+@IsCancellable
 public class BlockInteractEvent extends Event {
     public BlockPos pos;
     public EnumFacing facing;
@@ -15,14 +15,14 @@ public class BlockInteractEvent extends Event {
         this.facing = facing;
     }
 
-    @Cancelable
+    @IsCancellable
     public static class ClickBlock extends BlockInteractEvent {
         public ClickBlock(BlockPos pos, EnumFacing facing) {
             super(pos, facing);
         }
     }
 
-    @Cancelable
+    @IsCancellable
     public static class DamageBlock extends BlockInteractEvent {
         public DamageBlock(BlockPos pos, EnumFacing facing) {
             super(pos, facing);

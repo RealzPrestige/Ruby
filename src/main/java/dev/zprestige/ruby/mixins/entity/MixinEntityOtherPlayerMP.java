@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
-@Mixin({EntityOtherPlayerMP.class})
+@Mixin(value = EntityOtherPlayerMP.class)
 public class MixinEntityOtherPlayerMP extends AbstractClientPlayer {
 
     @Shadow

@@ -1,5 +1,7 @@
 package dev.zprestige.ruby.module.combat;
 
+import dev.zprestige.ruby.eventbus.annotation.Priority;
+import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.ChorusEvent;
 import dev.zprestige.ruby.events.MoveEvent;
 import dev.zprestige.ruby.events.PacketEvent;
@@ -30,7 +32,6 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.awt.*;
 import java.util.List;
@@ -57,9 +58,9 @@ public class AutoCrystal extends Module {
     public FloatSetting placeMinimumDamage = createSetting("Place Minimum Damage", 8.0f, 0.0f, 36.0f).setParent(placing);
     public FloatSetting placeMaximumSelfDamage = createSetting("Place Maximum Self Damage", 8.0f, 0.0f, 36.0f).setParent(placing);
     public BooleanSetting placeIncludeMinOffset = createSetting("Include Min Offset", false).setParent(placing);
-    public FloatSetting placeMinOffset = createSetting("Place Min Offset", 2.0f, 0.0f, 15.0f, (Predicate<Float>) v-> placeIncludeMinOffset.getValue());
+    public FloatSetting placeMinOffset = createSetting("Place Min Offset", 2.0f, 0.0f, 15.0f, (Predicate<Float>) v -> placeIncludeMinOffset.getValue());
     public BooleanSetting placeIncludeMaxOffset = createSetting("Include Max Offset", false).setParent(placing);
-    public FloatSetting placeMaxOffset = createSetting("Place Max Offset", 2.0f, 0.0f, 15.0f, (Predicate<Float>) v-> placeIncludeMaxOffset.getValue());
+    public FloatSetting placeMaxOffset = createSetting("Place Max Offset", 2.0f, 0.0f, 15.0f, (Predicate<Float>) v -> placeIncludeMaxOffset.getValue());
     public BooleanSetting placeSilentSwitch = createSetting("Place Silent Switch", false).setParent(placing);
     public BooleanSetting placeAntiSuicide = createSetting("Place Anti Suicide", false).setParent(placing);
     public BooleanSetting placePacket = createSetting("Place Packet", false).setParent(placing);
@@ -81,7 +82,7 @@ public class AutoCrystal extends Module {
     public BooleanSetting explodeIgnoreMinimumDamageAndTakeHighestDamageValueWhenever = createSetting("Explode Ignore Minimum Damage And Take Highest Damage Value Whenever", false).setParent(exploding);
     public FloatSetting explodeMaximumSelfDamage = createSetting("Explode Maximum Self Damage", 8.0f, 0.0f, 36.0f).setParent(exploding);
     public BooleanSetting explodeAntiStuck = createSetting("Explode Anti Stuck", false).setParent(exploding);
-    public IntegerSetting explodeAntiStuckThreshold = createSetting("Explode Anti Stuck Threshold", 2, 1, 10, (Predicate<Integer>) v-> explodeAntiStuck.getValue()).setParent(exploding);
+    public IntegerSetting explodeAntiStuckThreshold = createSetting("Explode Anti Stuck Threshold", 2, 1, 10, (Predicate<Integer>) v -> explodeAntiStuck.getValue()).setParent(exploding);
     public BooleanSetting explodeAntiSuicide = createSetting("Explode Anti Suicide", false).setParent(exploding);
     public BooleanSetting explodePacket = createSetting("Explode Packet", false).setParent(exploding);
     public BooleanSetting explodeInhibit = createSetting("Explode Inhibit", false).setParent(exploding);
@@ -100,8 +101,8 @@ public class AutoCrystal extends Module {
     public BooleanSetting predict = createSetting("Predict", false).setParent(predicting);
     public IntegerSetting predictDelay = createSetting("Predict Delay", 60, 0, 500, (Predicate<Integer>) v -> predict.getValue()).setParent(predicting);
     public BooleanSetting predictSetDead = createSetting("Predict Set Dead", false, v -> predict.getValue()).setParent(predicting);
-    public ModeSetting predictSetDeadMode = createSetting("Predict Set Dead Mode", "Packet-Confirm", Arrays.asList("Pre-Confirm", "Post-Confirm", "Packet-Confirm"), v-> predictSetDead.getValue()).setParent(predicting);
-   public BooleanSetting predictChorus = createSetting("Predict Chorus", false, v -> predict.getValue()).setParent(predicting);
+    public ModeSetting predictSetDeadMode = createSetting("Predict Set Dead Mode", "Packet-Confirm", Arrays.asList("Pre-Confirm", "Post-Confirm", "Packet-Confirm"), v -> predictSetDead.getValue()).setParent(predicting);
+    public BooleanSetting predictChorus = createSetting("Predict Chorus", false, v -> predict.getValue()).setParent(predicting);
 
     public ParentSetting rendering = createSetting("Rendering");
     public ModeSetting renderMode = createSetting("Render Mode", "Static", Arrays.asList("Static", "Fade", "Shrink", "Moving")).setParent(rendering);
@@ -149,11 +150,11 @@ public class AutoCrystal extends Module {
     public double cx, cy, cz;
 
     @Override
-    public void onEnable(){
+    public void onEnable() {
         antiStuckHashMap.clear();
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onChorus(ChorusEvent event) {
         if (nullCheck() || !isEnabled() || !predict.getValue() || !predictChorus.getValue())
             return;
@@ -165,7 +166,7 @@ public class AutoCrystal extends Module {
         chorusBB = new AxisAlignedBB(new BlockPos(x, y, z));
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onMove(MoveEvent event) {
         if (nullCheck() || !isEnabled() || !onMoveCalc.getValue())
             return;
@@ -303,13 +304,13 @@ public class AutoCrystal extends Module {
             if (BlockUtil.hasBlockEnumFacing(pos)) {
                 facing = BlockUtil.getFirstFacing(pos);
             }
-        } catch (Exception ignored){
+        } catch (Exception ignored) {
             System.out.println("06d is a pedo");
         }
         if (placePacket.getValue())
-            Objects.requireNonNull(mc.getConnection()).sendPacket(new CPacketPlayerTryUseItemOnBlock(pos, enumFacing.getValue().equals("Closest") && facing != null  ? facing : EnumFacing.UP, mc.player.getHeldItemOffhand().getItem() == Items.END_CRYSTAL ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND, 0.5f, 0.5f, 0.5f));
+            Objects.requireNonNull(mc.getConnection()).sendPacket(new CPacketPlayerTryUseItemOnBlock(pos, enumFacing.getValue().equals("Closest") && facing != null ? facing : EnumFacing.UP, mc.player.getHeldItemOffhand().getItem() == Items.END_CRYSTAL ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND, 0.5f, 0.5f, 0.5f));
         else
-            mc.playerController.processRightClickBlock(mc.player, mc.world, pos, enumFacing.getValue().equals("Closest") && facing != null  ? facing : EnumFacing.UP, new Vec3d(mc.player.posX, -mc.player.posY, -mc.player.posZ), mc.player.getHeldItemOffhand().getItem().equals(Items.END_CRYSTAL) ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND);
+            mc.playerController.processRightClickBlock(mc.player, mc.world, pos, enumFacing.getValue().equals("Closest") && facing != null ? facing : EnumFacing.UP, new Vec3d(mc.player.posX, -mc.player.posY, -mc.player.posZ), mc.player.getHeldItemOffhand().getItem().equals(Items.END_CRYSTAL) ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND);
         if (placeSilentSwitch.getValue()) {
             mc.player.inventory.currentItem = currentItem;
             mc.playerController.updateController();
@@ -340,7 +341,7 @@ public class AutoCrystal extends Module {
                 if (mc.player.getDistanceSq(pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f) > (placeRange.getValue() * placeRange.getValue()))
                     continue;
 
-                if (previousPos != null){
+                if (previousPos != null) {
                     if (placeIncludeMinOffset.getValue() && pos.getDistance(previousPos.getX(), previousPos.getY(), previousPos.getZ()) < placeMinOffset.getValue())
                         continue;
                     if (placeIncludeMaxOffset.getValue() && pos.getDistance(previousPos.getX(), previousPos.getY(), previousPos.getZ()) > placeMaxOffset.getValue())
@@ -435,7 +436,7 @@ public class AutoCrystal extends Module {
             float targetHealth = target.getHealth() + target.getAbsorptionAmount();
             float minimumDamageValue = explodeMinimumDamage.getValue();
 
-            if (explodeAntiStuck.getValue()){
+            if (explodeAntiStuck.getValue()) {
                 int i = 0;
                 for (Map.Entry<Integer, Integer> entry : antiStuckHashMap.entrySet())
                     if (entry.getKey().equals(entity.entityId) && entry.getValue() > explodeAntiStuckThreshold.getValue())
@@ -475,7 +476,7 @@ public class AutoCrystal extends Module {
         return null;
     }
 
-    @SubscribeEvent
+    @RegisterListener(priority = Priority.HIGHEST)
     public void onPacketReceive(PacketEvent.PacketReceiveEvent event) {
         if (nullCheck() || !isEnabled())
             return;
@@ -514,7 +515,7 @@ public class AutoCrystal extends Module {
         }
     }
 
-    @SubscribeEvent
+    @RegisterListener(priority = Priority.HIGHEST)
     public void onPacketSend(PacketEvent.PacketSendEvent event) {
         if (nullCheck() || !isEnabled())
             return;

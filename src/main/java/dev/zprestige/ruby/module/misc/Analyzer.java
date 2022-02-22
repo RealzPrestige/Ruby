@@ -2,6 +2,7 @@ package dev.zprestige.ruby.module.misc;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 import dev.zprestige.ruby.Ruby;
+import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.EntityAddedEvent;
 import dev.zprestige.ruby.events.PacketEvent;
 import dev.zprestige.ruby.events.PlayerChangeEvent;
@@ -118,7 +119,7 @@ public class Analyzer extends Module {
         }
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onPacketSend(PacketEvent.PacketSendEvent event) {
         if (nullCheck() || !isEnabled() || !(event.getPacket() instanceof CPacketPlayerTryUseItemOnBlock))
             return;
@@ -126,7 +127,7 @@ public class Analyzer extends Module {
             placedPosses.add(((CPacketPlayerTryUseItemOnBlock) event.getPacket()).position);
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onDeath(PlayerChangeEvent.Death event) {
         if (nullCheck() || !isEnabled() || !(entityPlayer != null && entityPlayer.equals(event.entityPlayer)))
             return;
@@ -138,7 +139,7 @@ public class Analyzer extends Module {
         disableModule(ChatFormatting.WHITE + "Finished analyzing " + ChatFormatting.BOLD + playerName + ChatFormatting.WHITE + ", disabling Analyzer.");
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onEntityAdded(EntityAddedEvent event) {
         if (nullCheck() || !isEnabled() || entityPlayer == null)
             return;

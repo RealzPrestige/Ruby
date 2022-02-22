@@ -1,6 +1,7 @@
 package dev.zprestige.ruby.module.client;
 
 import dev.zprestige.ruby.Ruby;
+import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.PacketEvent;
 import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
@@ -39,7 +40,6 @@ public class Hud extends Module {
     public BooleanSetting tps = createSetting("Tps", false);
     public BooleanSetting coords = createSetting("Coords", false);
     public BooleanSetting welcomer = createSetting("Welcomer", false);
-    public BooleanSetting moduleList = createSetting("ModuleList", false);
     public BooleanSetting armor = createSetting("Armor", false);
     public BooleanSetting noRegularArmorHud = createSetting("No Regular Armor Hud", false);
     public BooleanSetting totems = createSetting("Totems", false);
@@ -47,35 +47,23 @@ public class Hud extends Module {
     public IntegerSetting graphX = createSetting("Graph X", 0, 0, 1000, (Predicate<Integer>) v -> packetGraph.getValue());
     public IntegerSetting graphY = createSetting("Graph Y", 200, 0, 1000, (Predicate<Integer>) v -> packetGraph.getValue());
     public HashMap<Integer, Integer> placedCrystals = new HashMap<>();
-    public ArrayList<Module> orderedModuleList = null;
     public GraphUtil receivedPackets = new GraphUtil();
     public List<Double> receivedPacketsList = new ArrayList<>();
     public GraphUtil sentPackets = new GraphUtil();
     public List<Double> sentPacketsList = new ArrayList<>();
 
-    public Thread thread = new Thread(() -> {
-        while (true) {
-            if (nullCheck() || !isEnabled())
-                continue;
-            try {
-                orderedModuleList = Ruby.moduleManager.getOrderedModuleListByLength();
-            } catch (Exception ignored) {
-            }
-        }
-    });
-
     public Hud() {
         Instance = this;
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onPacketReceive(PacketEvent.PacketReceiveEvent packetEvent) {
         if (nullCheck() || !isEnabled() || !packetGraph.getValue())
             return;
         receivedPackets.addItem();
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onPacketSend(PacketEvent.PacketSendEvent packetEvent) {
         if (nullCheck() || !isEnabled() || !packetGraph.getValue())
             return;
@@ -102,19 +90,6 @@ public class Hud extends Module {
             GL11.glVertex2d(n8 + i * n9 + x, y + n7 - n7 * list.get(i));
         GL11.glEnd();
         GL11.glEnable(3553);
-    }
-
-    @Override
-    public void onThreadReset() {
-        thread.stop();
-        thread = new Thread(() -> {
-            while (true) {
-                try {
-                    orderedModuleList = Ruby.moduleManager.getOrderedModuleListByLength();
-                } catch (Exception ignored) {
-                }
-            }
-        });
     }
 
     @Override
@@ -214,29 +189,6 @@ public class Hud extends Module {
             int screenWidth = new ScaledResolution(mc).getScaledWidth();
             Ruby.rubyFont.drawStringWithShadow("Welcome, ", (screenWidth / 2f) - (Ruby.rubyFont.getStringWidth("Welcome, " + mc.player.getName()) / 2f), 0, new Color(0x5D5D5D).getRGB());
             Ruby.rubyFont.drawStringWithShadow(mc.player.getName(), (screenWidth / 2f) - (Ruby.rubyFont.getStringWidth("Welcome, " + mc.player.getName()) / 2f) + Ruby.rubyFont.getStringWidth("Welcome, "), 0, color.getValue().getRGB());
-        }
-        if (moduleList.getValue()) {
-            int j = 0;
-            int screenWidth = new ScaledResolution(mc).getScaledWidth();
-            if (!thread.isAlive() || thread.isInterrupted())
-                thread.start();
-            if (orderedModuleList != null)
-                for (Module module : orderedModuleList) {
-                    if (!module.isEnabled() || !module.drawn)
-                        continue;
-                    if (!module.getHudString().equals("")) {
-                        RenderUtil.drawRect(screenWidth - module.getModuleNameWidth() - 2, j, screenWidth - 1, j + 10, new Color(0, 0, 0, 100));
-                        Ruby.rubyFont.drawStringWithShadow(module.getName(), screenWidth - module.getModuleNameWidth() - 2, j, color.getValue().getRGB());
-                        Ruby.rubyFont.drawStringWithShadow("[", screenWidth - module.getModuleNameWidth() + Ruby.rubyFont.getStringWidth(module.getName()) - 2, j, new Color(0x5D5D5D).getRGB());
-                        Ruby.rubyFont.drawStringWithShadow(module.getHudString(), screenWidth - module.getModuleNameWidth() + Ruby.rubyFont.getStringWidth(module.getName() + "[") - 2, j, module.getHudStringColor().getRGB());
-                        Ruby.rubyFont.drawStringWithShadow("]", screenWidth - module.getModuleNameWidth() + Ruby.rubyFont.getStringWidth(module.getName() + "[" + module.getHudString()) - 2, j, new Color(0x5D5D5D).getRGB());
-                    } else {
-                        RenderUtil.drawRect(screenWidth - Ruby.rubyFont.getStringWidth(module.getName()) - 2, j, screenWidth - 1, j + 10, new Color(0, 0, 0, 100));
-                        Ruby.rubyFont.drawStringWithShadow(module.getName(), screenWidth - Ruby.rubyFont.getStringWidth(module.getName()) - 2, j, color.getValue().getRGB());
-                    }
-                    j += 10;
-                }
-            RenderUtil.drawRect(screenWidth - 1, 0, screenWidth, j, color.getValue().getRGB());
         }
         if (armor.getValue())
             renderArmorHUD();

@@ -1,8 +1,8 @@
 package dev.zprestige.ruby.events;
 
+import dev.zprestige.ruby.eventbus.event.Event;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class RenderItemEvent extends Event {
     public ItemStack stack;

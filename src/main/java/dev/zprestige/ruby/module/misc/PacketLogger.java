@@ -1,5 +1,6 @@
 package dev.zprestige.ruby.module.misc;
 
+import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.PacketEvent;
 import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
@@ -23,14 +24,14 @@ public class PacketLogger extends Module {
         Logger.info("Logger Finished.");
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onPacketSend(PacketEvent.PacketSendEvent event) {
         if (!isEnabled())
             return;
         Logger.info("[Send] " + event.getPacket());
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onPacketReceive(PacketEvent.PacketReceiveEvent event) {
         if (!isEnabled())
             return;

@@ -8,11 +8,11 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 import java.awt.*;
 
-@Mixin(GuiNewChat.class)
+@Mixin(value = GuiNewChat.class)
 public class MixinGuiNewChat {
 
     @Redirect(method = "drawChat", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiNewChat;drawRect(IIIII)V", ordinal = 0))
-    public void drawRect(final int left, final int top, final int right, final int bottom, final int color) {
+    protected void drawRect(final int left, final int top, final int right, final int bottom, final int color) {
         RenderUtil.drawRect(left, top, right, bottom, new Color(0, 0, 0, 50).getRGB());
     }
 }

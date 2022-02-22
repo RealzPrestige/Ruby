@@ -1,6 +1,7 @@
 package dev.zprestige.ruby.module.client;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
+import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.ModuleToggleEvent;
 import dev.zprestige.ruby.events.PacketEvent;
 import dev.zprestige.ruby.module.Category;
@@ -24,7 +25,7 @@ public class Notify extends Module {
         Instance = this;
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onPacketReceive(PacketEvent.PacketReceiveEvent event) {
         if (nullCheck() || !isEnabled() || !(event.getPacket() instanceof SPacketChat) || !zenovLolCounter.getValue()) {
             return;
@@ -47,14 +48,14 @@ public class Notify extends Module {
         }
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onModuleEnable(ModuleToggleEvent.Enable event) {
         if (!isEnabled() || nullCheck() || !modules.getValue())
             return;
         MessageUtil.sendRemovableMessage(ChatFormatting.WHITE + "" + ChatFormatting.BOLD + event.getModule().getName() + ChatFormatting.RESET + " has been toggled " + ChatFormatting.GREEN + "On" + ChatFormatting.RESET + ".", 1);
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onModuleDisable(ModuleToggleEvent.Disable event) {
         if (!isEnabled() || nullCheck() || !modules.getValue())
             return;

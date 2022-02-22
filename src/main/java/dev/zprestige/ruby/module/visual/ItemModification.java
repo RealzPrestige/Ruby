@@ -1,6 +1,6 @@
 package dev.zprestige.ruby.module.visual;
 
-import dev.zprestige.ruby.events.ItemEatEvent;
+import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.PacketEvent;
 import dev.zprestige.ruby.events.RenderItemEvent;
 import dev.zprestige.ruby.module.Category;
@@ -15,11 +15,11 @@ import org.lwjgl.opengl.GL11;
 import java.awt.*;
 import java.util.Arrays;
 import java.util.function.Predicate;
-@ModuleInfo(name = "ItemModification" , category = Category.Visual, description = "mods items")
+
+@ModuleInfo(name = "ItemModification", category = Category.Visual, description = "mods items")
 public class ItemModification extends Module {
     public static ItemModification Instance;
     public ParentSetting misc = createSetting("Misc");
-    public BooleanSetting noEat = createSetting("No Eat", false).setParent(misc);
     public ColorSetting color = createSetting("Item Colors", new Color(255, 255, 255)).setParent(misc);
     public BooleanSetting animationTest = createSetting("Animation", false).setParent(misc);
     public ModeSetting direction = createSetting("Direction", "Forwards", Arrays.asList("Forwards", "Backwards")).setParent(misc);
@@ -63,13 +63,6 @@ public class ItemModification extends Module {
         Instance = this;
     }
 
-    @SubscribeEvent
-    public void onEat(ItemEatEvent event){
-        if (isEnabled() && !nullCheck() && noEat.getValue())
-            event.setCanceled(true);
-    }
-
-
     @Override
     public void onGlobalRenderTick() {
         if (swung) {
@@ -110,7 +103,7 @@ public class ItemModification extends Module {
         }
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onRenderMainhand(RenderItemEvent.MainHand event) {
         if (isEnabled() && event.entityLivingBase.equals(mc.player) && mainhand.getValue()) {
             if (animationTest.getValue()) {
@@ -128,7 +121,7 @@ public class ItemModification extends Module {
         }
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onRenderOffhand(RenderItemEvent.Offhand event) {
         if (isEnabled() && event.entityLivingBase.equals(mc.player) && offhand.getValue()) {
             if (offhandTranslation.getValue())
@@ -139,11 +132,11 @@ public class ItemModification extends Module {
                 return;
             GlStateManager.rotate(offhandRotationX.getValue() * 36.0f, 1.0f, 0.0f, 0.0f);
             GlStateManager.rotate(offhandRotationY.getValue() * 36.0f, 0.0f, 1.0f, 0.0f);
-            GlStateManager.rotate(offhandRotationZ.getValue() * 36.0f, 0.0f, 0.0f, 1.0f);;
+            GlStateManager.rotate(offhandRotationZ.getValue() * 36.0f, 0.0f, 0.0f, 1.0f);
         }
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onPacketSent(PacketEvent.PacketSendEvent event) {
         if (nullCheck() || !isEnabled() || !(event.getPacket() instanceof CPacketAnimation))
             return;

@@ -39,43 +39,16 @@ public class Nametags extends Module {
     public BooleanSetting inFrustum = createSetting("In Frustum", false);
     public List<EntityPlayer> entityPlayers = new ArrayList<>();
     public ICamera camera = new Frustum();
-    public Thread thread = new Thread(() -> {
-        while (true) {
-            if (nullCheck() || !isEnabled())
-                continue;
-            try {
-                entityPlayers = mc.world.playerEntities;
-            } catch (Exception ignored) {
-            }
-        }
-    });
 
     public Nametags() {
         Instance = this;
     }
-
-    @Override
-    public void onThreadReset() {
-        if (multiThreaded.getValue()) {
-            thread.stop();
-            thread = new Thread(() -> {
-                while (true) {
-                    try {
-                        entityPlayers = mc.world.playerEntities;
-                    } catch (Exception ignored) {
-                    }
-                }
-            });
-        }
-    }
-
     @Override
     public void onGlobalRenderTick(Render3DEvent event) {
         if (!multiThreaded.getValue())
             entityPlayers = mc.world.playerEntities;
         else {
-            if (!thread.isAlive() || thread.isInterrupted())
-                thread.start();
+            Ruby.threadManager.run(() -> entityPlayers = mc.world.playerEntities);
         }
         if (!entityPlayers.isEmpty()) {
             if (inFrustum.getValue())

@@ -1,6 +1,7 @@
 package dev.zprestige.ruby.module.movement;
 
 import dev.zprestige.ruby.Ruby;
+import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.MotionUpdateEvent;
 import dev.zprestige.ruby.events.MoveEvent;
 import dev.zprestige.ruby.events.PacketEvent;
@@ -13,7 +14,6 @@ import dev.zprestige.ruby.setting.impl.FloatSetting;
 import dev.zprestige.ruby.util.EntityUtil;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.network.play.server.SPacketPlayerPosLook;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -47,7 +47,7 @@ public class LongJump extends Module {
         prevTickDamage = mc.player.getHealth() + mc.player.getAbsorptionAmount();
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onPacketReceive(PacketEvent.PacketReceiveEvent event) {
         if (nullCheck() || !isEnabled() || !(event.getPacket() instanceof SPacketPlayerPosLook))
             return;
@@ -55,7 +55,7 @@ public class LongJump extends Module {
             disableModule("Rubberband detected, disabling LongJump.");
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onMotionUpdate(MotionUpdateEvent event) {
         if (nullCheck() || !isEnabled())
             return;
@@ -64,16 +64,16 @@ public class LongJump extends Module {
         prevDistance = Math.sqrt(xDist * xDist + zDist * zDist);
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onMove(MoveEvent event) {
-        if (nullCheck() || !isEnabled() || event.isCanceled())
+        if (nullCheck() || !isEnabled() || event.isCancelled())
             return;
         if (damageCheck.getValue() && damage < minDamage.getValue())
             return;
         if (mc.player.collidedHorizontally || (mc.player.moveForward == 0.0f && mc.player.moveStrafing == 0.0f)) {
             stage = 0;
             ticks = 2;
-            event.setCanceled(true);
+            event.setCancelled(true);
             event.motionX = 0.0;
             event.motionZ = 0.0;
         } else {
@@ -89,7 +89,7 @@ public class LongJump extends Module {
                 moveSpeed = prevDistance - 0.66 * (prevDistance - EntityUtil.getDefaultSpeed());
             } else
                 moveSpeed = prevDistance - prevDistance / 159.0;
-            event.setCanceled(true);
+            event.setCancelled(true);
             EntityUtil.setMoveSpeed(event, moveSpeed);
             if (!mc.player.collidedVertically && (mc.world.getCollisionBoxes(mc.player, mc.player.getEntityBoundingBox().offset(0.0, mc.player.motionY, 0.0)).size() > 0 || mc.world.getCollisionBoxes(mc.player, mc.player.getEntityBoundingBox().offset(0.0, -0.4, 0.0)).size() > 0) && stage > 10) {
                 if (stage >= 38) {

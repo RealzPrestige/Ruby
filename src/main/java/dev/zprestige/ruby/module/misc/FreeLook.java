@@ -1,5 +1,6 @@
 package dev.zprestige.ruby.module.misc;
 
+import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.TurnEvent;
 import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
@@ -35,13 +36,13 @@ public class FreeLook extends Module {
         event.setPitch(event.getPitch() + pitch);
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onTurnEvent(TurnEvent event) {
         if (nullCheck() || !isEnabled() || holdBind.getKey() == -1 || !Keyboard.isKeyDown(holdBind.getKey()))
             return;
         yaw = (float) ((double) yaw + (double) event.getYaw() * 0.15D);
         pitch = (float) ((double) pitch - (double) event.getPitch() * 0.15D);
         pitch = MathHelper.clamp(pitch, -90.0F, 90.0F);
-        event.setCanceled(true);
+        event.setCancelled(true);
     }
 }

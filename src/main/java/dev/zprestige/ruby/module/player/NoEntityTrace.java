@@ -1,5 +1,6 @@
 package dev.zprestige.ruby.module.player;
 
+import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.MouseOverEvent;
 import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
@@ -12,11 +13,11 @@ public class NoEntityTrace extends Module {
     public BooleanSetting pickaxe = createSetting("Pickaxe", false);
     public BooleanSetting gapple = createSetting("Gapple", false);
 
-    @SubscribeEvent
+    @RegisterListener
     public void mouseOverEvent(MouseOverEvent event) {
         if (nullCheck() || !isEnabled())
             return;
         if ((pickaxe.getValue() && mc.player.getHeldItemMainhand().getItem().equals(Items.DIAMOND_PICKAXE)) || (gapple.getValue() && mc.player.getHeldItemMainhand().getItem().equals(Items.GOLDEN_APPLE)))
-            event.setCanceled(true);
+            event.setCancelled(true);
     }
 }

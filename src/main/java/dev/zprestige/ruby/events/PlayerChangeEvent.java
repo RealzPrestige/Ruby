@@ -1,8 +1,7 @@
 package dev.zprestige.ruby.events;
 
+import dev.zprestige.ruby.eventbus.event.Event;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fml.common.eventhandler.Cancelable;
-import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class PlayerChangeEvent extends Event {
     public EntityPlayer entityPlayer;

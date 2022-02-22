@@ -1,5 +1,6 @@
 package dev.zprestige.ruby.module.visual;
 
+import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.Render3DEvent;
 import dev.zprestige.ruby.events.RenderItemInFirstPersonEvent;
 import dev.zprestige.ruby.mixins.render.IEntityRenderer;
@@ -38,11 +39,11 @@ public class Shaders extends Module {
     public FloatSetting opacity = createSetting("Opacity", 255.0f, 0.0f, 255.0f).setParent(shader);
     public boolean forceRender = false;
 
-    @SubscribeEvent
+    @RegisterListener
     public void renderItemInFirstPerson(RenderItemInFirstPersonEvent event) {
         if (nullCheck() || !isEnabled() || !event.isPre || forceRender || !items.getValue())
             return;
-        event.setCanceled(true);
+        event.setCancelled(true);
     }
 
     @Override

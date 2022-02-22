@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.awt.*;
 
-@Mixin({GuiButton.class})
+@Mixin(value = GuiButton.class)
 public abstract class MixinGuiButton {
     @Shadow
     public int x;
@@ -35,7 +35,7 @@ public abstract class MixinGuiButton {
     protected abstract void mouseDragged(Minecraft mc, int mouseX, int mouseY);
 
     @Inject(method = {"drawButton"}, at = {@At("HEAD")}, cancellable = true)
-    public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
+    protected void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
         if (visible) {
             hovered = (mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height);
             RenderUtil.drawRect(x, y, x + width, y + height, new Color(0,0, 0, 50).getRGB());

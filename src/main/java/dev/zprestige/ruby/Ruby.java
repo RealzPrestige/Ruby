@@ -1,18 +1,17 @@
 package dev.zprestige.ruby;
 
+import dev.zprestige.ruby.eventbus.EventBus;
 import dev.zprestige.ruby.events.listener.EventListener;
 import dev.zprestige.ruby.manager.*;
 import dev.zprestige.ruby.ui.font.RubyFont;
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.EventBus;
 
 @Mod(modid = "ruby", name = "Ruby", version = "0.1")
 public class Ruby {
-    public static EventBus RubyEventBus;
     public static Minecraft mc;
+    public static EventBus eventBus;
     public static ThreadManager threadManager;
     public static HoleManager holeManager;
     public static EventListener eventListener;
@@ -26,8 +25,8 @@ public class Ruby {
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
-        RubyEventBus = MinecraftForge.EVENT_BUS;
         mc = Minecraft.getMinecraft();
+        eventBus = new EventBus();
         threadManager = new ThreadManager();
         holeManager = new HoleManager();
         eventListener = new EventListener();

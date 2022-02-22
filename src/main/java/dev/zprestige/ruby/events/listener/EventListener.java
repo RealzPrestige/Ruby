@@ -2,6 +2,7 @@ package dev.zprestige.ruby.events.listener;
 
 import com.google.common.base.Strings;
 import dev.zprestige.ruby.Ruby;
+import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.*;
 import dev.zprestige.ruby.module.Module;
 import dev.zprestige.ruby.module.visual.Nametags;
@@ -12,6 +13,7 @@ import net.minecraft.network.play.server.SPacketPlayerListItem;
 import net.minecraft.network.play.server.SPacketSoundEffect;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -26,7 +28,8 @@ public class EventListener {
     protected final ArrayList<Module> moduleList = new ArrayList<>(Ruby.moduleManager.moduleList);
 
     public EventListener() {
-        Ruby.RubyEventBus.register(this);
+        MinecraftForge.EVENT_BUS.register(this);
+        Ruby.eventBus.register(this);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -44,7 +47,7 @@ public class EventListener {
 
     @SubscribeEvent
     public void onClientConnect(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
-        Ruby.RubyEventBus.post(new SelfLogoutEvent());
+        Ruby.eventBus.post(new SelfLogoutEvent());
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -74,22 +77,22 @@ public class EventListener {
         }
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onPacketReceive(PacketEvent.PacketReceiveEvent event) {
         if (!checkNull())
             return;
         if (event.getPacket() instanceof SPacketSoundEffect && ((SPacketSoundEffect) event.getPacket()).getSound() == SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT)
-            Ruby.RubyEventBus.post(new ChorusEvent(((SPacketSoundEffect) event.getPacket()).getX(), ((SPacketSoundEffect) event.getPacket()).getY(), ((SPacketSoundEffect) event.getPacket()).getZ()));
+            Ruby.eventBus.post(new ChorusEvent(((SPacketSoundEffect) event.getPacket()).getX(), ((SPacketSoundEffect) event.getPacket()).getY(), ((SPacketSoundEffect) event.getPacket()).getZ()));
         if (event.getPacket() instanceof SPacketPlayerListItem) {
             for (SPacketPlayerListItem.AddPlayerData data : ((SPacketPlayerListItem) event.getPacket()).getEntries()) {
                 if (data != null && (!Strings.isNullOrEmpty(data.getProfile().getName()) || data.getProfile().getId() != null)) {
                     EntityPlayer entity = mc.world.getPlayerEntityByUUID(data.getProfile().getId());
                     if (((SPacketPlayerListItem) event.getPacket()).getAction().equals(SPacketPlayerListItem.Action.ADD_PLAYER)) {
-                        Ruby.RubyEventBus.post(new LogoutEvent.LoginEvent(entity));
+                        Ruby.eventBus.post(new LogoutEvent.LoginEvent(entity));
                     } else if (((SPacketPlayerListItem) event.getPacket()).getAction().equals(SPacketPlayerListItem.Action.REMOVE_PLAYER)) {
 
                         if (entity != null)
-                            Ruby.RubyEventBus.post(new LogoutEvent(entity, entity.getPosition(), System.currentTimeMillis(), entity.getEntityId()));
+                            Ruby.eventBus.post(new LogoutEvent(entity, entity.getPosition(), System.currentTimeMillis(), entity.getEntityId()));
                     }
                 }
             }

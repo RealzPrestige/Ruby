@@ -8,11 +8,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(ChunkRenderDispatcher.class)
+@Mixin(value = ChunkRenderDispatcher.class)
 public class MixinChunkRenderDispatcher {
     @Inject(method = "getNextChunkUpdate", at = @At("HEAD"))
-    private void limitChunkUpdates(final CallbackInfoReturnable<ChunkCompileTaskGenerator> cir) throws InterruptedException {
-        if (WorldTweaks.Instance.isEnabled())
+    protected void limitChunkUpdates(final CallbackInfoReturnable<ChunkCompileTaskGenerator> cir) throws InterruptedException {
+        if (WorldTweaks.Instance.isEnabled()) {
             Thread.sleep(WorldTweaks.Instance.chunkLoadDelay.getValue());
+        }
     }
 }

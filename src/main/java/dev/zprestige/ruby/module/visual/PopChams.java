@@ -1,5 +1,6 @@
 package dev.zprestige.ruby.module.visual;
 
+import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.PlayerChangeEvent;
 import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
@@ -75,7 +76,7 @@ public class PopChams extends Module {
     public static double LEG2_Y1 = 0.8;
     public static double LEG2_Z1 = -0.25;
 
-    @SubscribeEvent
+    @RegisterListener
     public void onTotemPop(PlayerChangeEvent.TotemPop event) {
         if (!isEnabled() || nullCheck())
             return;
@@ -84,7 +85,7 @@ public class PopChams extends Module {
         popDataHashMap.put(event.entityPlayer.getName(), new PopChams.PopData(event.entityPlayer, System.currentTimeMillis(), event.entityPlayer.rotationYaw, event.entityPlayer.rotationPitch, event.entityPlayer.posX, event.entityPlayer.posY, event.entityPlayer.posZ, false));
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onDeath(PlayerChangeEvent.Death event) {
         if (!isEnabled() || nullCheck() || !onDeath.getValue())
             return;

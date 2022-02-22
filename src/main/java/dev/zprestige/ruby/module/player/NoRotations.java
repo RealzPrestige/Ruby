@@ -1,5 +1,6 @@
 package dev.zprestige.ruby.module.player;
 
+import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.PacketEvent;
 import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
@@ -10,7 +11,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @ModuleInfo(name = "NoRotations", category = Category.Player, description = "Server no longer force rotation on u")
 public class NoRotations extends Module {
 
-    @SubscribeEvent
+    @RegisterListener
     public void onPacketReceive(PacketEvent.PacketReceiveEvent event){
         if (nullCheck() || !isEnabled() || !(event.getPacket() instanceof SPacketPlayerPosLook) || mc.currentScreen != null)
             return;

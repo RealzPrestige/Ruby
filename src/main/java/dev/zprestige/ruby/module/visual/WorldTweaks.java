@@ -1,5 +1,6 @@
 package dev.zprestige.ruby.module.visual;
 
+import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.PacketEvent;
 import dev.zprestige.ruby.events.ParticleEvent;
 import dev.zprestige.ruby.module.Category;
@@ -36,11 +37,11 @@ public class WorldTweaks extends Module {
         Instance = this;
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onParticle(ParticleEvent event) {
         if (nullCheck() || !isEnabled())
             return;
-        event.setCanceled(antiParticles.getValue());
+        event.setCancelled(antiParticles.getValue());
     }
 
     @SubscribeEvent
@@ -104,11 +105,11 @@ public class WorldTweaks extends Module {
             event.setCanceled(true);
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onPacketReceive(PacketEvent.PacketReceiveEvent event) {
         if (nullCheck() || !isEnabled() || !noEffects.getValue() || !(event.getPacket() instanceof SPacketEffect))
             return;
-        event.setCanceled(true);
+        event.setCancelled(true);
     }
 
 }

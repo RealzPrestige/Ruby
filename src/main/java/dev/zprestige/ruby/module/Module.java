@@ -57,15 +57,15 @@ public class Module {
     public void enableModule() {
         setEnabled(true);
         onEnable();
-        Ruby.RubyEventBus.post(new ModuleToggleEvent.Enable(this));
-        Ruby.RubyEventBus.register(this);
+        Ruby.eventBus.post(new ModuleToggleEvent.Enable(this));
+        Ruby.eventBus.register(this);
     }
 
     public void disableModule() {
         setEnabled(false);
         onDisable();
-        Ruby.RubyEventBus.post(new ModuleToggleEvent.Disable(this));
-        Ruby.RubyEventBus.unregister(this);
+        Ruby.eventBus.post(new ModuleToggleEvent.Disable(this));
+        Ruby.eventBus.unregister(this);
     }
 
     public void disableModule(String message) {

@@ -18,7 +18,7 @@ public class TickManager {
         prevTime = -1;
         for (int i = 0, len = TPS.length; i < len; i++)
             TPS[i] = 0;
-        Ruby.RubyEventBus.register(this);
+        Ruby.eventBus.register(this);
     }
 
     public float getTPS() {

@@ -1,5 +1,6 @@
 package dev.zprestige.ruby.module.misc;
 
+import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.PacketEvent;
 import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
@@ -13,10 +14,10 @@ import net.minecraftforge.fml.common.network.internal.FMLProxyPacket;
 @ModuleInfo(name = "VanillaSpoof", category = Category.Misc, description = "spoofs yo mods")
 public class VanillaSpoof extends Module {
 
-    @SubscribeEvent
+    @RegisterListener
     public void onPacketSend(PacketEvent.PacketSendEvent event) {
         if (event.getPacket() instanceof FMLProxyPacket && !mc.isSingleplayer()) {
-            event.setCanceled(true);
+            event.setCancelled(true);
         }
         if (event.getPacket() instanceof CPacketCustomPayload) {
             CPacketCustomPayload packet = (CPacketCustomPayload) event.getPacket();

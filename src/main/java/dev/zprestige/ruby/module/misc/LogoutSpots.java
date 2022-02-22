@@ -1,5 +1,6 @@
 package dev.zprestige.ruby.module.misc;
 
+import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.LogoutEvent;
 import dev.zprestige.ruby.events.Render3DEvent;
 import dev.zprestige.ruby.events.SelfLogoutEvent;
@@ -28,7 +29,7 @@ public class LogoutSpots extends Module {
         loggedKids.clear();
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onSelfLogout(SelfLogoutEvent event) {
         if (nullCheck() || !isEnabled())
             return;
@@ -47,14 +48,14 @@ public class LogoutSpots extends Module {
         }
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onEntityLogout(LogoutEvent event) {
         if (nullCheck() || !isEnabled())
             return;
         loggedKids.add(new LoggedKid(event.entityPlayer, event.pos, event.currentTimeMillis, event.entityId));
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onLoginEvent(LogoutEvent.LoginEvent event) {
         if (nullCheck() || !isEnabled())
             return;

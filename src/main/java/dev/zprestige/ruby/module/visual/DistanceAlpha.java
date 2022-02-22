@@ -1,5 +1,6 @@
 package dev.zprestige.ruby.module.visual;
 
+import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.RenderLivingEntityEvent;
 import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
@@ -20,7 +21,7 @@ public class DistanceAlpha extends Module {
         camera.setPosition(Objects.requireNonNull(mc.getRenderViewEntity()).posX, mc.getRenderViewEntity().posY, mc.getRenderViewEntity().posZ);
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onRenderLivingEntity(RenderLivingEntityEvent event) {
         if (nullCheck() || !isEnabled() || event.getEntityLivingBase() == null || !(event.getEntityLivingBase() instanceof EntityPlayer) || mc.player.equals(event.getEntityLivingBase()) || !camera.isBoundingBoxInFrustum(event.getEntityLivingBase().getEntityBoundingBox().grow(2)))
             return;

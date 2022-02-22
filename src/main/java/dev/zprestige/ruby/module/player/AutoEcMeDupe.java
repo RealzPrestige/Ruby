@@ -1,6 +1,7 @@
 package dev.zprestige.ruby.module.player;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
+import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.PacketEvent;
 import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
@@ -150,12 +151,12 @@ public class AutoEcMeDupe extends Module {
         }
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onPacketSend(PacketEvent.PacketSendEvent event) {
         if (nullCheck() || !isEnabled() || !(event.getPacket() instanceof CPacketPlayerTryUseItemOnBlock))
             return;
         if (restart && stage == 4) {
-            event.setCanceled(true);
+            event.setCancelled(true);
         }
     }
 

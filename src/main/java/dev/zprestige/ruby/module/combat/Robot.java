@@ -1,6 +1,7 @@
 package dev.zprestige.ruby.module.combat;
 
 import dev.zprestige.ruby.Ruby;
+import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.PacketEvent;
 import dev.zprestige.ruby.manager.HoleManager;
 import dev.zprestige.ruby.module.Category;
@@ -919,7 +920,7 @@ public class Robot extends Module {
         City
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onPacketSend(PacketEvent.PacketSendEvent event) {
         if (nullCheck() || !isEnabled())
             return;
@@ -928,14 +929,13 @@ public class Robot extends Module {
                 RayTraceResult rayTraceResult = mc.objectMouseOver;
                 if (rayTraceResult == null || !mc.gameSettings.keyBindUseItem.isKeyDown() || !mc.world.getBlockState(rayTraceResult.getBlockPos()).getBlock().equals(Blocks.ENDER_CHEST))
                     return;
-                event.setCanceled(true);
+                event.setCancelled(true);
                 Objects.requireNonNull(mc.getConnection()).sendPacket(new CPacketPlayerTryUseItem(EnumHand.MAIN_HAND));
             }
         } catch (Exception ignored) {
         }
     }
-
-    @SubscribeEvent
+    @RegisterListener
     public void onPacketReceive(PacketEvent.PacketReceiveEvent event) {
         if (nullCheck() || !isEnabled() || !(event.getPacket() instanceof SPacketPlayerPosLook))
             return;

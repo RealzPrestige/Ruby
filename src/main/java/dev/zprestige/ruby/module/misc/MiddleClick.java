@@ -1,6 +1,7 @@
 package dev.zprestige.ruby.module.misc;
 
 import dev.zprestige.ruby.Ruby;
+import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.ui.buttons.MiddleClickInterface;
 import dev.zprestige.ruby.events.PacketEvent;
@@ -33,11 +34,11 @@ public class MiddleClick extends Module {
             mc.displayGuiScreen(null);
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onPacketReceive(PacketEvent.PacketReceiveEvent event) {
         if (nullCheck() || !isEnabled() || !(event.getPacket() instanceof SPacketChat))
             return;
-        blockedList.stream().filter(player -> ((SPacketChat) event.getPacket()).getChatComponent().getUnformattedText().contains(player.getName())).map(player -> true).forEach(event::setCanceled);
+        blockedList.stream().filter(player -> ((SPacketChat) event.getPacket()).getChatComponent().getUnformattedText().contains(player.getName())).map(player -> true).forEach(event::setCancelled);
     }
 
     @SubscribeEvent

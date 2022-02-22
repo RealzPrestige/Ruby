@@ -10,14 +10,14 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(ParticleManager.class)
+@Mixin(value = ParticleManager.class)
 public class MixinParticleManager {
 
     @Inject(method = "addEffect", at = @At("HEAD"), cancellable = true)
     public void addEffect(Particle effect, CallbackInfo ci) {
-        ParticleEvent event = new ParticleEvent();
-        Ruby.RubyEventBus.post(event);
-        if (event.isCanceled()) {
+        final ParticleEvent event = new ParticleEvent();
+        Ruby.eventBus.post(event);
+        if (event.isCancelled()) {
             ci.cancel();
         }
     }

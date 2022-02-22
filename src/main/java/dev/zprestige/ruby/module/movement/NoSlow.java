@@ -1,5 +1,6 @@
 package dev.zprestige.ruby.module.movement;
 
+import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.KeyEvent;
 import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
@@ -14,23 +15,23 @@ import org.lwjgl.input.Keyboard;
 
 import java.util.Arrays;
 
-@ModuleInfo(name = "NoSlow" , category = Category.Movement, description = "cancels slows")
+@ModuleInfo(name = "NoSlow", category = Category.Movement, description = "cancels slows")
 public class NoSlow extends Module {
     public static NoSlow Instance;
     public BooleanSetting items = createSetting("Items", false);
     public BooleanSetting guiMove = createSetting("Inventory", false);
     public KeyBinding[] keys = new KeyBinding[]{mc.gameSettings.keyBindForward, mc.gameSettings.keyBindBack, mc.gameSettings.keyBindLeft, mc.gameSettings.keyBindRight, mc.gameSettings.keyBindJump, mc.gameSettings.keyBindSprint};
 
-    public NoSlow(){
+    public NoSlow() {
         Instance = this;
     }
+
     @Override
     public void onTick() {
         if (guiMove.getValue()) {
             if (mc.currentScreen instanceof GuiOptions || mc.currentScreen instanceof GuiVideoSettings || mc.currentScreen instanceof GuiScreenOptionsSounds || mc.currentScreen instanceof GuiContainer || mc.currentScreen instanceof GuiIngameMenu)
                 Arrays.stream(keys).forEach(bind -> KeyBinding.setKeyBindState(bind.getKeyCode(), Keyboard.isKeyDown(bind.getKeyCode())));
-            else
-                if (mc.currentScreen == null) {
+            else if (mc.currentScreen == null) {
                 for (KeyBinding bind : keys) {
                     if (Keyboard.isKeyDown(bind.getKeyCode()))
                         continue;
@@ -48,7 +49,7 @@ public class NoSlow extends Module {
         }
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onKeyEvent(KeyEvent event) {
         if (guiMove.getValue() && !(mc.currentScreen instanceof GuiChat)) {
             event.info = event.pressed;

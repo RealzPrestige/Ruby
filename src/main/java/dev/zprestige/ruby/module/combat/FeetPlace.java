@@ -1,5 +1,6 @@
 package dev.zprestige.ruby.module.combat;
 
+import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.PacketEvent;
 import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
@@ -197,7 +198,7 @@ public class FeetPlace extends Module {
         return !canPlace(blockPos.north()) || !canPlace(blockPos.east()) || !canPlace(blockPos.south()) || !canPlace(blockPos.west()) || !canPlace(blockPos.down()) || !canPlace(blockPos.up());
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onPacketReceive(PacketEvent.PacketReceiveEvent event) {
         if (!(event.getPacket() instanceof SPacketBlockBreakAnim))
             return;

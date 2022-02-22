@@ -21,8 +21,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.awt.*;
 
-@Mixin(value = {RenderItem.class}, priority = 1001)
-public abstract class MixinRenderItem {
+@Mixin(value = RenderItem.class, priority = 1001)
+public class MixinRenderItem {
 
     @Shadow
     private void renderModel(IBakedModel model, int color, ItemStack stack) {
@@ -32,9 +32,9 @@ public abstract class MixinRenderItem {
     public void renderItem(final ItemStack stack, final EntityLivingBase entityLivingBaseIn, final ItemCameraTransforms.TransformType transform, final boolean leftHanded, final CallbackInfo ci) {
         if (transform == ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND || transform == ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND) {
             if (transform.equals(ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND))
-                Ruby.RubyEventBus.post(new RenderItemEvent.Offhand(stack, entityLivingBaseIn));
+                Ruby.eventBus.post(new RenderItemEvent.Offhand(stack, entityLivingBaseIn));
             else
-                Ruby.RubyEventBus.post(new RenderItemEvent.MainHand(stack, entityLivingBaseIn));
+                Ruby.eventBus.post(new RenderItemEvent.MainHand(stack, entityLivingBaseIn));
         }
     }
 

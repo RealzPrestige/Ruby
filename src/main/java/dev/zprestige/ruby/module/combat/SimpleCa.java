@@ -1,5 +1,7 @@
 package dev.zprestige.ruby.module.combat;
 
+import dev.zprestige.ruby.eventbus.annotation.Priority;
+import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.PacketEvent;
 import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
@@ -88,7 +90,7 @@ public class SimpleCa extends Module {
         }
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    @RegisterListener(priority = Priority.HIGHEST)
     public void onPacketReceive(PacketEvent.PacketReceiveEvent event) {
         if (nullCheck() || !isEnabled())
             return;
@@ -104,7 +106,7 @@ public class SimpleCa extends Module {
         }
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    @RegisterListener(priority = Priority.HIGHEST)
     public void onPacketSend(PacketEvent.PacketSendEvent event) {
         if (nullCheck() || !isEnabled())
             return;

@@ -1,12 +1,12 @@
 package dev.zprestige.ruby.events;
 
+import dev.zprestige.ruby.eventbus.event.Event;
+import dev.zprestige.ruby.eventbus.event.IsCancellable;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.eventhandler.Cancelable;
-import net.minecraftforge.fml.common.eventhandler.Event;
 
-@Cancelable
+@IsCancellable
 public class RenderItemInFirstPersonEvent extends Event {
 
     public EntityLivingBase entity;

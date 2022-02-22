@@ -1,5 +1,6 @@
 package dev.zprestige.ruby.module.movement;
 
+import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.BlockPushEvent;
 import dev.zprestige.ruby.events.EntityPushEvent;
 import dev.zprestige.ruby.events.MoveEvent;
@@ -20,32 +21,32 @@ public class Velocity extends Module {
     public BooleanSetting blocks = createSetting("Blocks", false);
     public BooleanSetting pistons = createSetting("Pistons", false);
 
-    @SubscribeEvent
+    @RegisterListener
     public void onPacketReceived(PacketEvent.PacketReceiveEvent event) {
         if (nullCheck() || !isEnabled() || !explosions.getValue())
             return;
-        event.setCanceled(event.getPacket() instanceof SPacketEntityVelocity ? ((SPacketEntityVelocity) event.getPacket()).getEntityID() == mc.player.entityId : event.getPacket() instanceof SPacketExplosion);
+        event.setCancelled(event.getPacket() instanceof SPacketEntityVelocity ? ((SPacketEntityVelocity) event.getPacket()).getEntityID() == mc.player.entityId : event.getPacket() instanceof SPacketExplosion);
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onBlockPush(BlockPushEvent event) {
         if (nullCheck() || !isEnabled() || !blocks.getValue())
             return;
-        event.setCanceled(true);
+        event.setCancelled(true);
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onEntityCollision(EntityPushEvent event) {
         if (nullCheck() || !isEnabled() || !push.getValue())
             return;
-        event.setCanceled(true);
+        event.setCancelled(true);
     }
 
-    @SubscribeEvent
+    @RegisterListener
     public void onMove(MoveEvent event){
         if (nullCheck() || !isEnabled() || !pistons.getValue() || !(event.getType().equals(MoverType.PISTON) || event.getType().equals(MoverType.SHULKER_BOX))) {
             return;
         }
-        event.setCanceled(true);
+        event.setCancelled(true);
     }
 }

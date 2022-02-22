@@ -31,37 +31,41 @@ public abstract class MixinEntityRenderer implements IEntityRenderer{
     }
 
     @Inject(method = "getMouseOver", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/WorldClient;getEntitiesInAABBexcluding(Lnet/minecraft/entity/Entity;Lnet/minecraft/util/math/AxisAlignedBB;Lcom/google/common/base/Predicate;)Ljava/util/List;"), cancellable = true)
-    public void mouseOver(float partialTicks, CallbackInfo ci) {
-        MouseOverEvent event = new MouseOverEvent();
-        Ruby.RubyEventBus.post(event);
-        if (event.isCanceled())
+    protected void mouseOver(float partialTicks, CallbackInfo ci) {
+        final MouseOverEvent event = new MouseOverEvent();
+        Ruby.eventBus.post(event);
+        if (event.isCancelled()) {
             ci.cancel();
+        }
     }
 
     @Inject(method = {"hurtCameraEffect"}, at = {@At(value = "HEAD")}, cancellable = true)
-    public void hurtCameraEffectHook(float ticks, CallbackInfo info) {
+    protected void hurtCameraEffectHook(float ticks, CallbackInfo info) {
         if (!NoRender.Instance.nullCheck() && NoRender.Instance.isEnabled() && NoRender.Instance.hurtCam.getValue())
             info.cancel();
     }
 
     @ModifyVariable(method = "updateLightmap", at = @At(value = "STORE"), index = 20)
-    public int red(int red) {
-        if (Ambience.Instance.isEnabled())
+    protected int red(int red) {
+        if (Ambience.Instance.isEnabled()) {
             red = Ambience.Instance.color.getValue().getRed();
+        }
         return red;
     }
 
     @ModifyVariable(method = "updateLightmap", at = @At(value = "STORE"), index = 21)
-    public int green(int green) {
-        if (Ambience.Instance.isEnabled())
+    protected int green(int green) {
+        if (Ambience.Instance.isEnabled()) {
             green = Ambience.Instance.color.getValue().getGreen();
+        }
         return green;
     }
 
     @ModifyVariable(method = "updateLightmap", at = @At(value = "STORE"), index = 22)
-    public int blue(int blue) {
-        if (Ambience.Instance.isEnabled())
+    protected int blue(int blue) {
+        if (Ambience.Instance.isEnabled()) {
             blue = Ambience.Instance.color.getValue().getBlue();
+        }
         return blue;
     }
 }

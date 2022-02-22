@@ -19,11 +19,11 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Mixin(value = {GuiPlayerTabOverlay.class})
+@Mixin(value = GuiPlayerTabOverlay.class)
 public class MixinTabOverlay extends Gui {
 
     @Redirect(method = {"renderPlayerlist"}, at = @At(value = "INVOKE", target = "Ljava/util/List;subList(II)Ljava/util/List;", remap = false))
-    public List<NetworkPlayerInfo> subListHook(List<NetworkPlayerInfo> list, int fromIndex, int toIndex) {
+    protected List<NetworkPlayerInfo> subListHook(List<NetworkPlayerInfo> list, int fromIndex, int toIndex) {
         if (TabList.Instance.isEnabled()) {
             switch (TabList.Instance.order.getValue()) {
                 case "Ping":

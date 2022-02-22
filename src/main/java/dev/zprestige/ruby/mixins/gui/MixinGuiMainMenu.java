@@ -11,16 +11,16 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin({GuiMainMenu.class})
+@Mixin(value = GuiMainMenu.class)
 public class MixinGuiMainMenu extends GuiScreen {
 
     @Inject(method = {"initGui"}, at = {@At("RETURN")})
-    public void initGui(CallbackInfo callbackInfo) {
+    protected void initGui(CallbackInfo callbackInfo) {
         buttonList.add(new GuiButton(36, width / 2 - 100, (height / 4 + 48) + 118, "Altening Manager"));
     }
 
     @Inject(method = {"actionPerformed"}, at = {@At("RETURN")})
-    public void actionPerformed(GuiButton button, CallbackInfo callbackInfo) {
+    protected void actionPerformed(GuiButton button, CallbackInfo callbackInfo) {
         if (button.id == 36) {
             mc.displayGuiScreen(new AlteningGuiScreen(this));
         }

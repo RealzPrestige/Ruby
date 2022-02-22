@@ -1,7 +1,7 @@
 package dev.zprestige.ruby.events;
 
+import dev.zprestige.ruby.eventbus.event.Event;
 import net.minecraft.entity.Entity;
-import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class EntityAddedEvent extends Event {
     public Entity entity;

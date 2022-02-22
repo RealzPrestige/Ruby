@@ -1,8 +1,8 @@
 package dev.zprestige.ruby.events;
 
+import dev.zprestige.ruby.eventbus.event.Event;
+import dev.zprestige.ruby.eventbus.event.IsCancellable;
 import net.minecraft.network.Packet;
-import net.minecraftforge.fml.common.eventhandler.Cancelable;
-import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class PacketEvent extends Event {
 
@@ -16,14 +16,14 @@ public class PacketEvent extends Event {
         return this.packet;
     }
 
-    @Cancelable
+    @IsCancellable
     public static class PacketReceiveEvent extends PacketEvent {
         public PacketReceiveEvent(Packet<?> packet) {
             super(packet);
         }
     }
 
-    @Cancelable
+    @IsCancellable
     public static class PacketSendEvent extends PacketEvent {
         public PacketSendEvent(Packet<?> packet) {
             super(packet);

@@ -9,12 +9,13 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(GuiIngame.class)
+@Mixin(value = GuiIngame.class)
 public class MixinGuiIngame {
 
     @Inject(method = "renderPotionEffects", at = @At("HEAD"), cancellable = true)
-    public void renderPotionEffects(ScaledResolution scaledRes, CallbackInfo ci) {
-        if (Hud.Instance.nullCheck() && Hud.Instance.isEnabled())
+    protected void renderPotionEffects(ScaledResolution scaledRes, CallbackInfo ci) {
+        if (Hud.Instance.nullCheck() && Hud.Instance.isEnabled()) {
             ci.cancel();
+        }
     }
 }
