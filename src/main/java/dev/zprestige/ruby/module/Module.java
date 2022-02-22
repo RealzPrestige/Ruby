@@ -16,9 +16,8 @@ import java.util.function.Predicate;
 
 public class Module {
     public boolean open, drawn = true;
-    protected String name;//= getModuleInfo().name();
-    protected Category category; //= getModuleInfo().category();
-    protected String description = getModuleInfo().description();
+    protected String name;
+    protected Category category;
     protected final List<Setting<?>> settingList = new ArrayList<>();
     protected final  KeySetting keybind = createSetting("Keybind", Keyboard.KEY_NONE);
     protected final BooleanSetting enabled = createSetting("Enabled", false);
@@ -90,10 +89,6 @@ public class Module {
 
     public Category getCategory() {
         return category;
-    }
-
-    public String getDescription() {
-        return description;
     }
 
     public Integer getKeybind() {
