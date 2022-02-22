@@ -2,6 +2,7 @@ package dev.zprestige.ruby.module.combat;
 
 import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.events.PacketEvent;
+import dev.zprestige.ruby.manager.HoleManager;
 import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
 import dev.zprestige.ruby.module.ModuleInfo;
@@ -229,9 +230,9 @@ public class Robot extends Module {
                 Speed.Instance.speedMode.setValue("OnGround");
             }
             boolean isFilled = nextHole != null && !mc.world.getBlockState(nextHole).getBlock().equals(Blocks.AIR);
-            nextHole = getNextHole(entityPlayer, false, 20.0, 0.0);
+            nextHole = getNextHole(entityPlayer, false, 0.0);
             if (needsToGoIntoHole || forcedHole || isTowering) {
-                BlockPos newNextHole = getNextHole(entityPlayer, true, 10.0, 10.0);
+                BlockPos newNextHole = getNextHole(entityPlayer, true, 10.0);
                 if (newNextHole != null) {
                     nextHole = newNextHole;
                     forcedHole = true;
@@ -347,25 +348,17 @@ public class Robot extends Module {
         }
     }
 
-    public BlockPos getNextHole(EntityPlayer entityPlayer, boolean force, double radius, double forceRadius) {
-        ArrayList<BlockPos> allHoles = new ArrayList<>();
-        ArrayList<BlockPos> bedrockHoles = Ruby.holeManager.getBedrockHoles(radius);
-        if (bedrockHoles != null && !bedrockHoles.isEmpty())
-            allHoles.addAll(bedrockHoles);
-        ArrayList<BlockPos> obsidianHoles = Ruby.holeManager.getObsidianHoles(radius);
-        if (obsidianHoles != null && !obsidianHoles.isEmpty())
-            allHoles.addAll(obsidianHoles);
+    public BlockPos getNextHole(EntityPlayer entityPlayer, boolean force, double forceRadius) {
+        ArrayList<HoleManager.HolePos> allHoles = Ruby.holeManager.holes;
         if (!allHoles.isEmpty()) {
+            TreeMap<Double, BlockPos> posTreeMap;
             if (force) {
-                TreeMap<Double, BlockPos> posTreeMap = allHoles.stream().filter(pos -> canEnter(pos) && (lastHole != null && !lastHole.equals(pos)) && mc.player.getDistanceSq(pos) < (forceRadius * forceRadius)).collect(Collectors.toMap(mc.player::getDistanceSq, allHole -> allHole, (a, b) -> b, TreeMap::new));
-                if (!posTreeMap.isEmpty())
-                    return posTreeMap.firstEntry().getValue();
+                posTreeMap = allHoles.stream().filter(holePos -> canEnter(holePos.pos) && (lastHole != null && !lastHole.equals(holePos.pos)) && mc.player.getDistanceSq(holePos.pos) < (forceRadius * forceRadius)).collect(Collectors.toMap(holePos -> mc.player.getDistanceSq(holePos.pos), holePos -> holePos.pos, (a, b) -> b, TreeMap::new));
             } else {
-                TreeMap<Double, BlockPos> posTreeMap2 = allHoles.stream().filter(pos -> canEnter(pos) && (lastHole != null && !lastHole.equals(pos)) && entityPlayer.getDistanceSq(pos) > 4.0f && entityPlayer.getDistanceSq(pos) < 25.0f).collect(Collectors.toMap(entityPlayer::getDistanceSq, pos -> pos, (a, b) -> b, TreeMap::new));
-                if (!posTreeMap2.isEmpty()) {
-                    return posTreeMap2.firstEntry().getValue();
-                }
+                posTreeMap = allHoles.stream().filter(holePos -> canEnter(holePos.pos) && (lastHole != null && !lastHole.equals(holePos.pos)) && entityPlayer.getDistanceSq(holePos.pos) > 4.0f && entityPlayer.getDistanceSq(holePos.pos) < 25.0f).collect(Collectors.toMap(holePos -> entityPlayer.getDistanceSq(holePos.pos), holePos -> holePos.pos, (a, b) -> b, TreeMap::new));
             }
+            if (!posTreeMap.isEmpty())
+                return posTreeMap.firstEntry().getValue();
         }
         return null;
     }
