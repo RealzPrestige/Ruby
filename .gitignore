@@ -1,64 +1,11 @@
-# Build #
-#########
-MANIFEST.MF
-dependency-reduced-pom.xml
 
-# Compiled #
-############
-bin
-build
-classes
-dist
-lib
-libs
-out
-run
-target
-*.com
-*.class
-*.dll
-*.exe
-*.o
-*.so
-
-# Databases #
-#############
-*.db
-*.sql
-*.sqlite
-
-# Packages #
-############
-*.7z
-*.dmg
-*.gz
-*.iso
-*.rar
-*.tar
-*.zip
-
-# Repository #
-##############
-.git
-
-# Logging #
-###########
 /logs
 *.log
-
-# Misc #
-########
 *.bak
-
-# System #
-##########
 .DS_Store
 ehthumbs.db
 Thumbs.db
 *.sh
-
-# Project #
-###########
 .checkstyle
 .classpath
 .externalToolBuilders
