@@ -45,13 +45,13 @@ public class MixinTabOverlay extends Gui {
         String name = networkPlayerInfoIn.getDisplayName() != null ? networkPlayerInfoIn.getDisplayName().getFormattedText() : ScorePlayerTeam.formatPlayerName(networkPlayerInfoIn.getPlayerTeam(), networkPlayerInfoIn.getGameProfile().getName());
         if (TabList.Instance.isEnabled() && TabList.Instance.showPing.getValue())
             callbackInfoReturnable.setReturnValue(name + " [" + networkPlayerInfoIn.getResponseTime() + "]");
-        if (Friends.Instance.isEnabled() && Friends.Instance.tabHighlight.getValue() && Ruby.friendInitializer.isFriend(name)) {
+        if (Friends.Instance.isEnabled() && Friends.Instance.tabHighlight.getValue() && Ruby.friendManager.isFriend(name)) {
             if (Friends.Instance.tabPrefix.getValue())
                 callbackInfoReturnable.setReturnValue(ChatFormatting.AQUA + Friends.Instance.tabPrefixPrefix.getValue() + " " + name + (TabList.Instance.isEnabled() && TabList.Instance.showPing.getValue() ? " [" + networkPlayerInfoIn.getResponseTime() + "]" : ""));
             else
                 callbackInfoReturnable.setReturnValue(ChatFormatting.AQUA + "" + name+ (TabList.Instance.isEnabled() && TabList.Instance.showPing.getValue() ? " [" + networkPlayerInfoIn.getResponseTime() + "]" : ""));
         }
-        if (Enemies.Instance.isEnabled() && Enemies.Instance.tabHighlight.getValue() && Ruby.enemyInitializer.isEnemy(name)) {
+        if (Enemies.Instance.isEnabled() && Enemies.Instance.tabHighlight.getValue() && Ruby.enemyManager.isEnemy(name)) {
             if (Enemies.Instance.tabPrefix.getValue())
                 callbackInfoReturnable.setReturnValue(ChatFormatting.RED + Enemies.Instance.tabPrefixPrefix.getValue() + " " + name+ (TabList.Instance.isEnabled() && TabList.Instance.showPing.getValue() ? " [" + networkPlayerInfoIn.getResponseTime() + "]" : ""));
             else

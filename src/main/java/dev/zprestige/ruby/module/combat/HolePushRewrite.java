@@ -198,7 +198,7 @@ public class HolePushRewrite extends Module {
     public EntityPlayer getUntrappedClosestEntityPlayer(float range, boolean pistonCheck) {
         TreeMap<Float, EntityPlayer> treeMap = new TreeMap<>();
         for (EntityPlayer entityPlayer : mc.world.playerEntities) {
-            if (!entityPlayer.equals(mc.player) && !Ruby.friendInitializer.isFriend(entityPlayer.getName()) && mc.player.getDistance(entityPlayer) < range && BlockUtil.isPlayerSafe(entityPlayer) && canPlace(EntityUtil.getPlayerPos(entityPlayer).up().up()) && (!pistonCheck || mc.world.getBlockState(EntityUtil.getPlayerPos(entityPlayer).up()).getBlock().equals(Blocks.AIR))) {
+            if (!entityPlayer.equals(mc.player) && !Ruby.friendManager.isFriend(entityPlayer.getName()) && mc.player.getDistance(entityPlayer) < range && BlockUtil.isPlayerSafe(entityPlayer) && canPlace(EntityUtil.getPlayerPos(entityPlayer).up().up()) && (!pistonCheck || mc.world.getBlockState(EntityUtil.getPlayerPos(entityPlayer).up()).getBlock().equals(Blocks.AIR))) {
                 treeMap.put(mc.player.getDistance(entityPlayer), entityPlayer);
             }
         }

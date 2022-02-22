@@ -11,51 +11,12 @@ import java.util.stream.Collectors;
 public class HoleManager {
     public ArrayList<BlockPos> obsidianHoles = new ArrayList<>();
     public ArrayList<BlockPos> bedrockHoles = new ArrayList<>();
-    public Thread thread1 = new Thread(() -> {
-        while (true) {
-            try {
-                obsidianHoles = setupObsidian();
-            } catch (Exception ignored) {
-            }
-
-        }
-    });
-    public Thread thread2 = new Thread(() -> {
-        while (true) {
-            try {
-                bedrockHoles = setupBedrock();
-            } catch (Exception ignored) {
-            }
-        }
-    });
-
-    @SuppressWarnings("deprecation")
-    public void onThreadReset() {
-        thread1.stop();
-        thread1 = new Thread(() -> {
-            while (true) {
-                try {
-                    obsidianHoles = setupObsidian();
-                } catch (Exception ignored) {
-                }
-            }
-        });
-        thread2.stop();
-        thread2 = new Thread(() -> {
-            while (true) {
-                try {
-                    bedrockHoles = setupBedrock();
-                } catch (Exception ignored) {
-                }
-            }
-        });
-    }
 
     public void onRenderWorldLastEvent() {
-        if (thread1 != null && (!thread1.isAlive() || thread1.isInterrupted()))
-            thread1.start();
-        if (thread2 != null && (!thread2.isAlive() || thread2.isInterrupted()))
-            thread2.start();
+        Ruby.threadManager.run(() -> {
+            bedrockHoles = setupBedrock();
+            obsidianHoles = setupObsidian();
+        });
     }
 
     public ArrayList<BlockPos> setupBedrock() {

@@ -31,9 +31,6 @@ public class Module {
         return getClass().getAnnotation(ModuleInfo.class);
     }
 
-    public void onThreadReset() {
-    }
-
     public void onEnable() {
     }
 

@@ -1,15 +1,14 @@
 package dev.zprestige.ruby.module.client;
 
 import dev.zprestige.ruby.Ruby;
-import dev.zprestige.ruby.manager.Configu;
 import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
 import dev.zprestige.ruby.module.ModuleInfo;
 import dev.zprestige.ruby.setting.impl.BooleanSetting;
 import dev.zprestige.ruby.setting.impl.ColorSetting;
 import dev.zprestige.ruby.setting.impl.IntegerSetting;
-import dev.zprestige.ruby.ui.config.ConfigGuiScreen;
 import dev.zprestige.ruby.ui.click.MainScreen;
+import dev.zprestige.ruby.ui.config.ConfigGuiScreen;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Keyboard;
@@ -38,8 +37,7 @@ public class NewGui extends Module {
     @Override
     public void onDisable() {
         mc.displayGuiScreen(null);
-        Ruby.configInitializer.savePlayer();
-        Configu.saveModules();
+        Ruby.configManager.savePlayer();
     }
 
     @Override

@@ -73,7 +73,7 @@ public class Aura extends Module {
         for (EntityPlayer entityPlayer : mc.world.playerEntities) {
             if (entityPlayer.equals(mc.player))
                 continue;
-            if (Ruby.friendInitializer.isFriend(entityPlayer.getName()))
+            if (Ruby.friendManager.isFriend(entityPlayer.getName()))
                 continue;
             if (mc.player.getDistance(entityPlayer) > range.getValue())
                 continue;

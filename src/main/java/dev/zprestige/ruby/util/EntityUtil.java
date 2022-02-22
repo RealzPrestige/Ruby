@@ -16,7 +16,6 @@ import net.minecraft.network.play.client.CPacketAnimation;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.CombatRules;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.*;
 import net.minecraft.world.Explosion;
@@ -335,7 +334,7 @@ public class EntityUtil {
     }
 
     public static boolean isntValid(Entity entity, double range) {
-        return entity == null || isDead(entity) || entity.equals(mc.player) || entity instanceof EntityPlayer && Ruby.friendInitializer.isFriend(entity.getName()) || mc.player.getDistanceSq(entity) > (range * range);
+        return entity == null || isDead(entity) || entity.equals(mc.player) || entity instanceof EntityPlayer && Ruby.friendManager.isFriend(entity.getName()) || mc.player.getDistanceSq(entity) > (range * range);
     }
 
     public static boolean isAlive(Entity entity) {

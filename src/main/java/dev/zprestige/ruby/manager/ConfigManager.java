@@ -18,7 +18,7 @@ public class ConfigManager {
         path = new File(Ruby.mc.gameDir + File.separator + "Ruby" + File.separator + "Configs");
         if (!path.exists())
             path.mkdir();
-        modules.addAll(Ruby.moduleManager.getOrderedModuleList());
+        modules.addAll(Ruby.moduleManager.moduleList);
         if (!getActiveConfig().equals("0"))
             load(getActiveConfig());
     }
@@ -101,7 +101,7 @@ public class ConfigManager {
             if (!file.exists())
                 file.createNewFile();
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
-            for (FriendManager.FriendPlayer friendPlayer : Ruby.friendInitializer.getFriendList()) {
+            for (FriendManager.FriendPlayer friendPlayer : Ruby.friendManager.getFriendList()) {
                 bufferedWriter.write(friendPlayer.getName());
                 bufferedWriter.write("\r\n");
             }
@@ -118,9 +118,7 @@ public class ConfigManager {
             FileInputStream fileInputStream = new FileInputStream(file.getAbsolutePath());
             DataInputStream dataInputStream = new DataInputStream(fileInputStream);
             BufferedReader bufferReader = new BufferedReader(new InputStreamReader(dataInputStream));
-            bufferReader.lines().forEach(line -> {
-                Ruby.friendInitializer.addFriend(line);
-            });
+            bufferReader.lines().forEach(line -> Ruby.friendManager.addFriend(line));
             bufferReader.close();
         } catch (Exception ignored) {
         }
@@ -132,7 +130,7 @@ public class ConfigManager {
             if (!file.exists())
                 file.createNewFile();
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
-            for (EnemyManager.EnemyPlayer enemyPlayer : Ruby.enemyInitializer.getEnemyList()) {
+            for (EnemyManager.EnemyPlayer enemyPlayer : Ruby.enemyManager.getEnemyList()) {
                 bufferedWriter.write(enemyPlayer.getName());
                 bufferedWriter.write("\r\n");
             }
@@ -151,7 +149,7 @@ public class ConfigManager {
             BufferedReader bufferReader = new BufferedReader(new InputStreamReader(dataInputStream));
             bufferReader.lines().forEach(line -> {
                 String name = line;
-                Ruby.enemyInitializer.addEnemy(name);
+                Ruby.enemyManager.addEnemy(name);
             });
             bufferReader.close();
         } catch (Exception ignored) {

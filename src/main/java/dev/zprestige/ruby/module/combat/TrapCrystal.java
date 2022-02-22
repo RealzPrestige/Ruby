@@ -192,7 +192,7 @@ public class TrapCrystal extends Module {
         TreeMap<Float, EntityPlayer> treeMap = new TreeMap<>();
         for (EntityPlayer entityPlayer : mc.world.playerEntities) {
             BlockPos upUpPos = EntityUtil.getPlayerPos(entityPlayer).up().up();
-            if (!entityPlayer.equals(mc.player) && !Ruby.friendInitializer.isFriend(entityPlayer.getName()) && mc.player.getDistance(entityPlayer) < range && BlockUtil.isPlayerSafe(entityPlayer) && canPlaceInclObsidian(upUpPos) && canPlace(upUpPos.up()) && canPlace(upUpPos.up().up())) {
+            if (!entityPlayer.equals(mc.player) && !Ruby.friendManager.isFriend(entityPlayer.getName()) && mc.player.getDistance(entityPlayer) < range && BlockUtil.isPlayerSafe(entityPlayer) && canPlaceInclObsidian(upUpPos) && canPlace(upUpPos.up()) && canPlace(upUpPos.up().up())) {
                 treeMap.put(mc.player.getDistance(entityPlayer), entityPlayer);
             }
         }

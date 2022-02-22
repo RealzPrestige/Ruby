@@ -82,20 +82,20 @@ public class MiddleClickInterface extends GuiScreen {
                 String prefix = ChatFormatting.RED + "[Ruby] ";
                 switch (quadrantType) {
                     case AddFriend:
-                        if (Ruby.friendInitializer.isFriend(entity.getName())) {
-                            Ruby.friendInitializer.removeFriend(entity.getName());
+                        if (Ruby.friendManager.isFriend(entity.getName())) {
+                            Ruby.friendManager.removeFriend(entity.getName());
                             Ruby.mc.player.sendMessage(new TextComponentString(prefix + ChatFormatting.RESET + "Successfully removed " + entity.getName() + " as friend."));
                         } else {
-                            Ruby.friendInitializer.addFriend(entity.getName());
+                            Ruby.friendManager.addFriend(entity.getName());
                             Ruby.mc.player.sendMessage(new TextComponentString(prefix + ChatFormatting.RESET + "Successfully added " + entity.getName() + " as friend."));
                         }
                         break;
                     case AddEnemy:
-                        if (Ruby.enemyInitializer.isEnemy(entity.getName())) {
-                            Ruby.enemyInitializer.removeEnemy(entity.getName());
+                        if (Ruby.enemyManager.isEnemy(entity.getName())) {
+                            Ruby.enemyManager.removeEnemy(entity.getName());
                             Ruby.mc.player.sendMessage(new TextComponentString(prefix + ChatFormatting.RESET + "Successfully removed " + entity.getName() + " as enemy."));
                         } else {
-                            Ruby.enemyInitializer.addEnemy(entity.getName());
+                            Ruby.enemyManager.addEnemy(entity.getName());
                             Ruby.mc.player.sendMessage(new TextComponentString(prefix + ChatFormatting.RESET + "Successfully added " + entity.getName() + " as enemy."));
                         }
                         break;

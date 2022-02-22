@@ -8,6 +8,7 @@ import dev.zprestige.ruby.module.Module;
 import dev.zprestige.ruby.module.visual.Nametags;
 import dev.zprestige.ruby.module.visual.Waypoints;
 import dev.zprestige.ruby.util.MessageUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.play.client.CPacketChatMessage;
@@ -24,36 +25,26 @@ import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import org.lwjgl.input.Keyboard;
 
+import java.util.ArrayList;
+
 public class EventListener {
+    protected final Minecraft mc = Ruby.mc;
+    protected final ArrayList<Module> moduleList = new ArrayList<>(Ruby.moduleManager.moduleList);
     public EventListener() {
         Ruby.RubyEventBus.register(this);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onLivingUpdateEvent(LivingEvent.LivingUpdateEvent event) {
-        if (Ruby.mc.player != null && Ruby.mc.world != null && event.getEntity().getEntityWorld().isRemote && event.getEntityLiving().equals(Ruby.mc.player)) {
-            Ruby.moduleManager.getOrderedModuleList().stream().filter(Module::isEnabled).forEach(Module::onTick);
+        if (checkNull() && event.getEntity().getEntityWorld().isRemote && event.getEntityLiving().equals(mc.player)) {
+            moduleList.stream().filter(Module::isEnabled).forEach(Module::onTick);
         }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onRenderGameOverlayTextEvent(RenderGameOverlayEvent.Text event) {
-        if (Ruby.mc.player != null && Ruby.mc.world != null)
-            Ruby.moduleManager.getOrderedModuleList().stream().filter(Module::isEnabled).forEach(Module::onOverlayTick);
-    }
-
-    @SubscribeEvent
-    public void onDeath(LivingDeathEvent event) {
-        if (event.getEntity().equals(Ruby.mc.player)) {
-            Ruby.moduleManager.getOrderedModuleList().stream().filter(Module::isEnabled).forEach(Module::onThreadReset);
-            Ruby.holeManager.onThreadReset();
-        }
-    }
-
-    @SubscribeEvent
-    public void onClientConnect(FMLNetworkEvent.ClientConnectedToServerEvent event) {
-        Ruby.moduleManager.getOrderedModuleList().stream().filter(Module::isEnabled).forEach(Module::onThreadReset);
-        Ruby.holeManager.onThreadReset();
+        if (checkNull())
+            moduleList.stream().filter(Module::isEnabled).forEach(Module::onOverlayTick);
     }
 
     @SubscribeEvent
@@ -63,40 +54,41 @@ public class EventListener {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onRenderWorldLastEvent(RenderWorldLastEvent event) {
-        Ruby.mc.profiler.startSection("ruby");
-        if (Ruby.mc.player != null && Ruby.mc.world != null) {
+        mc.profiler.startSection("ruby");
+        if (checkNull()) {
             Render3DEvent render3DEvent = new Render3DEvent(event.getPartialTicks());
             Ruby.holeManager.onRenderWorldLastEvent();
             if (Nametags.Instance.isEnabled())
                 Nametags.Instance.onGlobalRenderTick(render3DEvent);
-            Ruby.moduleManager.getOrderedModuleList().stream().filter(Module::isEnabled).forEach(Module::onGlobalRenderTick);
-            Ruby.moduleManager.getOrderedModuleList().stream().filter(module -> module.isEnabled() && !(module instanceof Nametags)).forEach(module -> module.onGlobalRenderTick(render3DEvent));
+            moduleList.stream().filter(Module::isEnabled).forEach(Module::onGlobalRenderTick);
+            moduleList.stream().filter(module -> module.isEnabled() && !(module instanceof Nametags)).forEach(module -> module.onGlobalRenderTick(render3DEvent));
         }
-        Ruby.mc.profiler.endSection();
+        mc.profiler.endSection();
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    @SubscribeEvent
     public void onKeyInput(InputEvent.KeyInputEvent event) {
-        if (Ruby.mc.player != null && Ruby.mc.world != null && Keyboard.getEventKey() != 226) {
-            Ruby.moduleManager.getOrderedModuleList().stream().filter(module -> Keyboard.getEventKeyState() && module.getKeybind().equals(Keyboard.getEventKey())).forEach(module -> {
-                if (module.isEnabled())
+        if (checkNull()) {
+            Ruby.moduleManager.moduleList.stream().filter(module -> Keyboard.getEventKeyState() && module.getKeybind().equals(Keyboard.getEventKey())).forEach(module -> {
+                if (module.isEnabled()) {
                     module.disableModule();
-                else
+                } else {
                     module.enableModule();
+                }
             });
         }
     }
 
     @SubscribeEvent
     public void onPacketReceive(PacketEvent.PacketReceiveEvent event) {
-        if (Ruby.mc.world == null || Ruby.mc.player == null)
+        if (!checkNull())
             return;
         if (event.getPacket() instanceof SPacketSoundEffect && ((SPacketSoundEffect) event.getPacket()).getSound() == SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT)
             Ruby.RubyEventBus.post(new ChorusEvent(((SPacketSoundEffect) event.getPacket()).getX(), ((SPacketSoundEffect) event.getPacket()).getY(), ((SPacketSoundEffect) event.getPacket()).getZ()));
         if (event.getPacket() instanceof SPacketPlayerListItem) {
             for (SPacketPlayerListItem.AddPlayerData data : ((SPacketPlayerListItem) event.getPacket()).getEntries()) {
                 if (data != null && (!Strings.isNullOrEmpty(data.getProfile().getName()) || data.getProfile().getId() != null)) {
-                    EntityPlayer entity = Ruby.mc.world.getPlayerEntityByUUID(data.getProfile().getId());
+                    EntityPlayer entity = mc.world.getPlayerEntityByUUID(data.getProfile().getId());
                     if (((SPacketPlayerListItem) event.getPacket()).getAction().equals(SPacketPlayerListItem.Action.ADD_PLAYER)) {
                         Ruby.RubyEventBus.post(new LogoutEvent.LoginEvent(entity));
                     } else if (((SPacketPlayerListItem) event.getPacket()).getAction().equals(SPacketPlayerListItem.Action.REMOVE_PLAYER)) {
@@ -108,10 +100,13 @@ public class EventListener {
             }
         }
     }
+    protected boolean checkNull(){
+        return mc.player != null && mc.world != null;
+    }
 
     @SubscribeEvent
     public void onPacketSend(PacketEvent.PacketSendEvent event) {
-        if (Ruby.mc.world == null || Ruby.mc.player == null || !(event.getPacket() instanceof CPacketChatMessage))
+        if (!checkNull() || !(event.getPacket() instanceof CPacketChatMessage))
             return;
         CPacketChatMessage packet = (CPacketChatMessage) event.getPacket();
         if (packet.getMessage().startsWith("@"))
@@ -121,7 +116,7 @@ public class EventListener {
         if (packet.getMessage().toLowerCase().contains("ruby load")) {
             String folder = packet.getMessage().split(" ")[2];
             try {
-                Ruby.configInitializer.load(folder);
+                Ruby.configManager.load(folder);
                 MessageUtil.sendMessage(ChatFormatting.WHITE + "Successfully loaded " + ChatFormatting.GRAY + folder + ChatFormatting.WHITE + ".");
             } catch (Exception ignored) {
                 MessageUtil.sendMessage("Input not found or something went wrong, command failed.");
@@ -131,7 +126,7 @@ public class EventListener {
         if (packet.getMessage().toLowerCase().contains("ruby save")) {
             String folder = packet.getMessage().split(" ")[2];
             try {
-                Ruby.configInitializer.save(folder);
+                Ruby.configManager.save(folder);
                 MessageUtil.sendMessage(ChatFormatting.WHITE + "Successfully saved " + ChatFormatting.GRAY + folder + ChatFormatting.WHITE + ".");
             } catch (Exception ignored) {
                 MessageUtil.sendMessage("Input not found or something went wrong, command failed.");
@@ -141,7 +136,7 @@ public class EventListener {
         if (packet.getMessage().toLowerCase().contains("ruby friend add")) {
             String name = packet.getMessage().split(" ")[3];
             try {
-                Ruby.friendInitializer.addFriend(name);
+                Ruby.friendManager.addFriend(name);
                 MessageUtil.sendMessage(ChatFormatting.WHITE + "Successfully added " + ChatFormatting.AQUA + name + ChatFormatting.WHITE + " as a friend.");
             } catch (Exception ignored) {
                 MessageUtil.sendMessage("Input not found or something went wrong, command failed.");
@@ -151,7 +146,7 @@ public class EventListener {
         if (packet.getMessage().toLowerCase().contains("ruby friend del")) {
             String name = packet.getMessage().split(" ")[3];
             try {
-                Ruby.friendInitializer.removeFriend(name);
+                Ruby.friendManager.removeFriend(name);
                 MessageUtil.sendMessage(ChatFormatting.WHITE + "Successfully removed " + ChatFormatting.AQUA + name + ChatFormatting.WHITE + " as a friend.");
             } catch (Exception ignored) {
                 MessageUtil.sendMessage("Input not found or something went wrong, command failed.");
@@ -161,7 +156,7 @@ public class EventListener {
         if (packet.getMessage().toLowerCase().contains("ruby enemy add")) {
             String name = packet.getMessage().split(" ")[3];
             try {
-                Ruby.enemyInitializer.addEnemy(name);
+                Ruby.enemyManager.addEnemy(name);
                 MessageUtil.sendMessage(ChatFormatting.WHITE + "Successfully added " + ChatFormatting.RED + name + ChatFormatting.WHITE + " as an enemy.");
             } catch (Exception ignored) {
                 MessageUtil.sendMessage("Input not found or something went wrong, command failed.");
@@ -171,7 +166,7 @@ public class EventListener {
         if (packet.getMessage().toLowerCase().contains("ruby enemy del")) {
             String name = packet.getMessage().split(" ")[3];
             try {
-                Ruby.enemyInitializer.removeEnemy(name);
+                Ruby.enemyManager.removeEnemy(name);
                 MessageUtil.sendMessage(ChatFormatting.WHITE + "Successfully removed " + ChatFormatting.RED + name + ChatFormatting.WHITE + " as an enemy.");
             } catch (Exception ignored) {
                 MessageUtil.sendMessage("Input not found or something went wrong, command failed.");

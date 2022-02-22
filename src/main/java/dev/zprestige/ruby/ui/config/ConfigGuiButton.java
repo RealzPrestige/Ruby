@@ -68,7 +68,7 @@ public class ConfigGuiButton {
 
     public void mouseClicked(int mouseX, int mouseY, int clickedButton) {
         if (isInside(mouseX, mouseY) && clickedButton == 0) {
-            Ruby.configInitializer.load(name);
+            Ruby.configManager.load(name);
             Configs.Instance.enableModule();
         }
         icons.forEach(icon -> icon.mouseClicked(mouseX, mouseY, clickedButton));
@@ -113,15 +113,15 @@ public class ConfigGuiButton {
             if (isInside(mouseX, mouseY) && clickedButton == 0) {
                 switch (iconType) {
                     case Save:
-                        Ruby.configInitializer.save(name);
+                        Ruby.configManager.save(name);
                         MessageUtil.sendMessage(ChatFormatting.WHITE + "Successfully saved " + ChatFormatting.GRAY + name + ChatFormatting.WHITE + ".");
                         break;
                     case Load:
-                        Ruby.configInitializer.load(name);
+                        Ruby.configManager.load(name);
                         MessageUtil.sendMessage(ChatFormatting.WHITE + "Successfully loaded " + ChatFormatting.GRAY + name + ChatFormatting.WHITE + ".");
                         break;
                     case Delete:
-                        Ruby.configInitializer.deleteFolder(name);
+                        Ruby.configManager.deleteFolder(name);
                         MessageUtil.sendMessage(ChatFormatting.WHITE + "Successfully deleted " + ChatFormatting.GRAY + name + ChatFormatting.WHITE + ".");
                         break;
                 }

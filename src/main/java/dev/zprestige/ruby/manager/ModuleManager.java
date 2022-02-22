@@ -12,7 +12,6 @@ import java.util.Comparator;
 import java.util.List;
 
 public class ModuleManager {
-    public ArrayList<Module> orderedModuleList = new ArrayList<>();
     public ArrayList<Module> moduleList = new ArrayList<>();
 
     public ModuleManager() {
@@ -23,9 +22,6 @@ public class ModuleManager {
         addModules("movement");
         addModules("player");
         addModules("visual");
-        moduleList.sort(Comparator.comparing(Module::getName));
-        moduleList.sort(Comparator.comparing(Module::getCategory));
-        orderedModuleList.addAll(moduleList);
     }
 
     public void addModules(String folder) {
@@ -47,22 +43,11 @@ public class ModuleManager {
         }
     }
 
-    public ArrayList<Module> getOrderedModuleList() {
-        return orderedModuleList;
-    }
 
     public ArrayList<Module> getOrderedModuleListByLength() {
         ArrayList<Module> lengthOrdered = new ArrayList<>(moduleList);
         lengthOrdered.sort(Comparator.comparing(Module::getModuleNameWidth).reversed());
         return lengthOrdered;
-    }
-
-    public List<Module> getModulesInCategory(Category category) {
-        ArrayList<Module> modulesInCategory = new ArrayList<>();
-        for (Module module : orderedModuleList)
-            if (module.getCategory().equals(category))
-                modulesInCategory.add(module);
-        return modulesInCategory;
     }
 
     public List<Category> getCategories() {

@@ -13,29 +13,33 @@ import net.minecraftforge.fml.common.eventhandler.EventBus;
 public class Ruby {
     public static EventBus RubyEventBus;
     public static Minecraft mc;
+    public static ThreadManager threadManager;
     public static HoleManager holeManager;
     public static EventListener eventListener;
     public static ModuleManager moduleManager;
-    public static FriendManager friendInitializer;
-    public static EnemyManager enemyInitializer;
-    public static ConfigManager configInitializer;
-    public static TickManager tickInitializer;
+    public static FriendManager friendManager;
+    public static EnemyManager enemyManager;
+    public static ConfigManager configManager;
+    public static TickManager tickManager;
     public static TotemPopManager totemPopManager;
+    public static Configu configu;
     public static RubyFont rubyFont = new RubyFont("Font", 17.0f);
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         RubyEventBus = MinecraftForge.EVENT_BUS;
         mc = Minecraft.getMinecraft();
+        threadManager = new ThreadManager();
         holeManager = new HoleManager();
         eventListener = new EventListener();
         moduleManager = new ModuleManager();
-        friendInitializer = new FriendManager();
-        enemyInitializer = new EnemyManager();
-        configInitializer = new ConfigManager();
-        tickInitializer = new TickManager();
+        friendManager = new FriendManager();
+        enemyManager = new EnemyManager();
+        configManager = new ConfigManager();
+        tickManager = new TickManager();
         totemPopManager = new TotemPopManager();
-        configInitializer.loadPlayer();
+        configu = new Configu();
+        configManager.loadPlayer();
     }
 }
 

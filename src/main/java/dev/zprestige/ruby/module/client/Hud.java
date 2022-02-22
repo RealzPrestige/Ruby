@@ -173,9 +173,9 @@ public class Hud extends Module {
         if (tps.getValue()) {
             i += 10;
             try {
-                RenderUtil.drawRect(1, i, 1 + Ruby.rubyFont.getStringWidth("Tps " + Ruby.tickInitializer.getTPS()) + 2, i + 10, new Color(0, 0, 0, 100).getRGB());
+                RenderUtil.drawRect(1, i, 1 + Ruby.rubyFont.getStringWidth("Tps " + Ruby.tickManager.getTPS()) + 2, i + 10, new Color(0, 0, 0, 100).getRGB());
                 Ruby.rubyFont.drawStringWithShadow("Tps", 1, i, new Color(0x5D5D5D).getRGB());
-                Ruby.rubyFont.drawStringWithShadow(" " + Ruby.tickInitializer.getTPS(), 1 + Ruby.rubyFont.getStringWidth("Tps"), i, color.getValue().getRGB());
+                Ruby.rubyFont.drawStringWithShadow(" " + Ruby.tickManager.getTPS(), 1 + Ruby.rubyFont.getStringWidth("Tps"), i, color.getValue().getRGB());
                 RenderUtil.drawRect(0, i, 1, i + 10, color.getValue().getRGB());
             } catch (Exception ignored) {
             }

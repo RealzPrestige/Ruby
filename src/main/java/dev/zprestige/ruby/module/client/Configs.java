@@ -1,5 +1,6 @@
 package dev.zprestige.ruby.module.client;
 
+import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
 import dev.zprestige.ruby.module.ModuleInfo;

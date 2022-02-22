@@ -169,7 +169,7 @@ public class BlockUtil {
 
 
     public static BlockPos getClosestHoleToPlayer(EntityPlayer entityPlayer, float radius, boolean doubleHoles) {
-        if (entityPlayer == null || entityPlayer.isDead || Ruby.friendInitializer.isFriend(entityPlayer.getName()) || entityPlayer.equals(mc.player))
+        if (entityPlayer == null || entityPlayer.isDead || Ruby.friendManager.isFriend(entityPlayer.getName()) || entityPlayer.equals(mc.player))
             return null;
         TreeMap<Double, Hole> holes = new TreeMap<>();
         for (BlockPos pos : getSphere(radius, AirType.OnlyAir, entityPlayer)) {
