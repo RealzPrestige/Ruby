@@ -6,6 +6,7 @@ import net.minecraft.launchwrapper.Launch;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("ALL")
 public class ClassFinder {
 
     public static List<Class<?>> from(String packageName) {

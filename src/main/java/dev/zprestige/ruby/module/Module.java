@@ -69,10 +69,7 @@ public class Module {
     }
 
     public void disableModule(String message) {
-        setEnabled(false);
-        onDisable();
-        Ruby.RubyEventBus.post(new ModuleToggleEvent.Disable(this));
-        Ruby.RubyEventBus.unregister(this);
+        disableModule();
         MessageUtil.sendMessage(message);
     }
 
