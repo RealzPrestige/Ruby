@@ -1,297 +1,188 @@
 package dev.zprestige.ruby.manager;
 
 import dev.zprestige.ruby.Ruby;
+import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
 import dev.zprestige.ruby.setting.Setting;
 import dev.zprestige.ruby.setting.impl.*;
+import net.minecraft.client.Minecraft;
+import org.lwjgl.input.Keyboard;
 
 import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Objects;
+import java.util.stream.Collectors;
 
+@SuppressWarnings("ResultOfMethodCallIgnored")
 public class ConfigManager {
-    ArrayList<Module> modules = new ArrayList<>();
-    File path;
+    protected final Minecraft mc = Ruby.mc;
+    protected final String separator = File.separator;
+    protected final ArrayList<Module> moduleList = Ruby.moduleManager.moduleList;
+    protected File configPath = new File(mc.gameDir + separator + "Ruby" + separator + "Configs");
 
-    public ConfigManager() {
-        path = new File(Ruby.mc.gameDir + File.separator + "Ruby" + File.separator + "Configs");
-        if (!path.exists())
-            path.mkdir();
-        modules.addAll(Ruby.moduleManager.moduleList);
-        if (!getActiveConfig().equals("0"))
-            load(getActiveConfig());
-    }
-
-    public void deleteFolder(String name) {
-        for (String file : Objects.requireNonNull(path.list())) {
-            if (file.equals(name)) {
-                File file1 = new File(path + File.separator + name);
-                file1.delete();
-            }
+    public void loadFromActiveConfig() {
+        String activeConfig = readActiveConfig();
+        if (!activeConfig.equals("NONE")) {
+            configPath = new File(configPath + separator + activeConfig);
+            loadModules(false);
         }
     }
 
-    public void save(String folder) {
-        path = new File(Ruby.mc.gameDir + File.separator + "Ruby" + File.separator + "Configs" + File.separator + folder);
-        if (!path.exists())
-            path.mkdir();
-        saveModuleFile();
-        saveActiveConfig(folder);
+    public void load(String folder, boolean onlyVisuals) {
+        configPath = new File(configPath + separator + folder);
+        loadModules(onlyVisuals);
+        if (!onlyVisuals) {
+            saveActiveConfig(folder);
+        }
     }
 
-    public void load(String folder) {
-        path = new File(Ruby.mc.gameDir + File.separator + "Ruby" + File.separator + "Configs" + File.separator + folder);
-        if (!path.exists())
-            return;
-        setModuleValue();
-        setModuleBind();
-        setModuleSettingValues();
-        saveActiveConfig(folder);
+    public void save(String folder, boolean onlyVisuals) {
+        configPath = new File(configPath + separator + folder);
+        saveModules(onlyVisuals);
+        if (!onlyVisuals) {
+            saveActiveConfig(folder);
+        }
     }
 
-    public File playerPath = new File(Ruby.mc.gameDir + File.separator + "Ruby" + File.separator + "Players");
-
-    {
-        if (!playerPath.exists())
-            playerPath.mkdir();
-    }
-
-    public void savePlayer() {
-        saveFriendList(playerPath);
-        saveEnemyList(playerPath);
-    }
-
-    public void loadPlayer() {
-        loadFriendList(playerPath);
-        loadEnemyList(playerPath);
-    }
-
-    public void saveActiveConfig(String folder) {
+    public void saveSocials() {
+        final File file = registerPathAndCreate(mc.gameDir + separator + "Ruby" + separator + "Socials");
+        final File friends = registerPathAndCreate(file + separator + "Friends.txt");
+        final File enemies = registerPathAndCreate(file + separator + "Enemies.txt");
         try {
-            File file = new File(Ruby.mc.gameDir + File.separator + "Ruby" + File.separator + "ActiveConfig.txt");
-            if (!file.exists())
-                file.createNewFile();
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
-            bufferedWriter.write(folder);
+            final BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(friends));
+            Ruby.friendManager.getFriendList().forEach(friendPlayer -> writeLine(bufferedWriter, friendPlayer.getName()));
             bufferedWriter.close();
-        } catch (Exception ignored) {
+            final BufferedWriter bufferedWriter2 = new BufferedWriter(new FileWriter(enemies));
+            Ruby.enemyManager.getEnemyList().forEach(enemyPlayer -> writeLine(bufferedWriter2, enemyPlayer.getName()));
+            bufferedWriter2.close();
+        } catch (IOException ignored) {
         }
     }
 
-    public String getActiveConfig() {
+    public void readAndSetSocials(){
+        final File file = registerPathAndCreate(mc.gameDir + separator + "Ruby" + separator + "Socials");
+        final File friends = registerPathAndCreate(file + separator + "Friends.txt");
+        final File enemies = registerPathAndCreate(file + separator + "Enemies.txt");
         try {
-            File file = new File(Ruby.mc.gameDir + File.separator + "Ruby" + File.separator + "ActiveConfig.txt");
-            if (!file.exists())
-                return "0";
-            FileInputStream fileInputStream = new FileInputStream(file.getAbsolutePath());
-            DataInputStream dataInputStream = new DataInputStream(fileInputStream);
-            BufferedReader bufferReader = new BufferedReader(new InputStreamReader(dataInputStream));
-            String line = bufferReader.readLine();
-            bufferReader.close();
-            return line;
-        } catch (Exception ignored) {
-        }
-        return "0";
-    }
-
-    public void saveFriendList(File path) {
-        try {
-            File file = new File(path + File.separator + File.separator + "Friends.txt");
-            if (!file.exists())
-                file.createNewFile();
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
-            for (FriendManager.FriendPlayer friendPlayer : Ruby.friendManager.getFriendList()) {
-                bufferedWriter.write(friendPlayer.getName());
-                bufferedWriter.write("\r\n");
-            }
-            bufferedWriter.close();
-        } catch (Exception ignored) {
-        }
-    }
-
-    public void loadFriendList(File path) {
-        try {
-            File file = new File(path + File.separator + "Friends.txt");
-            if (!file.exists())
-                return;
-            FileInputStream fileInputStream = new FileInputStream(file.getAbsolutePath());
-            DataInputStream dataInputStream = new DataInputStream(fileInputStream);
-            BufferedReader bufferReader = new BufferedReader(new InputStreamReader(dataInputStream));
+            final BufferedReader bufferReader = new BufferedReader(new InputStreamReader(new DataInputStream(new FileInputStream(friends))));
+            final BufferedReader bufferReader2 = new BufferedReader(new InputStreamReader(new DataInputStream(new FileInputStream(enemies))));
+            Ruby.friendManager.getFriendList().clear();
+            Ruby.enemyManager.getEnemyList().clear();
             bufferReader.lines().forEach(line -> Ruby.friendManager.addFriend(line));
-            bufferReader.close();
-        } catch (Exception ignored) {
+            bufferReader2.lines().forEach(line -> Ruby.enemyManager.addEnemy(line));
+        } catch (IOException ignored) {
         }
     }
 
-    public void saveEnemyList(File path) {
+    protected String readActiveConfig() {
+        final File file = registerFileAndCreate(mc.gameDir + separator + "Ruby");
         try {
-            File file = new File(path + File.separator + "Enemies.txt");
-            if (!file.exists())
-                file.createNewFile();
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
-            for (EnemyManager.EnemyPlayer enemyPlayer : Ruby.enemyManager.getEnemyList()) {
-                bufferedWriter.write(enemyPlayer.getName());
-                bufferedWriter.write("\r\n");
-            }
+            final BufferedReader bufferReader = new BufferedReader(new InputStreamReader(new DataInputStream(new FileInputStream(file))));
+            String activeConfig = bufferReader.readLine().replace("\"", "");
+            bufferReader.close();
+            return activeConfig;
+        } catch (IOException ignored) {
+        }
+        return "NONE";
+    }
+
+    protected void saveActiveConfig(String folder) {
+        final File file = registerFileAndCreate(mc.gameDir + separator + "Ruby");
+        try {
+            final BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
+            writeLine(bufferedWriter, "\"" + folder + "\"");
             bufferedWriter.close();
-        } catch (Exception ignored) {
+        } catch (IOException ignored) {
         }
     }
 
-    public void loadEnemyList(File path) {
-        try {
-            File file = new File(path + File.separator + "Enemies.txt");
-            if (!file.exists())
-                return;
-            FileInputStream fileInputStream = new FileInputStream(file.getAbsolutePath());
-            DataInputStream dataInputStream = new DataInputStream(fileInputStream);
-            BufferedReader bufferReader = new BufferedReader(new InputStreamReader(dataInputStream));
-            bufferReader.lines().forEach(line -> {
-                String name = line;
-                Ruby.enemyManager.addEnemy(name);
-            });
-            bufferReader.close();
-        } catch (Exception ignored) {
+    protected void loadModules(boolean onlyVisuals) {
+        ArrayList<Module> modules = onlyVisuals ? moduleList.stream().filter(module -> module.getCategory().equals(Category.Visual)).collect(Collectors.toCollection(ArrayList::new)) : moduleList;
+        modules.forEach(module -> {
+            final File path = new File(configPath + separator + module.getCategory().toString());
+            final File file = new File(path + separator + module.getName() + ".txt");
+            try {
+                final BufferedReader bufferReader = new BufferedReader(new InputStreamReader(new DataInputStream(new FileInputStream(file))));
+                bufferReader.lines().forEach(line -> {
+                    final String[] split = line.replace("\"", "").replace(" ", "").split(":");
+                    setValueFromSetting(getSettingByNameAndModule(module, split[0]), split[1], split[0].equals("Enabled"));
+                });
+                bufferReader.close();
+            } catch (IOException ignored) {
+            }
+        });
+    }
+
+    @SuppressWarnings("ALL")
+    protected void setValueFromSetting(Setting setting, String line, boolean enabled) {
+        if (enabled) {
+            final Module module = setting.getModule();
+            if (line.equals("true") && !module.isEnabled()) {
+                module.enableModule();
+            } else if (module.isEnabled()) {
+                module.disableModule();
+            }
+        }
+        if (setting instanceof StringSetting || setting instanceof ModeSetting) {
+            setting.setValue(line);
+        }
+        if (setting instanceof IntegerSetting) {
+            setting.setValue(Integer.parseInt(line));
+        }
+        if (setting instanceof FloatSetting) {
+            setting.setValue(Float.parseFloat(line));
+        }
+        if (setting instanceof DoubleSetting) {
+            setting.setValue(Double.parseDouble(line));
+        }
+        if (setting instanceof BooleanSetting) {
+            setting.setValue(Boolean.parseBoolean(line));
+        }
+        if (setting instanceof KeySetting) {
+            setting.setValue(Keyboard.getKeyIndex(line));
+        }
+        if (setting instanceof ColorSetting) {
+            ((ColorSetting) setting).setColor(new Color(Integer.parseInt(line), true));
         }
     }
 
-    public void saveModuleFile() {
-        try {
-            for (Module module : modules) {
-                File categoryPath = new File(path + File.separator + module.getCategory().toString());
-                if (!categoryPath.exists())
-                    categoryPath.mkdir();
-                File file = new File(categoryPath.getAbsolutePath(), module.getName() + ".txt");
-                if (!file.exists())
-                    file.createNewFile();
-                BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
-                bufferedWriter.write("State : " + (module.isEnabled() ? "Enabled" : "Disabled"));
-                bufferedWriter.write("\r\n");
-                for (Setting setting : module.getSettingList()) {
-                    if (setting.getName().equals("Keybind") || setting.getName().equals("Enabled"))
-                        continue;
-                    if (setting instanceof StringSetting) {
-                        bufferedWriter.write(setting.getName() + " : " + setting.getValue());
-                        bufferedWriter.write("\r\n");
-                        continue;
-                    }
-                    if (setting instanceof ColorSetting) {
-                        bufferedWriter.write(setting.getName() + " : " + ((ColorSetting) setting).getValue().getRGB());
-                        bufferedWriter.write("\r\n");
-                        continue;
-                    }
-                    bufferedWriter.write(setting.getName() + " : " + setting.getValue());
-                    bufferedWriter.write("\r\n");
-                }
-                bufferedWriter.write("Keybind : " + module.getKeybind());
+    protected Setting<?> getSettingByNameAndModule(Module module, String name) {
+        return module.getSettingList().stream().filter(setting -> setting.getName().equals(name)).findFirst().orElse(null);
+    }
+
+    protected void saveModules(boolean onlyVisuals) {
+        ArrayList<Module> modules = onlyVisuals ? moduleList.stream().filter(module -> module.getCategory().equals(Category.Visual)).collect(Collectors.toCollection(ArrayList::new)) : moduleList;
+        modules.forEach(module -> {
+            final File path = registerPathAndCreate(configPath + separator + module.getCategory().toString());
+            final File file = registerFileAndCreate(path + separator + module.getName() + ".txt");
+            try {
+                final BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
+                module.getSettingList().stream().filter(setting -> !(setting instanceof ParentSetting)).forEach(setting -> writeLine(bufferedWriter, "\"" + setting.getName() + "\": \"" + (setting instanceof ColorSetting ? ((ColorSetting) setting).getValue().getRGB() : setting instanceof KeySetting ? Keyboard.getKeyName(((KeySetting) setting).getKey()) : setting.getValue()) + "\""));
                 bufferedWriter.close();
+            } catch (IOException ignored) {
             }
-        } catch (Exception ignored) {
+        });
+    }
+
+    protected void writeLine(BufferedWriter bufferedWriter, String line) {
+        try {
+            bufferedWriter.write(line + "\r\n");
+        } catch (IOException ignored) {
         }
     }
 
-    public void setModuleValue() {
-        for (Module module : modules) {
-            try {
-                File categoryPath = new File(path + File.separator + module.getCategory().toString());
-                if (!categoryPath.exists())
-                    continue;
-                File file = new File(categoryPath.getAbsolutePath(), module.getName() + ".txt");
-                if (!file.exists())
-                    continue;
-                FileInputStream fileInputStream = new FileInputStream(file.getAbsolutePath());
-                DataInputStream dataInputStream = new DataInputStream(fileInputStream);
-                BufferedReader bufferReader = new BufferedReader(new InputStreamReader(dataInputStream));
-                bufferReader.lines().forEach(line -> {
-                    String clarification = line.split(" : ")[0];
-                    String state = line.split(" : ")[1];
-                    if (clarification.equals("State"))
-                        if (state.equals("Enabled"))
-                            module.enableModule();
-                        else if (state.equals("Disabled"))
-                            module.disableModule();
-                });
-                bufferReader.close();
-            } catch (Exception ignored) {
-            }
+    protected File registerFileAndCreate(final String file) {
+        final File file1 = new File(file);
+        try {
+            file1.createNewFile();
+        } catch (IOException ignored) {
         }
+        return file1;
     }
 
-    public void setModuleBind() {
-        for (Module module : modules) {
-            try {
-                File categoryPath = new File(path + File.separator + module.getCategory().toString());
-                if (!categoryPath.exists())
-                    continue;
-                File file = new File(categoryPath.getAbsolutePath(), module.getName() + ".txt");
-                if (!file.exists())
-                    continue;
-                FileInputStream fileInputStream = new FileInputStream(file.getAbsolutePath());
-                DataInputStream dataInputStream = new DataInputStream(fileInputStream);
-                BufferedReader bufferReader = new BufferedReader(new InputStreamReader(dataInputStream));
-                bufferReader.lines().forEach(line -> {
-                    String clarification = line.split(" : ")[0];
-                    String state = line.split(" : ")[1];
-                    if (clarification.equals("Keybind")) {
-                        if (state.equals("0"))
-                            return;
-                        module.setKeybind(Integer.parseInt(state));
-                    }
-                });
-                bufferReader.close();
-            } catch (Exception ignored) {
-            }
-        }
-    }
-
-    public void setModuleSettingValues() {
-        for (Module module : modules) {
-            try {
-                File categoryPath = new File(path.getAbsolutePath() + File.separator + module.getCategory().toString());
-                if (!categoryPath.exists())
-                    continue;
-                File file = new File(categoryPath.getAbsolutePath(), module.getName() + ".txt");
-                if (!file.exists())
-                    continue;
-                FileInputStream fileInputStream = new FileInputStream(file.getAbsolutePath());
-                DataInputStream dataInputStream = new DataInputStream(fileInputStream);
-                BufferedReader bufferReader = new BufferedReader(new InputStreamReader(dataInputStream));
-                bufferReader.lines().forEach(line -> {
-                    String clarification = line.split(" : ")[0];
-                    String state = line.split(" : ")[1];
-                    for (Setting setting : module.getSettingList()) {
-                        if (setting.getName().equals(clarification)) {
-                            if (setting instanceof StringSetting) {
-                                setting.setValue(state);
-                            }
-                            if (setting instanceof IntegerSetting) {
-                                setting.setValue(Integer.parseInt(state));
-                            }
-                            if (setting instanceof FloatSetting) {
-                                setting.setValue(Float.parseFloat(state));
-                            }
-                            if (setting instanceof DoubleSetting) {
-                                setting.setValue(Double.parseDouble(state));
-                            }
-                            if (setting instanceof BooleanSetting) {
-                                setting.setValue(Boolean.parseBoolean(state));
-                            }
-                            if (setting instanceof KeySetting) {
-                                setting.setValue(Integer.parseInt(state));
-                            }
-                            if (setting instanceof ColorSetting) {
-                                ((ColorSetting) setting).setColor(new Color(Integer.parseInt(state), true));
-                            }
-                            if (setting instanceof ModeSetting) {
-                                setting.setValue(state);
-                            }
-                        }
-                    }
-                });
-                bufferReader.close();
-            } catch (Exception ignored) {
-            }
-        }
+    protected File registerPathAndCreate(final String file) {
+        final File file1 = new File(file);
+        file1.mkdirs();
+        return file1;
     }
 }

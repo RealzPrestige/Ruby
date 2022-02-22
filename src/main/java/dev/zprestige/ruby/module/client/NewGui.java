@@ -37,7 +37,7 @@ public class NewGui extends Module {
     @Override
     public void onDisable() {
         mc.displayGuiScreen(null);
-        Ruby.configManager.savePlayer();
+        Ruby.configManager.saveSocials();
     }
 
     @Override

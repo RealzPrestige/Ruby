@@ -19,10 +19,9 @@ public class Ruby {
     public static ModuleManager moduleManager;
     public static FriendManager friendManager;
     public static EnemyManager enemyManager;
-    public static ConfigManager configManager;
     public static TickManager tickManager;
     public static TotemPopManager totemPopManager;
-    public static Configu configu;
+    public static ConfigManager configManager;
     public static RubyFont rubyFont = new RubyFont("Font", 17.0f);
 
     @Mod.EventHandler
@@ -35,11 +34,9 @@ public class Ruby {
         moduleManager = new ModuleManager();
         friendManager = new FriendManager();
         enemyManager = new EnemyManager();
-        configManager = new ConfigManager();
         tickManager = new TickManager();
         totemPopManager = new TotemPopManager();
-        configu = new Configu();
-        configManager.loadPlayer();
+        configManager = new ConfigManager();
     }
 }
 
