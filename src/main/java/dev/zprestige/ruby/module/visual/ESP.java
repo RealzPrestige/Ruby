@@ -14,7 +14,6 @@ import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -32,22 +31,6 @@ import static org.lwjgl.opengl.GL11.*;
 @ModuleInfo(name = "ESP", category = Category.Visual, description = "renders stuff for things ")
 public class ESP extends Module {
     public static ESP Instance;
-    public ParentSetting hole = createSetting("Hole");
-    public BooleanSetting holes = createSetting("Holes", false).setParent(hole);
-    public BooleanSetting distanceFade = createSetting("Distance Fade", false, v -> holes.getValue()).setParent(hole);
-    public FloatSetting distanceDivision = createSetting("Distance Division", 20.0f, 0.1f, 500.0f, (Predicate<Float>) v -> distanceFade.getValue()).setParent(hole);
-    public FloatSetting holeHeight = createSetting("Hole Height", 1.0f, 0.0f, 2.0f, (Predicate<Float>) v -> holes.getValue()).setParent(hole);
-    public IntegerSetting holeRadius = createSetting("Radius", 10, 1, 50, (Predicate<Integer>) v -> holes.getValue()).setParent(hole);
-    public BooleanSetting bedrockBox = createSetting("Bedrock Box", false, v -> holes.getValue()).setParent(hole);
-    public ColorSetting bedrockBoxColor = createSetting("Bedrock Box Color", new Color(0, 255, 0), v -> holes.getValue() && bedrockBox.getValue()).setParent(hole);
-    public BooleanSetting bedrockOutline = createSetting("Bedrock Outline", false, v -> holes.getValue()).setParent(hole);
-    public ColorSetting bedrockOutlineColor = createSetting("Bedrock Outline Color", new Color(0, 255, 0), v -> holes.getValue() && bedrockOutline.getValue()).setParent(hole);
-    public FloatSetting bedrockOutlineWidth = createSetting("Bedrock Outline Width", 1.0f, 0.1f, 5.0f, (Predicate<Float>) v -> holes.getValue() && bedrockOutline.getValue()).setParent(hole);
-    public BooleanSetting obsidianBox = createSetting("Obsidian Box", false, v -> holes.getValue()).setParent(hole);
-    public ColorSetting obsidianBoxColor = createSetting("Obsidian Box Color", new Color(255, 0, 0), v -> holes.getValue() && obsidianBox.getValue()).setParent(hole);
-    public BooleanSetting obsidianOutline = createSetting("Obsidian Outline", false, v -> holes.getValue()).setParent(hole);
-    public ColorSetting obsidianOutlineColor = createSetting("Obsidian Outline Color", new Color(255, 0, 0), v -> holes.getValue() && obsidianOutline.getValue()).setParent(hole);
-    public FloatSetting obsidianOutlineWidth = createSetting("Obsidian Outline Width", 1.0f, 0.1f, 5.0f, (Predicate<Float>) v -> holes.getValue() && obsidianOutline.getValue()).setParent(hole);
 
     public ParentSetting items = createSetting("Items");
     public BooleanSetting itemNames = createSetting("Item Names", false).setParent(items);
@@ -79,20 +62,8 @@ public class ESP extends Module {
     }
 
     @Override
-    public void onThreadReset() {
-        thread3.stop();
-        thread3 = new Thread(() -> {
-            while (true) {
-                try {
-                    playerList = mc.world.playerEntities;
-                } catch (Exception ignored) {
-                }
-            }
-        });
-    }
-
-    @Override
     public void onGlobalRenderTick() {
+        Ruby.threadManager.run(() -> playerList = mc.world.playerEntities);
         camera.setPosition(Objects.requireNonNull(mc.getRenderViewEntity()).posX, mc.getRenderViewEntity().posY, mc.getRenderViewEntity().posZ);
         if (players.getValue() && playerMoveCancel.getValue()) {
             mc.world.playerEntities.stream().filter(entityPlayer -> !entityPlayer.equals(mc.player)).forEach(entityPlayer -> {
@@ -120,40 +91,6 @@ public class ESP extends Module {
             });
             mc.gameSettings.gammaSetting = gammaSetting;
             mc.gameSettings.fancyGraphics = fancyGraphics;
-        }
-        if (!holes.getValue())
-            return;
-        ArrayList<BlockPos> bedrockHoles = Ruby.holeManager.getBedrockHoles(holeRadius.getValue());
-        if (bedrockHoles != null) {
-            ArrayList<BlockPos> bedrockHoles2 = new ArrayList<>(bedrockHoles);
-            for (BlockPos pos : bedrockHoles2) {
-                AxisAlignedBB bb = new AxisAlignedBB(pos);
-                if (!camera.isBoundingBoxInFrustum(bb.grow(2.0)))
-                    continue;
-                int alpha = (int) Math.min(bedrockBoxColor.getValue().getAlpha() / (Math.max(1.0, mc.player.getDistanceSq(pos) / distanceDivision.getValue())), bedrockBoxColor.getValue().getAlpha());
-                if (bedrockBox.getValue()) {
-                    RenderUtil.drawBBBoxWithHeight(bb, bedrockBoxColor.getValue(), distanceFade.getValue() ? alpha : bedrockBoxColor.getValue().getAlpha(), holeHeight.getValue());
-                }
-                if (bedrockOutline.getValue()) {
-                    RenderUtil.drawBlockOutlineBBWithHeight(bb, distanceFade.getValue() ? new Color(bedrockOutlineColor.getValue().getRed() / 255.0f, bedrockOutlineColor.getValue().getGreen() / 255.0f, bedrockOutlineColor.getValue().getBlue() / 255.0f, alpha / 255.0f) : bedrockOutlineColor.getValue(), bedrockOutlineWidth.getValue(), holeHeight.getValue());
-                }
-            }
-        }
-        ArrayList<BlockPos> obsidianHoles = Ruby.holeManager.getObsidianHoles(holeRadius.getValue());
-        if (obsidianHoles != null) {
-            ArrayList<BlockPos> obsidianHoles2 = new ArrayList<>(obsidianHoles);
-            for (BlockPos pos : obsidianHoles2) {
-                AxisAlignedBB bb = new AxisAlignedBB(pos);
-                if (!camera.isBoundingBoxInFrustum(bb.grow(2.0)))
-                    continue;
-                int alpha = (int) Math.min(obsidianBoxColor.getValue().getAlpha() / (Math.max(1.0, mc.player.getDistanceSq(pos) / distanceDivision.getValue())), obsidianBoxColor.getValue().getAlpha());
-                if (bedrockBox.getValue()) {
-                    RenderUtil.drawBBBoxWithHeight(bb, obsidianBoxColor.getValue(), distanceFade.getValue() ? alpha : obsidianBoxColor.getValue().getAlpha(), holeHeight.getValue());
-                }
-                if (bedrockOutline.getValue()) {
-                    RenderUtil.drawBlockOutlineBBWithHeight(bb, distanceFade.getValue() ? new Color(obsidianOutlineColor.getValue().getRed() / 255.0f, obsidianOutlineColor.getValue().getGreen() / 255.0f, obsidianOutlineColor.getValue().getBlue() / 255.0f, alpha / 255.0f) : obsidianOutlineColor.getValue(), obsidianOutlineWidth.getValue(), holeHeight.getValue());
-                }
-            }
         }
     }
 

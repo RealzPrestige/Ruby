@@ -3,6 +3,7 @@ package dev.zprestige.ruby.util;
 import dev.zprestige.ruby.Ruby;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
@@ -29,17 +30,57 @@ public class RenderUtil {
     public static Tessellator tessellator;
     public static BufferBuilder builder;
     public static RenderItem itemRender;
+    public static Minecraft mc = Ruby.mc;
 
     static {
-        itemRender = Ruby.mc.getRenderItem();
+        itemRender = mc.getRenderItem();
         camera = new Frustum();
         tessellator = Tessellator.getInstance();
         builder = RenderUtil.tessellator.getBuffer();
     }
 
+    public static void drawBoxWithHeight(AxisAlignedBB bb, Color color, float height) {
+        AxisAlignedBB bb1 = new AxisAlignedBB(bb.minX - mc.getRenderManager().viewerPosX, bb.minY - mc.getRenderManager().viewerPosY, bb.minZ - mc.getRenderManager().viewerPosZ, bb.maxX - mc.getRenderManager().viewerPosX, bb.maxY - 1 + height - mc.getRenderManager().viewerPosY, bb.maxZ - mc.getRenderManager().viewerPosZ);
+        GlStateManager.pushMatrix();
+        GlStateManager.enableBlend();
+        GlStateManager.disableDepth();
+        GlStateManager.tryBlendFuncSeparate(770, 771, 0, 1);
+        GlStateManager.disableTexture2D();
+        GlStateManager.depthMask(false);
+        GL11.glEnable(2848);
+        GL11.glHint(3154, 4354);
+        RenderGlobal.renderFilledBox(bb1, color.getRed() / 255.0f, color.getGreen() / 255.0f, color.getBlue() / 255.0f, color.getAlpha() / 255.0f);
+        GL11.glDisable(2848);
+        GlStateManager.depthMask(true);
+        GlStateManager.enableDepth();
+        GlStateManager.enableTexture2D();
+        GlStateManager.disableBlend();
+        GlStateManager.popMatrix();
+    }
+
+
+    public static void drawCustomBB(Color color, double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
+        AxisAlignedBB bb1 = new AxisAlignedBB(minX - mc.getRenderManager().viewerPosX, minY - mc.getRenderManager().viewerPosY, minZ - mc.getRenderManager().viewerPosZ, maxX - mc.getRenderManager().viewerPosX, maxY - mc.getRenderManager().viewerPosY, maxZ - mc.getRenderManager().viewerPosZ);
+        GlStateManager.pushMatrix();
+        GlStateManager.enableBlend();
+        GlStateManager.disableDepth();
+        GlStateManager.tryBlendFuncSeparate(770, 771, 0, 1);
+        GlStateManager.disableTexture2D();
+        GlStateManager.depthMask(false);
+        GL11.glEnable(2848);
+        GL11.glHint(3154, 4354);
+        RenderGlobal.renderFilledBox(bb1, color.getRed() / 255.0f, color.getGreen() / 255.0f, color.getBlue() / 255.0f, color.getAlpha() / 255.0f);
+        GL11.glDisable(2848);
+        GlStateManager.depthMask(true);
+        GlStateManager.enableDepth();
+        GlStateManager.enableTexture2D();
+        GlStateManager.disableBlend();
+        GlStateManager.popMatrix();
+    }
+
     public static void renderLogo(){
         GlStateManager.enableAlpha();
-        Ruby.mc.getTextureManager().bindTexture(new ResourceLocation("textures/icons/ruby.png"));
+        mc.getTextureManager().bindTexture(new ResourceLocation("textures/icons/ruby.png"));
         GlStateManager.color(1f, 1f, 1f);
         GL11.glPushMatrix();
         GuiScreen.drawScaledCustomSizeModalRect(2, 511, 0, 0, 68, 28, 68, 28, 68, 28);
@@ -92,7 +133,7 @@ public class RenderUtil {
 
 
     public static double interpolateLastTickPos(double pos, double lastPos) {
-        return lastPos + (pos - lastPos) * Ruby.mc.timer.renderPartialTicks;
+        return lastPos + (pos - lastPos) * mc.timer.renderPartialTicks;
     }
 
     public static void renderBox(AxisAlignedBB bb, Color color, Color outLineColor, float lineWidth) {
@@ -321,14 +362,14 @@ public class RenderUtil {
         double x;
         double y;
         double z;
-        x = interpolateLastTickPos(entity.posX, entity.lastTickPosX) - Ruby.mc.getRenderManager().renderPosX;
-        y = interpolateLastTickPos(entity.posY, entity.lastTickPosY) - Ruby.mc.getRenderManager().renderPosY;
-        z = interpolateLastTickPos(entity.posZ, entity.lastTickPosZ) - Ruby.mc.getRenderManager().renderPosZ;
+        x = interpolateLastTickPos(entity.posX, entity.lastTickPosX) - mc.getRenderManager().renderPosX;
+        y = interpolateLastTickPos(entity.posY, entity.lastTickPosY) - mc.getRenderManager().renderPosY;
+        z = interpolateLastTickPos(entity.posZ, entity.lastTickPosZ) - mc.getRenderManager().renderPosZ;
         return new Vec3d(x, y, z);
     }
 
     public static void drawNametag(String text, double x, double y, double z, double scale, int color) {
-        double dist = ((Ruby.mc.getRenderViewEntity() == null) ? Ruby.mc.player : Ruby.mc.getRenderViewEntity()).getDistance(x + Ruby.mc.getRenderManager().viewerPosX, y + Ruby.mc.getRenderManager().viewerPosY, z + Ruby.mc.getRenderManager().viewerPosZ);
+        double dist = ((mc.getRenderViewEntity() == null) ? mc.player : mc.getRenderViewEntity()).getDistance(x + mc.getRenderManager().viewerPosX, y + mc.getRenderManager().viewerPosY, z + mc.getRenderManager().viewerPosZ);
         int textWidth = (int) (Ruby.rubyFont.getStringWidth(text) / 2);
         double scaling = dist <= 8.0 ? 0.0245 : 0.0018 + scale * dist;
         GlStateManager.pushMatrix();
@@ -337,12 +378,12 @@ public class RenderUtil {
         GlStateManager.doPolygonOffset(1.0f, -1500000.0f);
         GlStateManager.disableLighting();
         GlStateManager.translate(x, y + 0.4000000059604645, z);
-        GlStateManager.rotate(-Ruby.mc.getRenderManager().playerViewY, 0.0f, 1.0f, 0.0f);
-        GlStateManager.rotate(Ruby.mc.getRenderManager().playerViewX, (Ruby.mc.gameSettings.thirdPersonView == 2) ? -1.0f : 1.0f, 0.0f, 0.0f);
+        GlStateManager.rotate(-mc.getRenderManager().playerViewY, 0.0f, 1.0f, 0.0f);
+        GlStateManager.rotate(mc.getRenderManager().playerViewX, (mc.gameSettings.thirdPersonView == 2) ? -1.0f : 1.0f, 0.0f, 0.0f);
         GlStateManager.scale(-scaling, -scaling, scaling);
         GlStateManager.disableDepth();
         GlStateManager.enableBlend();
-        Ruby.mc.fontRenderer.drawStringWithShadow(text, (float) (-textWidth), -(Ruby.mc.fontRenderer.FONT_HEIGHT - 1), color);
+        mc.fontRenderer.drawStringWithShadow(text, (float) (-textWidth), -(mc.fontRenderer.FONT_HEIGHT - 1), color);
         GlStateManager.disableBlend();
         GlStateManager.enableDepth();
         GlStateManager.disableBlend();
@@ -372,11 +413,11 @@ public class RenderUtil {
     }
 
     public static Vec3d updateToCamera(final Vec3d vec) {
-        return new Vec3d(vec.x - Ruby.mc.getRenderManager().viewerPosX, vec.y - Ruby.mc.getRenderManager().viewerPosY, vec.z - Ruby.mc.getRenderManager().viewerPosZ);
+        return new Vec3d(vec.x - mc.getRenderManager().viewerPosX, vec.y - mc.getRenderManager().viewerPosY, vec.z - mc.getRenderManager().viewerPosZ);
     }
 
     public static void scissor(int x, int y, int x2, int y2) {
-        glScissor(x * new ScaledResolution(Ruby.mc).getScaleFactor(), (new ScaledResolution(Ruby.mc).getScaledHeight() - y2) * new ScaledResolution(Ruby.mc).getScaleFactor(), (x2 - x) * new ScaledResolution(Ruby.mc).getScaleFactor(), (y2 - y) * new ScaledResolution(Ruby.mc).getScaleFactor());
+        glScissor(x * new ScaledResolution(mc).getScaleFactor(), (new ScaledResolution(mc).getScaledHeight() - y2) * new ScaledResolution(mc).getScaleFactor(), (x2 - x) * new ScaledResolution(mc).getScaleFactor(), (y2 - y) * new ScaledResolution(mc).getScaleFactor());
     }
 
     public static double normalize(final double value, final double max) {
@@ -384,9 +425,9 @@ public class RenderUtil {
     }
 
     public static void drawBBBox(AxisAlignedBB BB, Color Color, int alpha) {
-        AxisAlignedBB bb = new AxisAlignedBB(BB.minX - Ruby.mc.getRenderManager().viewerPosX, BB.minY - Ruby.mc.getRenderManager().viewerPosY, BB.minZ - Ruby.mc.getRenderManager().viewerPosZ, BB.maxX - Ruby.mc.getRenderManager().viewerPosX, BB.maxY - Ruby.mc.getRenderManager().viewerPosY, BB.maxZ - Ruby.mc.getRenderManager().viewerPosZ);
-        camera.setPosition(Objects.requireNonNull(Ruby.mc.getRenderViewEntity()).posX, Ruby.mc.getRenderViewEntity().posY, Ruby.mc.getRenderViewEntity().posZ);
-        if (camera.isBoundingBoxInFrustum(new AxisAlignedBB(bb.minX + Ruby.mc.getRenderManager().viewerPosX, bb.minY + Ruby.mc.getRenderManager().viewerPosY, bb.minZ + Ruby.mc.getRenderManager().viewerPosZ, bb.maxX + Ruby.mc.getRenderManager().viewerPosX, bb.maxY + Ruby.mc.getRenderManager().viewerPosY, bb.maxZ + Ruby.mc.getRenderManager().viewerPosZ))) {
+        AxisAlignedBB bb = new AxisAlignedBB(BB.minX - mc.getRenderManager().viewerPosX, BB.minY - mc.getRenderManager().viewerPosY, BB.minZ - mc.getRenderManager().viewerPosZ, BB.maxX - mc.getRenderManager().viewerPosX, BB.maxY - mc.getRenderManager().viewerPosY, BB.maxZ - mc.getRenderManager().viewerPosZ);
+        camera.setPosition(Objects.requireNonNull(mc.getRenderViewEntity()).posX, mc.getRenderViewEntity().posY, mc.getRenderViewEntity().posZ);
+        if (camera.isBoundingBoxInFrustum(new AxisAlignedBB(bb.minX + mc.getRenderManager().viewerPosX, bb.minY + mc.getRenderManager().viewerPosY, bb.minZ + mc.getRenderManager().viewerPosZ, bb.maxX + mc.getRenderManager().viewerPosX, bb.maxY + mc.getRenderManager().viewerPosY, bb.maxZ + mc.getRenderManager().viewerPosZ))) {
             GlStateManager.pushMatrix();
             GlStateManager.enableBlend();
             GlStateManager.disableDepth();
@@ -406,9 +447,9 @@ public class RenderUtil {
     }
 
     public static void drawBBBoxWithHeight(AxisAlignedBB BB, Color Color, int alpha, float height) {
-        AxisAlignedBB bb = new AxisAlignedBB(BB.minX - Ruby.mc.getRenderManager().viewerPosX, BB.minY - Ruby.mc.getRenderManager().viewerPosY, BB.minZ - Ruby.mc.getRenderManager().viewerPosZ, BB.maxX - Ruby.mc.getRenderManager().viewerPosX, BB.maxY - Ruby.mc.getRenderManager().viewerPosY - 1 + height, BB.maxZ - Ruby.mc.getRenderManager().viewerPosZ);
-        camera.setPosition(Objects.requireNonNull(Ruby.mc.getRenderViewEntity()).posX, Ruby.mc.getRenderViewEntity().posY, Ruby.mc.getRenderViewEntity().posZ);
-        if (camera.isBoundingBoxInFrustum(new AxisAlignedBB(bb.minX + Ruby.mc.getRenderManager().viewerPosX, bb.minY + Ruby.mc.getRenderManager().viewerPosY, bb.minZ + Ruby.mc.getRenderManager().viewerPosZ, bb.maxX + Ruby.mc.getRenderManager().viewerPosX, bb.maxY + Ruby.mc.getRenderManager().viewerPosY, bb.maxZ + Ruby.mc.getRenderManager().viewerPosZ))) {
+        AxisAlignedBB bb = new AxisAlignedBB(BB.minX - mc.getRenderManager().viewerPosX, BB.minY - mc.getRenderManager().viewerPosY, BB.minZ - mc.getRenderManager().viewerPosZ, BB.maxX - mc.getRenderManager().viewerPosX, BB.maxY - mc.getRenderManager().viewerPosY - 1 + height, BB.maxZ - mc.getRenderManager().viewerPosZ);
+        camera.setPosition(Objects.requireNonNull(mc.getRenderViewEntity()).posX, mc.getRenderViewEntity().posY, mc.getRenderViewEntity().posZ);
+        if (camera.isBoundingBoxInFrustum(new AxisAlignedBB(bb.minX + mc.getRenderManager().viewerPosX, bb.minY + mc.getRenderManager().viewerPosY, bb.minZ + mc.getRenderManager().viewerPosZ, bb.maxX + mc.getRenderManager().viewerPosX, bb.maxY + mc.getRenderManager().viewerPosY, bb.maxZ + mc.getRenderManager().viewerPosZ))) {
             GlStateManager.pushMatrix();
             GlStateManager.enableBlend();
             GlStateManager.disableDepth();
@@ -428,9 +469,9 @@ public class RenderUtil {
     }
 
     public static void drawBBBoxWithHeightDepth(AxisAlignedBB BB, Color Color, int alpha, float height) {
-        AxisAlignedBB bb = new AxisAlignedBB(BB.minX - Ruby.mc.getRenderManager().viewerPosX, BB.minY - Ruby.mc.getRenderManager().viewerPosY, BB.minZ - Ruby.mc.getRenderManager().viewerPosZ, BB.maxX - Ruby.mc.getRenderManager().viewerPosX, BB.maxY - Ruby.mc.getRenderManager().viewerPosY - 1 + height, BB.maxZ - Ruby.mc.getRenderManager().viewerPosZ);
-        camera.setPosition(Objects.requireNonNull(Ruby.mc.getRenderViewEntity()).posX, Ruby.mc.getRenderViewEntity().posY, Ruby.mc.getRenderViewEntity().posZ);
-        if (camera.isBoundingBoxInFrustum(new AxisAlignedBB(bb.minX + Ruby.mc.getRenderManager().viewerPosX, bb.minY + Ruby.mc.getRenderManager().viewerPosY, bb.minZ + Ruby.mc.getRenderManager().viewerPosZ, bb.maxX + Ruby.mc.getRenderManager().viewerPosX, bb.maxY + Ruby.mc.getRenderManager().viewerPosY, bb.maxZ + Ruby.mc.getRenderManager().viewerPosZ))) {
+        AxisAlignedBB bb = new AxisAlignedBB(BB.minX - mc.getRenderManager().viewerPosX, BB.minY - mc.getRenderManager().viewerPosY, BB.minZ - mc.getRenderManager().viewerPosZ, BB.maxX - mc.getRenderManager().viewerPosX, BB.maxY - mc.getRenderManager().viewerPosY - 1 + height, BB.maxZ - mc.getRenderManager().viewerPosZ);
+        camera.setPosition(Objects.requireNonNull(mc.getRenderViewEntity()).posX, mc.getRenderViewEntity().posY, mc.getRenderViewEntity().posZ);
+        if (camera.isBoundingBoxInFrustum(new AxisAlignedBB(bb.minX + mc.getRenderManager().viewerPosX, bb.minY + mc.getRenderManager().viewerPosY, bb.minZ + mc.getRenderManager().viewerPosZ, bb.maxX + mc.getRenderManager().viewerPosX, bb.maxY + mc.getRenderManager().viewerPosY, bb.maxZ + mc.getRenderManager().viewerPosZ))) {
             GlStateManager.pushMatrix();
             GlStateManager.enableBlend();
             GlStateManager.tryBlendFuncSeparate(770, 771, 0, 1);
@@ -449,12 +490,12 @@ public class RenderUtil {
 
 
     public static void drawBlockOutlineBBWithHeight(AxisAlignedBB bb, Color color, float linewidth, float height) {
-        Vec3d interp = interpolateEntity(Ruby.mc.player, Ruby.mc.getRenderPartialTicks());
+        Vec3d interp = interpolateEntity(mc.player, mc.getRenderPartialTicks());
         RenderUtil.drawBlockOutlineWithHeight(bb.grow(0.002f).offset(-interp.x, -interp.y, -interp.z), color, linewidth, height);
     }
 
     public static void drawBlockOutlineBB(AxisAlignedBB bb, Color color, float linewidth) {
-        Vec3d interp = interpolateEntity(Ruby.mc.player, Ruby.mc.getRenderPartialTicks());
+        Vec3d interp = interpolateEntity(mc.player, mc.getRenderPartialTicks());
         RenderUtil.drawBlockOutline(bb.grow(0.002f).offset(-interp.x, -interp.y, -interp.z), color, linewidth);
     }
 
@@ -477,20 +518,20 @@ public class RenderUtil {
     }
 
     public static void drawBlockOutline(BlockPos pos, Color color, float linewidth, boolean air) {
-        IBlockState iblockstate = Ruby.mc.world.getBlockState(pos);
-        if ((air || iblockstate.getMaterial() != Material.AIR) && Ruby.mc.world.getWorldBorder().contains(pos)) {
-            assert (Ruby.mc.renderViewEntity != null);
-            Vec3d interp = interpolateEntity(Ruby.mc.renderViewEntity, Ruby.mc.getRenderPartialTicks());
-            RenderUtil.drawBlockOutline(iblockstate.getSelectedBoundingBox(Ruby.mc.world, pos).grow(0.002f).offset(-interp.x, -interp.y, -interp.z), color, linewidth);
+        IBlockState iblockstate = mc.world.getBlockState(pos);
+        if ((air || iblockstate.getMaterial() != Material.AIR) && mc.world.getWorldBorder().contains(pos)) {
+            assert (mc.renderViewEntity != null);
+            Vec3d interp = interpolateEntity(mc.renderViewEntity, mc.getRenderPartialTicks());
+            RenderUtil.drawBlockOutline(iblockstate.getSelectedBoundingBox(mc.world, pos).grow(0.002f).offset(-interp.x, -interp.y, -interp.z), color, linewidth);
         }
     }
 
     public static void glBillboard(float x, float y, float z) {
         float scale = 0.02666667f;
-        GlStateManager.translate((double) x - Ruby.mc.getRenderManager().renderPosX, (double) y - Ruby.mc.getRenderManager().renderPosY, (double) z - Ruby.mc.getRenderManager().renderPosZ);
+        GlStateManager.translate((double) x - mc.getRenderManager().renderPosX, (double) y - mc.getRenderManager().renderPosY, (double) z - mc.getRenderManager().renderPosZ);
         GlStateManager.glNormal3f(0.0f, 1.0f, 0.0f);
-        GlStateManager.rotate(-Ruby.mc.player.rotationYaw, 0.0f, 1.0f, 0.0f);
-        GlStateManager.rotate(Ruby.mc.player.rotationPitch, Ruby.mc.gameSettings.thirdPersonView == 2 ? -1.0f : 1.0f, 0.0f, 0.0f);
+        GlStateManager.rotate(-mc.player.rotationYaw, 0.0f, 1.0f, 0.0f);
+        GlStateManager.rotate(mc.player.rotationPitch, mc.gameSettings.thirdPersonView == 2 ? -1.0f : 1.0f, 0.0f, 0.0f);
         GlStateManager.scale(-scale, -scale, scale);
     }
 
@@ -506,7 +547,7 @@ public class RenderUtil {
 
     public static void drawText(BlockPos pos, String text) {
         GlStateManager.pushMatrix();
-        RenderUtil.glBillboardDistanceScaled((float) pos.getX() + 0.5f, (float) pos.getY() + 0.5f, (float) pos.getZ() + 0.5f, Ruby.mc.player, 1.0f);
+        RenderUtil.glBillboardDistanceScaled((float) pos.getX() + 0.5f, (float) pos.getY() + 0.5f, (float) pos.getZ() + 0.5f, mc.player, 1.0f);
         GlStateManager.disableDepth();
         GlStateManager.translate(-((double) Ruby.rubyFont.getStringWidth(text) / 2.0), 0.0, 0.0);
         Ruby.rubyFont.drawStringWithShadow(text, 0.0f, 0.0f, -1);
@@ -515,10 +556,10 @@ public class RenderUtil {
 
     public static void drawText2(BlockPos pos, String text) {
         GlStateManager.pushMatrix();
-        RenderUtil.glBillboardDistanceScaled((float) pos.getX() + 0.5f, (float) pos.getY() + 0.5f, (float) pos.getZ() + 0.5f, Ruby.mc.player, 1.0f);
+        RenderUtil.glBillboardDistanceScaled((float) pos.getX() + 0.5f, (float) pos.getY() + 0.5f, (float) pos.getZ() + 0.5f, mc.player, 1.0f);
         GlStateManager.disableDepth();
         GlStateManager.translate(-((double) Ruby.rubyFont.getStringWidth(text) / 2.0), 0.0, 0.0);
-        Ruby.mc.fontRenderer.drawStringWithShadow(text, 0.0f, 0.0f, -1);
+        mc.fontRenderer.drawStringWithShadow(text, 0.0f, 0.0f, -1);
         GlStateManager.popMatrix();
     }
 
@@ -612,9 +653,9 @@ public class RenderUtil {
 
 
     public static void drawBox(final BlockPos pos, final Color color) {
-        final AxisAlignedBB bb = new AxisAlignedBB(pos.getX() - Ruby.mc.getRenderManager().viewerPosX, pos.getY() - Ruby.mc.getRenderManager().viewerPosY, pos.getZ() - Ruby.mc.getRenderManager().viewerPosZ, pos.getX() + 1 - Ruby.mc.getRenderManager().viewerPosX, pos.getY() + 1 - Ruby.mc.getRenderManager().viewerPosY, pos.getZ() + 1 - Ruby.mc.getRenderManager().viewerPosZ);
-        camera.setPosition(Objects.requireNonNull(Ruby.mc.getRenderViewEntity()).posX, Ruby.mc.getRenderViewEntity().posY, Ruby.mc.getRenderViewEntity().posZ);
-        if (camera.isBoundingBoxInFrustum(new AxisAlignedBB(bb.minX + Ruby.mc.getRenderManager().viewerPosX, bb.minY + Ruby.mc.getRenderManager().viewerPosY, bb.minZ + Ruby.mc.getRenderManager().viewerPosZ, bb.maxX + Ruby.mc.getRenderManager().viewerPosX, bb.maxY + Ruby.mc.getRenderManager().viewerPosY, bb.maxZ + Ruby.mc.getRenderManager().viewerPosZ))) {
+        final AxisAlignedBB bb = new AxisAlignedBB(pos.getX() - mc.getRenderManager().viewerPosX, pos.getY() - mc.getRenderManager().viewerPosY, pos.getZ() - mc.getRenderManager().viewerPosZ, pos.getX() + 1 - mc.getRenderManager().viewerPosX, pos.getY() + 1 - mc.getRenderManager().viewerPosY, pos.getZ() + 1 - mc.getRenderManager().viewerPosZ);
+        camera.setPosition(Objects.requireNonNull(mc.getRenderViewEntity()).posX, mc.getRenderViewEntity().posY, mc.getRenderViewEntity().posZ);
+        if (camera.isBoundingBoxInFrustum(new AxisAlignedBB(bb.minX + mc.getRenderManager().viewerPosX, bb.minY + mc.getRenderManager().viewerPosY, bb.minZ + mc.getRenderManager().viewerPosZ, bb.maxX + mc.getRenderManager().viewerPosX, bb.maxY + mc.getRenderManager().viewerPosY, bb.maxZ + mc.getRenderManager().viewerPosZ))) {
             GlStateManager.pushMatrix();
             GlStateManager.enableBlend();
             GlStateManager.disableDepth();
