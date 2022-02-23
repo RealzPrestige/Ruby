@@ -27,8 +27,7 @@ public class ModuleManager {
     public void addModules(String folder) {
         try {
             List<Class<?>> classes = ClassFinder.from("dev.zprestige.ruby.module." + folder);
-            if (classes == null)
-                return;
+            if (classes == null) return;
             for (Class<?> clazz : classes) {
                 if (!Modifier.isAbstract(clazz.getModifiers()) && Module.class.isAssignableFrom(clazz)) {
                     for (Constructor<?> constructor : clazz.getConstructors()) {

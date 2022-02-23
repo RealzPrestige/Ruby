@@ -18,9 +18,11 @@ public class Module {
     protected String name;
     protected Category category;
     protected final List<Setting<?>> settingList = new ArrayList<>();
+    protected final List<dev.zprestige.ruby.newsettings.Setting> newSettings = new ArrayList<>();
     protected final  KeySetting keybind = createSetting("Keybind", Keyboard.KEY_NONE);
     protected final BooleanSetting enabled = createSetting("Enabled", false);
     protected final Minecraft mc = Minecraft.getMinecraft();
+    public final Menu Menu = new Menu(this);
     public int scrollY;
 
     public void onEnable() {
@@ -96,6 +98,10 @@ public class Module {
 
     public boolean nullCheck() {
         return mc.world == null || mc.player == null;
+    }
+
+    public List<dev.zprestige.ruby.newsettings.Setting> getNewSettings() {
+        return newSettings;
     }
 
     public Module withSuper(String name, Category category){

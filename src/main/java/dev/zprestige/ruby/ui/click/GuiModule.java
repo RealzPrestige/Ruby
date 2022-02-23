@@ -4,6 +4,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.module.Module;
 import dev.zprestige.ruby.module.client.NewGui;
+import dev.zprestige.ruby.newsettings.Setting;
 import dev.zprestige.ruby.setting.impl.*;
 import dev.zprestige.ruby.ui.click.setting.GuiSetting;
 import dev.zprestige.ruby.ui.click.setting.impl.*;

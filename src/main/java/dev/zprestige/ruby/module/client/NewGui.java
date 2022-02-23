@@ -2,6 +2,9 @@ package dev.zprestige.ruby.module.client;
 
 import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.module.Module;
+import dev.zprestige.ruby.newsettings.Setting;
+import dev.zprestige.ruby.newsettings.impl.Parent;
+import dev.zprestige.ruby.newsettings.impl.Slider;
 import dev.zprestige.ruby.setting.impl.BooleanSetting;
 import dev.zprestige.ruby.setting.impl.ColorSetting;
 import dev.zprestige.ruby.setting.impl.IntegerSetting;
@@ -20,6 +23,9 @@ public class NewGui extends Module {
     public BooleanSetting icons = createSetting("Icons", false);
     public IntegerSetting scrollSpeed = createSetting("Scroll Speed", 5, 1, 20);
     public IntegerSetting animationSpeed = createSetting("Animation Speed", 4, 1, 20);
+    protected final Parent john = Menu.Parent("John");
+    protected final Slider slider = Menu.Slider("Slider", 0, 10).parent(john);
+
 
     public NewGui() {
         Instance = this;
