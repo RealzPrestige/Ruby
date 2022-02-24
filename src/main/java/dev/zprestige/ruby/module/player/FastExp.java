@@ -21,7 +21,7 @@ public class FastExp extends Module {
     public static FastExp Instance;
     public final ComboBox mode = Menu.Switch("Mode", "Vanilla", Arrays.asList("Vanilla", "Packet"));
     public final ComboBox triggerMode = Menu.Switch("Trigger Mode", "Custom", Arrays.asList("RightClick", "MiddleClick", "Custom"), v -> mode.getValue().equals("Packet"));
-    public KeySetting customKey = Menu.Switch("Custom Key", Keyboard.KEY_NONE, v -> mode.getValue().equals("Packet") && triggerMode.getValue().equals("Custom"));
+    public final Key customKey = Menu.Switch("Custom Key", Keyboard.KEY_NONE, v -> mode.getValue().equals("Packet") && triggerMode.getValue().equals("Custom"));
     public final Slider packets = Menu.Switch("Packets", 1, 1, 10, (Predicate<Integer>) v -> mode.getValue().equals("Packet"));
     public final Switch handOnly = Menu.Switch("Hand Only");
 

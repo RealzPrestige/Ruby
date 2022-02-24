@@ -1,9 +1,9 @@
 package dev.zprestige.ruby.module.misc;
 
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.setting.impl.BooleanSetting;
-import dev.zprestige.ruby.setting.impl.IntegerSetting;
-import dev.zprestige.ruby.setting.impl.ParentSetting;
+import dev.zprestige.ruby.newsettings.impl.Parent;
+import dev.zprestige.ruby.newsettings.impl.Slider;
+import dev.zprestige.ruby.newsettings.impl.Switch;
 import dev.zprestige.ruby.util.InventoryUtil;
 import dev.zprestige.ruby.util.Timer;
 import net.minecraft.init.Blocks;
@@ -12,8 +12,8 @@ import net.minecraft.inventory.ClickType;
 import net.minecraft.item.Item;
 
 public class InventoryCleaner extends Module {
-    public final Slider throwDelay = Menu.Switch("Throw Delay", 100, 0, 500);
-    public final Parent items = Menu.Switch("Items");
+    public final Slider throwDelay = Menu.Slider("Throw Delay", 0, 500);
+    public final Parent items = Menu.Parent("Items");
     public final Switch chorusFruits = Menu.Switch("Chorus Fruits").parent(items);
     public final Switch obsidian = Menu.Switch("Obsidian").parent(items);
     public final Switch enderChests = Menu.Switch("EnderChest").parent(items);
@@ -25,12 +25,12 @@ public class InventoryCleaner extends Module {
 
     @Override
     public void onTick() {
-        if (throwTimer.getTime(throwDelay.getValue()) && getItemSlot() != -1)
+        if (throwTimer.getTime(throwDelay.GetSlider()) && getItemSlot() != -1)
             throwAway(getItemSlot());
     }
 
     public int getItemSlot() {
-        if (chorusFruits.getValue()) {
+        if (chorusFruits.GetSwitch()) {
             int hotbarSlot = InventoryUtil.getItemFromHotbar(Items.CHORUS_FRUIT);
             if (hotbarSlot != -1) {
                 int nonHotbarSlot = InventoryUtil.getItemSlotNonHotbar(Items.CHORUS_FRUIT);
@@ -39,7 +39,7 @@ public class InventoryCleaner extends Module {
                 }
             }
         }
-        if (obsidian.getValue()) {
+        if (obsidian.GetSwitch()) {
             int hotbarSlot = InventoryUtil.getItemFromHotbar(Item.getItemFromBlock(Blocks.OBSIDIAN));
             if (hotbarSlot != -1) {
                 int nonHotbarSlot = InventoryUtil.getItemSlotNonHotbar(Item.getItemFromBlock(Blocks.OBSIDIAN));
@@ -48,7 +48,7 @@ public class InventoryCleaner extends Module {
                 }
             }
         }
-        if (enderChests.getValue()) {
+        if (enderChests.GetSwitch()) {
             int hotbarSlot = InventoryUtil.getItemFromHotbar(Item.getItemFromBlock(Blocks.ENDER_CHEST));
             if (hotbarSlot != -1) {
                 int nonHotbarSlot = InventoryUtil.getItemSlotNonHotbar(Item.getItemFromBlock(Blocks.ENDER_CHEST));
@@ -57,7 +57,7 @@ public class InventoryCleaner extends Module {
                 }
             }
         }
-        if (swords.getValue()) {
+        if (swords.GetSwitch()) {
             int hotbarSlot = InventoryUtil.getItemFromHotbar(Items.DIAMOND_SWORD);
             if (hotbarSlot != -1) {
                 int nonHotbarSlot = InventoryUtil.getItemSlotNonHotbar(Items.DIAMOND_SWORD);
@@ -66,7 +66,7 @@ public class InventoryCleaner extends Module {
                 }
             }
         }
-        if (pickaxe.getValue()) {
+        if (pickaxe.GetSwitch()) {
             int hotbarSlot = InventoryUtil.getItemFromHotbar(Items.DIAMOND_PICKAXE);
             if (hotbarSlot != -1) {
                 int nonHotbarSlot = InventoryUtil.getItemSlotNonHotbar(Items.DIAMOND_PICKAXE);
@@ -75,7 +75,7 @@ public class InventoryCleaner extends Module {
                 }
             }
         }
-        if (pearls.getValue()) {
+        if (pearls.GetSwitch()) {
             int hotbarSlot = InventoryUtil.getItemFromHotbar(Items.ENDER_PEARL);
             if (hotbarSlot != -1) {
                 int nonHotbarSlot = InventoryUtil.getItemSlotNonHotbar(Items.ENDER_PEARL);
@@ -84,7 +84,7 @@ public class InventoryCleaner extends Module {
                 }
             }
         }
-        if (bows.getValue()) {
+        if (bows.GetSwitch()) {
             int hotbarSlot = InventoryUtil.getItemFromHotbar(Items.BOW);
             if (hotbarSlot != -1) {
                 return InventoryUtil.getItemSlotNonHotbar(Items.BOW);

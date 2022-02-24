@@ -1,9 +1,8 @@
 package dev.zprestige.ruby.module.misc;
 
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.setting.impl.BooleanSetting;
-import dev.zprestige.ruby.setting.impl.FloatSetting;
-import dev.zprestige.ruby.setting.impl.IntegerSetting;
+import dev.zprestige.ruby.newsettings.impl.Slider;
+import dev.zprestige.ruby.newsettings.impl.Switch;
 import dev.zprestige.ruby.util.BlockUtil;
 import dev.zprestige.ruby.util.InventoryUtil;
 import dev.zprestige.ruby.util.RenderUtil;
@@ -19,8 +18,8 @@ import java.awt.*;
 import java.util.TreeMap;
 
 public class AutoWither extends Module {
-    public final Slider placeDelay = Menu.Switch("Place Delay", 100, 0, 1000);
-    public final Slider placeRange = Menu.Switch("Place Range", 5.0f, 0.1f, 6.0f);
+    public final Slider placeDelay = Menu.Slider("Place Delay", 0, 1000);
+    public final Slider placeRange = Menu.Slider("Place Range", 0.1f, 6.0f);
     public final Switch packet = Menu.Switch("Packet");
     public final Switch rotate = Menu.Switch("Rotate");
     public Timer timer = new Timer();
@@ -37,7 +36,7 @@ public class AutoWither extends Module {
     public void onTick() {
         if (trolleyPos == null && restartTimer.getTime(1000)) {
             TreeMap<Double, trolleyBus> treeMap = new TreeMap<>();
-            for (BlockPos pos1 : BlockUtil.getSphere(placeRange.getValue(), BlockUtil.AirType.IgnoreAir, mc.player)) {
+            for (BlockPos pos1 : BlockUtil.getSphere(placeRange.GetSlider(), BlockUtil.AirType.IgnoreAir, mc.player)) {
                 if (mc.player.getDistanceSq(pos1) < 4.0f)
                     continue;
                 trolleyBus canPlaceWither = canPlaceWither(pos1);
@@ -47,8 +46,8 @@ public class AutoWither extends Module {
             }
             if (!treeMap.isEmpty())
                 trolleyPos = treeMap.firstEntry().getValue();
-        } else if (timer.getTime(placeDelay.getValue())) {
-            if (trolleyPos != null && mc.player.getDistanceSq(trolleyPos.pos) > (placeRange.getValue() * placeRange.getValue())){
+        } else if (timer.getTime(placeDelay.GetSlider())) {
+            if (trolleyPos != null && mc.player.getDistanceSq(trolleyPos.pos) > (placeRange.GetSlider() * placeRange.GetSlider())) {
                 trolleyPos = null;
                 restartTimer.setTime(0);
                 return;
@@ -72,33 +71,33 @@ public class AutoWither extends Module {
         if (trolleyPos == null)
             return;
         if (mc.world.getBlockState(trolleyPos.pos.up()).getBlock().equals(Blocks.AIR)) {
-            BlockUtil.placeBlockWithSwitch(trolleyPos.pos.up(), EnumHand.MAIN_HAND, rotate.getValue(), packet.getValue(), slot);
+            BlockUtil.placeBlockWithSwitch(trolleyPos.pos.up(), EnumHand.MAIN_HAND, rotate.GetSwitch(), packet.GetSwitch(), slot);
             return;
         }
         if (mc.world.getBlockState(trolleyPos.pos.up().up()).getBlock().equals(Blocks.AIR)) {
-            BlockUtil.placeBlockWithSwitch(trolleyPos.pos.up().up(), EnumHand.MAIN_HAND, rotate.getValue(), packet.getValue(), slot);
+            BlockUtil.placeBlockWithSwitch(trolleyPos.pos.up().up(), EnumHand.MAIN_HAND, rotate.GetSwitch(), packet.GetSwitch(), slot);
             return;
         }
         switch (trolleyPos.side) {
             case NorthSouth:
                 if (mc.world.getBlockState(trolleyPos.pos.up().up().north()).getBlock().equals(Blocks.AIR)) {
-                    BlockUtil.placeBlockWithSwitch(trolleyPos.pos.up().up().north(), EnumHand.MAIN_HAND, rotate.getValue(), packet.getValue(), slot);
+                    BlockUtil.placeBlockWithSwitch(trolleyPos.pos.up().up().north(), EnumHand.MAIN_HAND, rotate.GetSwitch(), packet.GetSwitch(), slot);
                     return;
                 }
                 if (mc.world.getBlockState(trolleyPos.pos.up().up().south()).getBlock().equals(Blocks.AIR)) {
-                    BlockUtil.placeBlockWithSwitch(trolleyPos.pos.up().up().south(), EnumHand.MAIN_HAND, rotate.getValue(), packet.getValue(), slot);
+                    BlockUtil.placeBlockWithSwitch(trolleyPos.pos.up().up().south(), EnumHand.MAIN_HAND, rotate.GetSwitch(), packet.GetSwitch(), slot);
                     return;
                 }
                 if (mc.world.getBlockState(trolleyPos.pos.up().up().up()).getBlock().equals(Blocks.AIR)) {
-                    BlockUtil.placeBlockWithSwitch(trolleyPos.pos.up().up().up(), EnumHand.MAIN_HAND, rotate.getValue(), packet.getValue(), skull);
+                    BlockUtil.placeBlockWithSwitch(trolleyPos.pos.up().up().up(), EnumHand.MAIN_HAND, rotate.GetSwitch(), packet.GetSwitch(), skull);
                     return;
                 }
                 if (mc.world.getBlockState(trolleyPos.pos.up().up().up().north()).getBlock().equals(Blocks.AIR)) {
-                    BlockUtil.placeBlockWithSwitch(trolleyPos.pos.up().up().up().north(), EnumHand.MAIN_HAND, rotate.getValue(), packet.getValue(), skull);
+                    BlockUtil.placeBlockWithSwitch(trolleyPos.pos.up().up().up().north(), EnumHand.MAIN_HAND, rotate.GetSwitch(), packet.GetSwitch(), skull);
                     return;
                 }
                 if (mc.world.getBlockState(trolleyPos.pos.up().up().up().south()).getBlock().equals(Blocks.AIR)) {
-                    BlockUtil.placeBlockWithSwitch(trolleyPos.pos.up().up().up().south(), EnumHand.MAIN_HAND, rotate.getValue(), packet.getValue(), skull);
+                    BlockUtil.placeBlockWithSwitch(trolleyPos.pos.up().up().up().south(), EnumHand.MAIN_HAND, rotate.GetSwitch(), packet.GetSwitch(), skull);
                     trolleyPos = null;
                     restartTimer.setTime(0);
                     return;
@@ -106,23 +105,23 @@ public class AutoWither extends Module {
                 break;
             case EastWest:
                 if (mc.world.getBlockState(trolleyPos.pos.up().up().east()).getBlock().equals(Blocks.AIR)) {
-                    BlockUtil.placeBlockWithSwitch(trolleyPos.pos.up().up().east(), EnumHand.MAIN_HAND, rotate.getValue(), packet.getValue(), slot);
+                    BlockUtil.placeBlockWithSwitch(trolleyPos.pos.up().up().east(), EnumHand.MAIN_HAND, rotate.GetSwitch(), packet.GetSwitch(), slot);
                     return;
                 }
                 if (mc.world.getBlockState(trolleyPos.pos.up().up().west()).getBlock().equals(Blocks.AIR)) {
-                    BlockUtil.placeBlockWithSwitch(trolleyPos.pos.up().up().west(), EnumHand.MAIN_HAND, rotate.getValue(), packet.getValue(), slot);
+                    BlockUtil.placeBlockWithSwitch(trolleyPos.pos.up().up().west(), EnumHand.MAIN_HAND, rotate.GetSwitch(), packet.GetSwitch(), slot);
                     return;
                 }
                 if (mc.world.getBlockState(trolleyPos.pos.up().up().up()).getBlock().equals(Blocks.AIR)) {
-                    BlockUtil.placeBlockWithSwitch(trolleyPos.pos.up().up().up(), EnumHand.MAIN_HAND, rotate.getValue(), packet.getValue(), skull);
+                    BlockUtil.placeBlockWithSwitch(trolleyPos.pos.up().up().up(), EnumHand.MAIN_HAND, rotate.GetSwitch(), packet.GetSwitch(), skull);
                     return;
                 }
                 if (mc.world.getBlockState(trolleyPos.pos.up().up().up().east()).getBlock().equals(Blocks.AIR)) {
-                    BlockUtil.placeBlockWithSwitch(trolleyPos.pos.up().up().up().east(), EnumHand.MAIN_HAND, rotate.getValue(), packet.getValue(), skull);
+                    BlockUtil.placeBlockWithSwitch(trolleyPos.pos.up().up().up().east(), EnumHand.MAIN_HAND, rotate.GetSwitch(), packet.GetSwitch(), skull);
                     return;
                 }
                 if (mc.world.getBlockState(trolleyPos.pos.up().up().up().west()).getBlock().equals(Blocks.AIR)) {
-                    BlockUtil.placeBlockWithSwitch(trolleyPos.pos.up().up().up().west(), EnumHand.MAIN_HAND, rotate.getValue(), packet.getValue(), skull);
+                    BlockUtil.placeBlockWithSwitch(trolleyPos.pos.up().up().up().west(), EnumHand.MAIN_HAND, rotate.GetSwitch(), packet.GetSwitch(), skull);
                     trolleyPos = null;
                     restartTimer.setTime(0);
                     return;
@@ -132,7 +131,7 @@ public class AutoWither extends Module {
     }
 
     public trolleyBus canPlaceWither(BlockPos pos) {
-        if (!mc.world.getBlockState(pos.up()).getBlock().equals(Blocks.AIR)|| !mc.world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(pos.up())).isEmpty())
+        if (!mc.world.getBlockState(pos.up()).getBlock().equals(Blocks.AIR) || !mc.world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(pos.up())).isEmpty())
             return new trolleyBus(-1, null, null);
         if (!mc.world.getBlockState(pos.up().up()).getBlock().equals(Blocks.AIR) || !mc.world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(pos.up().up())).isEmpty())
             return new trolleyBus(-1, null, null);

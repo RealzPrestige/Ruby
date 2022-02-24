@@ -1,10 +1,10 @@
 package dev.zprestige.ruby.module.misc;
 
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.setting.impl.BooleanSetting;
-import dev.zprestige.ruby.setting.impl.ColorSetting;
-import dev.zprestige.ruby.setting.impl.FloatSetting;
-import dev.zprestige.ruby.setting.impl.ModeSetting;
+import dev.zprestige.ruby.newsettings.impl.ColorSwitch;
+import dev.zprestige.ruby.newsettings.impl.ComboBox;
+import dev.zprestige.ruby.newsettings.impl.Slider;
+import dev.zprestige.ruby.newsettings.impl.Switch;
 import dev.zprestige.ruby.util.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -15,29 +15,26 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
 
 public class AutoMine extends Module {
-    public final ComboBox mineMode = Menu.Switch("Mine Mode", "Vanilla", Arrays.asList("Vanilla", "Packet", "EcMe"));
-    public final ComboBox priority = Menu.Switch("Priority", "City > Surround > AnvilBurrow", Arrays.asList(
+    public final ComboBox mineMode = Menu.ComboBox("Mine Mode", new String[]{"Vanilla", "Packet", "EcMe"});
+    public final ComboBox priority = Menu.ComboBox("Priority", new String[]{
             "City > Surround > AnvilBurrow",
             "City > AnvilBurrow > Surround",
             "Surround > City > AnvilBurrow",
             "Surround > AnvilBurrow > City",
             "AnvilBurrow > City > Surround",
             "AnvilBurrow > Surround > City"
-    ), v -> !mineMode.getValue().equals("EcMe"));
-    public final Slider targetRange = Menu.Switch("Target Range", 9.0f, 0.1f, 15.0f);
-    public final Slider breakRange = Menu.Switch("Break Range", 5.0f, 0.1f, 6.0f);
-    public final Switch rotateToPos = Menu.Switch("Rotate To Pos", v -> mineMode.getValue().equals("EcMe"));
-    public final Switch silentSwitch = Menu.Switch("Silent Switch", v -> mineMode.getValue().equals("EcMe"));
+    });
+    public final Slider targetRange = Menu.Slider("Target Range", 0.1f, 15.0f);
+    public final Slider breakRange = Menu.Slider("Break Range", 0.1f, 6.0f);
+    public final Switch rotateToPos = Menu.Switch("Rotate To Pos");
+    public final Switch silentSwitch = Menu.Switch("Silent Switch");
     public final Switch preSwitch = Menu.Switch("Pre Switch");
-    public final Switch renderPacket = Menu.Switch("Render Packet", v -> mineMode.getValue().equals("Packet"));
-    public final ColorBox packetColor = Menu.Switch("Packet Color", new Color(-1), v -> mineMode.getValue().equals("Packet") && renderPacket.getValue());
+    public final ColorSwitch renderPacket = Menu.ColorSwitch("Render Packet");
     public Timer timer = new Timer();
     public ArrayList<BlockPos> surround = new ArrayList<>();
     public ArrayList<BlockPos> perfectCityPosses = new ArrayList<>();
@@ -76,8 +73,8 @@ public class AutoMine extends Module {
 
     @Override
     public void onGlobalRenderTick() {
-        if (currentMinePos != null && !mc.world.getBlockState(currentMinePos).getBlock().equals(Blocks.AIR) && renderPacket.getValue() && mineMode.getValue().equals("Packet")) {
-            RenderUtil.drawFullBox(true, true, packetColor.getValue(), packetColor.getValue(), 1f, currentMinePos);
+        if (currentMinePos != null && !mc.world.getBlockState(currentMinePos).getBlock().equals(Blocks.AIR) && renderPacket.GetSwitch() && mineMode.GetCombo().equals("Packet")) {
+            RenderUtil.drawFullBox(true, true, renderPacket.GetColor(), renderPacket.GetColor(), 1f, currentMinePos);
         }
     }
 
@@ -89,7 +86,7 @@ public class AutoMine extends Module {
 
     @Override
     public void onTick() {
-        EntityPlayer entityPlayer = EntityUtil.getTarget(targetRange.getValue());
+        EntityPlayer entityPlayer = EntityUtil.getTarget(targetRange.GetSlider());
         int pickSlot = InventoryUtil.getItemFromHotbar(Items.DIAMOND_PICKAXE);
         if (entityPlayer == null || pickSlot == -1)
             return;
@@ -98,30 +95,30 @@ public class AutoMine extends Module {
         perfectCityPosses.clear();
         burrowPos = null;
         setup(targetPos);
-        if (mc.player.getDistanceSq(targetPos.north()) > (breakRange.getValue() * breakRange.getValue()) || mc.player.getDistanceSq(targetPos.east()) > (breakRange.getValue() * breakRange.getValue()) || mc.player.getDistanceSq(targetPos.south()) > (breakRange.getValue() * breakRange.getValue()) || mc.player.getDistanceSq(targetPos.west()) > (breakRange.getValue() * breakRange.getValue()) || mc.player.getDistanceSq(targetPos) > (breakRange.getValue() * breakRange.getValue()))
+        if (mc.player.getDistanceSq(targetPos.north()) > (breakRange.GetSlider() * breakRange.GetSlider()) || mc.player.getDistanceSq(targetPos.east()) > (breakRange.GetSlider() * breakRange.GetSlider()) || mc.player.getDistanceSq(targetPos.south()) > (breakRange.GetSlider() * breakRange.GetSlider()) || mc.player.getDistanceSq(targetPos.west()) > (breakRange.GetSlider() * breakRange.GetSlider()) || mc.player.getDistanceSq(targetPos) > (breakRange.GetSlider() * breakRange.GetSlider()))
             return;
-        if (mineMode.getValue().equals("EcMe")) {
+        if (mineMode.GetCombo().equals("EcMe")) {
             if (!surround.isEmpty()) {
                 BlockPos pos = surround.get(0);
                 if (pos != prevMinePosEcMe)
                     size = 0.0f;
                 float[] rotations = new float[]{mc.player.rotationYaw, mc.player.rotationPitch};
-                if (rotateToPos.getValue())
+                if (rotateToPos.GetSwitch())
                     posRotate(pos);
                 int slot = InventoryUtil.getItemFromHotbar(Items.DIAMOND_PICKAXE);
                 int currentItem = mc.player.inventory.currentItem;
-                if (silentSwitch.getValue() && slot != -1)
+                if (silentSwitch.GetSwitch() && slot != -1)
                     InventoryUtil.switchToSlot(slot);
-                if (mc.player.getHeldItemMainhand().getItem().equals(Items.DIAMOND_PICKAXE) || silentSwitch.getValue()) {
+                if (mc.player.getHeldItemMainhand().getItem().equals(Items.DIAMOND_PICKAXE) || silentSwitch.GetSwitch()) {
                     mc.playerController.onPlayerDamageBlock(pos, mc.objectMouseOver.sideHit);
                     mc.player.swingArm(EnumHand.MAIN_HAND);
                 }
                 size += 0.25f;
-                if (silentSwitch.getValue() && slot != -1) {
+                if (silentSwitch.GetSwitch() && slot != -1) {
                     mc.player.inventory.currentItem = currentItem;
                     mc.playerController.updateController();
                 }
-                if (rotateToPos.getValue()) {
+                if (rotateToPos.GetSwitch()) {
                     mc.player.rotationYaw = rotations[0];
                     mc.player.rotationPitch = rotations[1];
                 }
@@ -143,7 +140,7 @@ public class AutoMine extends Module {
             }
             return;
         }
-        switch (priority.getValue()) {
+        switch (priority.GetCombo()) {
             case "City > Surround > AnvilBurrow":
                 if (!perfectCityPosses.isEmpty()) {
                     BlockPos pos = perfectCityPosses.get(0);
@@ -214,11 +211,11 @@ public class AutoMine extends Module {
 
     public void mineBlock(BlockPos pos) {
         int currentItem = mc.player.inventory.currentItem;
-        if (preSwitch.getValue()) {
+        if (preSwitch.GetSwitch()) {
             int slot = InventoryUtil.getItemFromHotbar(Items.DIAMOND_PICKAXE);
             InventoryUtil.switchToSlot(slot);
         }
-        switch (mineMode.getValue()) {
+        switch (mineMode.GetCombo()) {
             case "Packet":
                 mc.player.connection.sendPacket(new CPacketPlayerDigging(CPacketPlayerDigging.Action.START_DESTROY_BLOCK, pos, EnumFacing.UP));
                 EntityUtil.swingArm(EntityUtil.SwingType.MainHand);
@@ -233,7 +230,7 @@ public class AutoMine extends Module {
                 currentMinePos = pos;
                 break;
         }
-        if (preSwitch.getValue()) {
+        if (preSwitch.GetSwitch()) {
             mc.player.inventory.currentItem = currentItem;
             mc.playerController.updateController();
         }

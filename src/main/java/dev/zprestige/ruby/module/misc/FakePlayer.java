@@ -3,8 +3,7 @@ package dev.zprestige.ruby.module.misc;
 import com.google.gson.JsonParser;
 import com.mojang.authlib.GameProfile;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.setting.impl.BooleanSetting;
-import dev.zprestige.ruby.setting.impl.StringSetting;
+import dev.zprestige.ruby.newsettings.impl.Switch;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
 
 import java.io.InputStream;
@@ -15,7 +14,6 @@ import java.util.UUID;
 
 public class FakePlayer extends Module {
     public static FakePlayer Instance;
-    public StringSetting name = Menu.Switch("Name", "zPrestige_");
     public final Switch copyInventory = Menu.Switch("Copy Inventory");
     EntityOtherPlayerMP fakePlayer;
 
@@ -25,9 +23,9 @@ public class FakePlayer extends Module {
 
     @Override
     public void onEnable() {
-        fakePlayer = new EntityOtherPlayerMP(mc.world, new GameProfile(getUUIDByName(name.getValue()), name.getValue()));
+        fakePlayer = new EntityOtherPlayerMP(mc.world, new GameProfile(getUUIDByName("FakePlayer"), "FakePlayer"));
         fakePlayer.copyLocationAndAnglesFrom(mc.player);
-        if (copyInventory.getValue()) {
+        if (copyInventory.GetSwitch()) {
             fakePlayer.inventory = mc.player.inventory;
         }
         fakePlayer.setHealth(36);

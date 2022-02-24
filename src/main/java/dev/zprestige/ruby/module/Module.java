@@ -194,14 +194,14 @@ public class Module {
         return setting;
     }
 
-    public KeySetting Menu.Switch(String name, int value) {
+    public final Key Menu.Switch(String name, int value) {
         KeySetting setting = new KeySetting(name, value);
         setting.setModule(this);
         settingList.add(setting);
         return setting;
     }
 
-    public KeySetting Menu.Switch(String name, int value, Predicate<Integer> shown) {
+    public final Key Menu.Switch(String name, int value, Predicate<Integer> shown) {
         KeySetting setting = new KeySetting(name, value, shown);
         setting.setModule(this);
         settingList.add(setting);

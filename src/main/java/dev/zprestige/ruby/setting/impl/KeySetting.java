@@ -8,11 +8,11 @@ public class KeySetting extends Setting<Integer> {
 
     public boolean isTyping = false;
 
-    public KeySetting(String name, int value) {
+    public final Key(String name, int value) {
         super(name, value);
     }
 
-    public KeySetting(String name, int value, Predicate<Integer> shown) {
+    public final Key(String name, int value, Predicate<Integer> shown) {
         super(name, value, shown);
     }
 
@@ -24,7 +24,7 @@ public class KeySetting extends Setting<Integer> {
         value = bind;
     }
 
-    public KeySetting setParent(ParentSetting parentSetting){
+    public final Key setParent(ParentSetting parentSetting){
         this.parentSetting = parentSetting;
         hasParentSetting = true;
         parentSetting.addChild(this);

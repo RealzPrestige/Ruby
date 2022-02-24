@@ -27,7 +27,7 @@ public class Speed extends Module {
     public static Speed Instance;
     public final Parent modes = Menu.Switch("Modes");
     public final ComboBox mode = Menu.Switch("Mode", "Normal", Arrays.asList("Normal", "Switch")).parent(modes);
-    public KeySetting switchKey = Menu.Switch("Switch Key", Keyboard.KEY_NONE, v -> mode.getValue().equals("Switch")).parent(modes);
+    public final Key switchKey = Menu.Switch("Switch Key", Keyboard.KEY_NONE, v -> mode.getValue().equals("Switch")).parent(modes);
     public final Switch announceSwitch = Menu.Switch("Announce Switch", v -> mode.getValue().equals("Switch")).parent(modes);
     public final Switch switchPullToGround = Menu.Switch("Switch Pull To Ground", false, v -> mode.getValue().equals("Switch")).parent(modes);
     public final ComboBox speedMode = Menu.Switch("Speed Mode", "Strafe", Arrays.asList("OnGround", "Strafe")).parent(modes);
