@@ -22,8 +22,8 @@ import java.util.Collections;
 import java.util.Objects;
 
 public class AutoMine extends Module {
-    public ModeSetting mineMode = createSetting("Mine Mode", "Vanilla", Arrays.asList("Vanilla", "Packet", "EcMe"));
-    public ModeSetting priority = createSetting("Priority", "City > Surround > AnvilBurrow", Arrays.asList(
+    public final ComboBox mineMode = Menu.Switch("Mine Mode", "Vanilla", Arrays.asList("Vanilla", "Packet", "EcMe"));
+    public final ComboBox priority = Menu.Switch("Priority", "City > Surround > AnvilBurrow", Arrays.asList(
             "City > Surround > AnvilBurrow",
             "City > AnvilBurrow > Surround",
             "Surround > City > AnvilBurrow",
@@ -31,13 +31,13 @@ public class AutoMine extends Module {
             "AnvilBurrow > City > Surround",
             "AnvilBurrow > Surround > City"
     ), v -> !mineMode.getValue().equals("EcMe"));
-    public FloatSetting targetRange = createSetting("Target Range", 9.0f, 0.1f, 15.0f);
-    public FloatSetting breakRange = createSetting("Break Range", 5.0f, 0.1f, 6.0f);
-    public BooleanSetting rotateToPos = createSetting("Rotate To Pos", false, v -> mineMode.getValue().equals("EcMe"));
-    public BooleanSetting silentSwitch = createSetting("Silent Switch", false, v -> mineMode.getValue().equals("EcMe"));
-    public BooleanSetting preSwitch = createSetting("Pre Switch", false);
-    public BooleanSetting renderPacket = createSetting("Render Packet", false, v -> mineMode.getValue().equals("Packet"));
-    public ColorSetting packetColor = createSetting("Packet Color", new Color(-1), v -> mineMode.getValue().equals("Packet") && renderPacket.getValue());
+    public final Slider targetRange = Menu.Switch("Target Range", 9.0f, 0.1f, 15.0f);
+    public final Slider breakRange = Menu.Switch("Break Range", 5.0f, 0.1f, 6.0f);
+    public final Switch rotateToPos = Menu.Switch("Rotate To Pos", v -> mineMode.getValue().equals("EcMe"));
+    public final Switch silentSwitch = Menu.Switch("Silent Switch", v -> mineMode.getValue().equals("EcMe"));
+    public final Switch preSwitch = Menu.Switch("Pre Switch");
+    public final Switch renderPacket = Menu.Switch("Render Packet", v -> mineMode.getValue().equals("Packet"));
+    public final ColorBox packetColor = Menu.Switch("Packet Color", new Color(-1), v -> mineMode.getValue().equals("Packet") && renderPacket.getValue());
     public Timer timer = new Timer();
     public ArrayList<BlockPos> surround = new ArrayList<>();
     public ArrayList<BlockPos> perfectCityPosses = new ArrayList<>();

@@ -15,8 +15,8 @@ import java.util.UUID;
 
 public class FakePlayer extends Module {
     public static FakePlayer Instance;
-    public StringSetting name = createSetting("Name", "zPrestige_");
-    public BooleanSetting copyInventory = createSetting("Copy Inventory", false);
+    public StringSetting name = Menu.Switch("Name", "zPrestige_");
+    public final Switch copyInventory = Menu.Switch("Copy Inventory");
     EntityOtherPlayerMP fakePlayer;
 
     public FakePlayer() {

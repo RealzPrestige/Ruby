@@ -15,14 +15,14 @@ import java.util.HashMap;
 import java.util.function.Predicate;
 
 public class LiquidSpeed extends Module {
-    public ModeSetting mode = createSetting("Mode", "Vanilla", Arrays.asList("Vanilla", "Factor", "Teleport"));
-    public FloatSetting horizontalSpeed = createSetting("Horizontal Factor", 1.0f, 0.1f, 10.0f);
-    public FloatSetting downFactor = createSetting("Down Factor", 1.0f, 0.1f, 10.0f);
-    public FloatSetting upFactor = createSetting("Up Factor", 1.0f, 0.1f, 10.0f);
-    public ModeSetting downMode = createSetting("Down Mode", "None", Arrays.asList("None", "NoDownForce", "NCP-Bypass"));
-    public BooleanSetting boost = createSetting("Boost", false, v -> mode.getValue().equals("Vanilla"));
-    public BooleanSetting onlyBoostOnHoldSprint = createSetting("Only Boost On Hold Sprint", false, v -> mode.getValue().equals("Vanilla"));
-    public FloatSetting boostReduction = createSetting("Boost Reduction", 1.0f, 0.1f, 10.0f, (Predicate<Float>) v -> mode.getValue().equals("Vanilla") && boost.getValue());
+    public final ComboBox mode = Menu.Switch("Mode", "Vanilla", Arrays.asList("Vanilla", "Factor", "Teleport"));
+    public final Slider horizontalSpeed = Menu.Switch("Horizontal Factor", 1.0f, 0.1f, 10.0f);
+    public final Slider downFactor = Menu.Switch("Down Factor", 1.0f, 0.1f, 10.0f);
+    public final Slider upFactor = Menu.Switch("Up Factor", 1.0f, 0.1f, 10.0f);
+    public final ComboBox downMode = Menu.Switch("Down Mode", "None", Arrays.asList("None", "NoDownForce", "NCP-Bypass"));
+    public final Switch boost = Menu.Switch("Boost", false, v -> mode.getValue().equals("Vanilla"));
+    public final Switch onlyBoostOnHoldSprint = Menu.Switch("Only Boost On Hold Sprint", false, v -> mode.getValue().equals("Vanilla"));
+    public final Slider boostReduction = Menu.Switch("Boost Reduction", 1.0f, 0.1f, 10.0f, (Predicate<Float>) v -> mode.getValue().equals("Vanilla") && boost.getValue());
     public HashMap<Long, Double> damagePerSecond = new HashMap<>();
     public double lastTickHealth = 0.0;
 

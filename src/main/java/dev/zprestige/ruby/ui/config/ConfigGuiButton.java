@@ -3,7 +3,7 @@ package dev.zprestige.ruby.ui.config;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.module.client.Configs;
-import dev.zprestige.ruby.module.client.NewGui;
+import dev.zprestige.ruby.module.client.ClickGui;
 import dev.zprestige.ruby.util.AnimationUtil;
 import dev.zprestige.ruby.util.RenderUtil;
 import net.minecraft.client.gui.GuiScreen;
@@ -52,13 +52,13 @@ public class ConfigGuiButton {
             }
         }
         {
-            RenderUtil.drawRect(x, y, x + width, y + height, NewGui.Instance.backgroundColor.getValue().getRGB());
-            RenderUtil.drawOutlineRect(x, y, x + width, y + height, NewGui.Instance.backgroundColor.getValue(), 1f);
+            RenderUtil.drawRect(x, y, x + width, y + height, ClickGui.Instance.backgroundColor.GetColor().getRGB());
+            RenderUtil.drawOutlineRect(x, y, x + width, y + height, ClickGui.Instance.backgroundColor.GetColor(), 1f);
             Ruby.rubyFont.drawStringWithShadow(name, x + (isInside(mouseX, mouseY) ? 3 : 2), y + (height / 2f) - (Ruby.rubyFont.getHeight(name) / 2f), -1);
         }
         {
             if (isInside(mouseX, mouseY))
-                RenderUtil.drawRect(x, y, x + width, y + height, NewGui.Instance.backgroundColor.getValue().getRGB());
+                RenderUtil.drawRect(x, y, x + width, y + height, ClickGui.Instance.backgroundColor.GetColor().getRGB());
         }
         {
             icons.forEach(icon -> icon.render(mouseX, mouseY));
@@ -101,8 +101,8 @@ public class ConfigGuiButton {
             }
             {
                 if (isInside(mouseX, mouseY)) {
-                    RenderUtil.drawRect(mouseX + 5, mouseY - 5, mouseX + 6 + Ruby.rubyFont.getStringWidth(iconType.toString()), mouseY + 8, NewGui.Instance.backgroundColor.getValue().getRGB());
-                    RenderUtil.drawOutlineRect(mouseX + 5, mouseY - 5, mouseX + 6 + Ruby.rubyFont.getStringWidth(iconType.toString()), mouseY + 8, NewGui.Instance.backgroundColor.getValue(), 1f);
+                    RenderUtil.drawRect(mouseX + 5, mouseY - 5, mouseX + 6 + Ruby.rubyFont.getStringWidth(iconType.toString()), mouseY + 8, ClickGui.Instance.backgroundColor.GetColor().getRGB());
+                    RenderUtil.drawOutlineRect(mouseX + 5, mouseY - 5, mouseX + 6 + Ruby.rubyFont.getStringWidth(iconType.toString()), mouseY + 8, ClickGui.Instance.backgroundColor.GetColor(), 1f);
                     Ruby.rubyFont.drawStringWithShadow(iconType.toString(), mouseX + 1, mouseY - 5 + (13 / 2f) - (Ruby.rubyFont.getHeight(iconType.toString()) / 2f), -1);
                 }
             }

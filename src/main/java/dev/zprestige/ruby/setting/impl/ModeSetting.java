@@ -8,12 +8,12 @@ import java.util.function.Predicate;
 public final class ModeSetting extends Setting<String> {
     public List<String> modes;
 
-    public ModeSetting(String name, String value, List<String> modeList) {
+    public final ComboBox(String name, String value, List<String> modeList) {
         super(name, value);
         this.modes = modeList;
     }
 
-    public ModeSetting(String name, String value, List<String> modeList, Predicate<String> shown) {
+    public final ComboBox(String name, String value, List<String> modeList, Predicate<String> shown) {
         super(name, value, shown);
         this.modes = modeList;
     }
@@ -34,7 +34,7 @@ public final class ModeSetting extends Setting<String> {
         this.value = (modes.contains(value) ? value : this.value);
     }
 
-    public ModeSetting setParent(ParentSetting parentSetting){
+    public final ComboBox setParent(ParentSetting parentSetting){
         this.parentSetting = parentSetting;
         hasParentSetting = true;
         parentSetting.addChild(this);

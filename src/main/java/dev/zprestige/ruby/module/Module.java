@@ -19,8 +19,8 @@ public class Module {
     protected Category category;
     protected final List<Setting<?>> settingList = new ArrayList<>();
     protected final List<dev.zprestige.ruby.newsettings.Setting> newSettings = new ArrayList<>();
-    protected final  KeySetting keybind = createSetting("Keybind", Keyboard.KEY_NONE);
-    protected final BooleanSetting enabled = createSetting("Enabled", false);
+    protected final  KeySetting keybind = Menu.Switch("Keybind", Keyboard.KEY_NONE);
+    protected final BooleanSetting enabled = Menu.Switch("Enabled");
     protected final Minecraft mc = Minecraft.getMinecraft();
     public final Menu Menu = new Menu(this);
     public int scrollY;
@@ -110,126 +110,126 @@ public class Module {
         return this;
     }
 
-    public BooleanSetting createSetting(String name, boolean value) {
+    public final Switch Menu.Switch(String name, boolean value) {
         BooleanSetting setting = new BooleanSetting(name, value);
         setting.setModule(this);
         settingList.add(setting);
         return setting;
     }
 
-    public BooleanSetting createSetting(String name, boolean value, Predicate<Boolean> shown) {
+    public final Switch Menu.Switch(String name, boolean value, Predicate<Boolean> shown) {
         BooleanSetting setting = new BooleanSetting(name, value, shown);
         setting.setModule(this);
         settingList.add(setting);
         return setting;
     }
 
-    public ColorSetting createSetting(String name, Color value) {
+    public final ColorBox Menu.Switch(String name, Color value) {
         ColorSetting setting = new ColorSetting(name, value);
         setting.setModule(this);
         settingList.add(setting);
         return setting;
     }
 
-    public ColorSetting createSetting(String name, Color value, Predicate<Color> shown) {
+    public final ColorBox Menu.Switch(String name, Color value, Predicate<Color> shown) {
         ColorSetting setting = new ColorSetting(name, value, shown);
         setting.setModule(this);
         settingList.add(setting);
         return setting;
     }
 
-    public DoubleSetting createSetting(String name, double value, double minimum, double maximum) {
+    public final Slider Menu.Switch(String name, double value, double minimum, double maximum) {
         DoubleSetting setting = new DoubleSetting(name, value, minimum, maximum);
         setting.setModule(this);
         settingList.add(setting);
         return setting;
     }
 
-    public DoubleSetting createSetting(String name, double value, double minimum, double maximum, Predicate<Double> shown) {
+    public final Slider Menu.Switch(String name, double value, double minimum, double maximum, Predicate<Double> shown) {
         DoubleSetting setting = new DoubleSetting(name, value, minimum, maximum, shown);
         setting.setModule(this);
         settingList.add(setting);
         return setting;
     }
 
-    public ModeSetting createSetting(String name, String value, java.util.List<String> modeList) {
+    public final ComboBox Menu.Switch(String name, String value, java.util.List<String> modeList) {
         ModeSetting setting = new ModeSetting(name, value, modeList);
         setting.setModule(this);
         settingList.add(setting);
         return setting;
     }
 
-    public ModeSetting createSetting(String name, String value, List<String> modeList, Predicate<String> shown) {
+    public final ComboBox Menu.Switch(String name, String value, List<String> modeList, Predicate<String> shown) {
         ModeSetting setting = new ModeSetting(name, value, modeList, shown);
         setting.setModule(this);
         settingList.add(setting);
         return setting;
     }
 
-    public FloatSetting createSetting(String name, float value, float minimum, float maximum) {
+    public final Slider Menu.Switch(String name, float value, float minimum, float maximum) {
         FloatSetting setting = new FloatSetting(name, value, minimum, maximum);
         setting.setModule(this);
         settingList.add(setting);
         return setting;
     }
 
-    public FloatSetting createSetting(String name, float value, float minimum, float maximum, Predicate<Float> shown) {
+    public final Slider Menu.Switch(String name, float value, float minimum, float maximum, Predicate<Float> shown) {
         FloatSetting setting = new FloatSetting(name, value, minimum, maximum, shown);
         setting.setModule(this);
         settingList.add(setting);
         return setting;
     }
 
-    public IntegerSetting createSetting(String name, int value, int minimum, int maximum) {
+    public final Slider Menu.Switch(String name, int value, int minimum, int maximum) {
         IntegerSetting setting = new IntegerSetting(name, value, minimum, maximum);
         setting.setModule(this);
         settingList.add(setting);
         return setting;
     }
 
-    public IntegerSetting createSetting(String name, int value, int minimum, int maximum, Predicate<Integer> shown) {
+    public final Slider Menu.Switch(String name, int value, int minimum, int maximum, Predicate<Integer> shown) {
         IntegerSetting setting = new IntegerSetting(name, value, minimum, maximum, shown);
         setting.setModule(this);
         settingList.add(setting);
         return setting;
     }
 
-    public KeySetting createSetting(String name, int value) {
+    public KeySetting Menu.Switch(String name, int value) {
         KeySetting setting = new KeySetting(name, value);
         setting.setModule(this);
         settingList.add(setting);
         return setting;
     }
 
-    public KeySetting createSetting(String name, int value, Predicate<Integer> shown) {
+    public KeySetting Menu.Switch(String name, int value, Predicate<Integer> shown) {
         KeySetting setting = new KeySetting(name, value, shown);
         setting.setModule(this);
         settingList.add(setting);
         return setting;
     }
 
-    public StringSetting createSetting(String name, String value) {
+    public StringSetting Menu.Switch(String name, String value) {
         StringSetting setting = new StringSetting(name, value);
         setting.setModule(this);
         settingList.add(setting);
         return setting;
     }
 
-    public StringSetting createSetting(String name, String value, Predicate<String> shown) {
+    public StringSetting Menu.Switch(String name, String value, Predicate<String> shown) {
         StringSetting setting = new StringSetting(name, value, shown);
         setting.setModule(this);
         settingList.add(setting);
         return setting;
     }
 
-    public ParentSetting createSetting(String name) {
+    public final Parent Menu.Switch(String name) {
         ParentSetting setting = new ParentSetting(name);
         setting.setModule(this);
         settingList.add(setting);
         return setting;
     }
 
-    public ParentSetting createSetting(String name, Predicate<Boolean> shown) {
+    public final Parent Menu.Switch(String name, Predicate<Boolean> shown) {
         ParentSetting setting = new ParentSetting(name, shown);
         setting.setModule(this);
         settingList.add(setting);

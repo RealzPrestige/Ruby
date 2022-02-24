@@ -8,10 +8,10 @@ import java.util.Arrays;
 import java.util.function.Predicate;
 
 public class AntiWeb extends Module {
-    public ModeSetting mode = createSetting("Mode", "Vanilla", Arrays.asList("Vanilla", "Motion", "Timer"));
-    public FloatSetting horizontalSpeed = createSetting("Horizontal Speed", 1.0f, 0.1f, 2.0f, (Predicate<Float>) v-> mode.getValue().equals("Motion"));
-    public FloatSetting verticalSpeed = createSetting("Vertical Speed", 1.0f, 0.1f, 2.0f, (Predicate<Float>) v-> mode.getValue().equals("Motion"));
-    public FloatSetting timerAmount = createSetting("Timer Amount", 1.0f, 0.1f, 10.0f, (Predicate<Float>) v-> mode.getValue().equals("Timer"));
+    public final ComboBox mode = Menu.Switch("Mode", "Vanilla", Arrays.asList("Vanilla", "Motion", "Timer"));
+    public final Slider horizontalSpeed = Menu.Switch("Horizontal Speed", 1.0f, 0.1f, 2.0f, (Predicate<Float>) v-> mode.getValue().equals("Motion"));
+    public final Slider verticalSpeed = Menu.Switch("Vertical Speed", 1.0f, 0.1f, 2.0f, (Predicate<Float>) v-> mode.getValue().equals("Motion"));
+    public final Slider timerAmount = Menu.Switch("Timer Amount", 1.0f, 0.1f, 10.0f, (Predicate<Float>) v-> mode.getValue().equals("Timer"));
     public boolean isTimering;
 
     @Override

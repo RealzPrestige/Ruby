@@ -8,7 +8,7 @@ import dev.zprestige.ruby.events.MoveEvent;
 import dev.zprestige.ruby.events.PacketEvent;
 import dev.zprestige.ruby.module.Module;
 import dev.zprestige.ruby.module.misc.RunDetect;
-import dev.zprestige.ruby.setting.impl.*;
+import dev.zprestige.ruby.newsettings.impl.*;
 import dev.zprestige.ruby.util.Timer;
 import dev.zprestige.ruby.util.*;
 import net.minecraft.entity.Entity;
@@ -35,95 +35,92 @@ import net.minecraft.util.math.Vec3d;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
-import java.util.function.Predicate;
 
 public class AutoCrystal extends Module {
-    public ParentSetting targets = createSetting("Targets");
-    public FloatSetting targetRange = createSetting("Target Range", 10.0f, 0.0f, 15.0f).setParent(targets);
+    public final Parent targets = Menu.Parent("Targets");
+    public final Slider targetRange = Menu.Slider("Target Range", 0.0f, 15.0f).parent(targets);
 
-    public ParentSetting others = createSetting("Misc");
-    public ModeSetting enumFacing = createSetting("Enum Facing", "Force Up", Arrays.asList("Force Up", "Closest")).setParent(others);
-    public BooleanSetting rotations = createSetting("Rotations", false).setParent(others);
-    public BooleanSetting onMoveCalc = createSetting("On Move Calc", false).setParent(others);
-    public BooleanSetting onMoveCalcPlace = createSetting("On Move Calc Place", false, v -> onMoveCalc.getValue()).setParent(others);
-    public BooleanSetting onMoveCalcExplode = createSetting("On Move Calc Explode", false, v -> onMoveCalc.getValue()).setParent(others);
+    public final Parent others = Menu.Parent("Misc");
+    public final ComboBox enumFacing = Menu.ComboBox("Enum Facing", new String[]{
+            "Force Up",
+            "Closest"
+    }).parent(others);
+    public final Switch rotations = Menu.Switch("Rotations").parent(others);
+    public final Switch onMoveCalc = Menu.Switch("On Move Calc").parent(others);
+    public final Switch onMoveCalcPlace = Menu.Switch("On Move Calc Place").parent(others);
+    public final Switch onMoveCalcExplode = Menu.Switch("On Move Calc Explode").parent(others);
 
-    public ParentSetting placing = createSetting("Placing");
-    public FloatSetting placeRange = createSetting("Place Range", 5.0f, 0.0f, 6.0f).setParent(placing);
-    public FloatSetting placeWallRange = createSetting("Place Wall Range", 5.0f, 0.0f, 6.0f).setParent(placing);
-    public IntegerSetting placeDelay = createSetting("Place Delay", 10, 0, 500).setParent(placing);
-    public IntegerSetting placeCalcDelay = createSetting("Place Calc Delay", 1, 0, 500).setParent(placing);
-    public FloatSetting placeMinimumDamage = createSetting("Place Minimum Damage", 8.0f, 0.0f, 36.0f).setParent(placing);
-    public FloatSetting placeMaximumSelfDamage = createSetting("Place Maximum Self Damage", 8.0f, 0.0f, 36.0f).setParent(placing);
-    public BooleanSetting placeIncludeMinOffset = createSetting("Include Min Offset", false).setParent(placing);
-    public FloatSetting placeMinOffset = createSetting("Place Min Offset", 2.0f, 0.0f, 15.0f, (Predicate<Float>) v -> placeIncludeMinOffset.getValue());
-    public BooleanSetting placeIncludeMaxOffset = createSetting("Include Max Offset", false).setParent(placing);
-    public FloatSetting placeMaxOffset = createSetting("Place Max Offset", 2.0f, 0.0f, 15.0f, (Predicate<Float>) v -> placeIncludeMaxOffset.getValue());
-    public BooleanSetting placeSilentSwitch = createSetting("Place Silent Switch", false).setParent(placing);
-    public BooleanSetting placeAntiSuicide = createSetting("Place Anti Suicide", false).setParent(placing);
-    public BooleanSetting placePacket = createSetting("Place Packet", false).setParent(placing);
-    public ModeSetting placeCalculations = createSetting("Place Calculations", "HighestEnemyDamage", Arrays.asList("Sync", "HighestEnemyDamage", "LowestSelfDamage", "HighestSelfDistance", "LowestEnemyDistance")).setParent(placing);
-    public ModeSetting placeSyncCalc = createSetting("Place Sync Calc", "Autonomic", Arrays.asList("Autonomic", "Target"), v -> placeCalculations.getValue().equals("Sync")).setParent(placing);
-    public BooleanSetting placeFastCalc = createSetting("Place Fast Calc", false).setParent(placing);
-    public IntegerSetting placeFastCalcSpeed = createSetting("Place Fast Calc Speed", 10, 0, 100, (Predicate<Integer>) v -> placeFastCalc.getValue()).setParent(placing);
-    public BooleanSetting placeMotionPredict = createSetting("Place Motion Predict", false).setParent(placing);
-    public IntegerSetting placeMotionPredictAmount = createSetting("Place Motion Predict Amount", 1, 0, 5, (Predicate<Integer>) v -> placeMotionPredict.getValue()).setParent(placing);
-    public BooleanSetting placeSwing = createSetting("Place Swing", false).setParent(placing);
-    public ModeSetting placeSwingHand = createSetting("Place Swing Hand", "Mainhand", Arrays.asList("Mainhand", "Offhand", "Packet"), v -> placeSwing.getValue()).setParent(placing);
+    public final Parent placing = Menu.Parent("Placing");
+    public final Slider placeRange = Menu.Slider("Place Range", 0.0f, 6.0f).parent(placing);
+    public final Slider placeWallRange = Menu.Slider("Place Wall Range", 0.0f, 6.0f).parent(placing);
+    public final Slider placeDelay = Menu.Slider("Place Delay", 0, 500).parent(placing);
+    public final Slider placeCalcDelay = Menu.Slider("Place Calc Delay", 0, 500).parent(placing);
+    public final Slider placeMinimumDamage = Menu.Slider("Place Minimum Damage", 0.0f, 36.0f).parent(placing);
+    public final Slider placeMaximumSelfDamage = Menu.Slider("Place Maximum Self Damage", 0.0f, 36.0f).parent(placing);
+    public final Switch placeIncludeMinOffset = Menu.Switch("Include Min Offset").parent(placing);
+    public final Slider placeMinOffset = Menu.Slider("Place Min Offset", 0.0f, 15.0f);
+    public final Switch placeIncludeMaxOffset = Menu.Switch("Include Max Offset").parent(placing);
+    public final Slider placeMaxOffset = Menu.Slider("Place Max Offset", 0.0f, 15.0f);
+    public final Switch placeSilentSwitch = Menu.Switch("Place Silent Switch").parent(placing);
+    public final Switch placeAntiSuicide = Menu.Switch("Place Anti Suicide").parent(placing);
+    public final Switch placePacket = Menu.Switch("Place Packet").parent(placing);
+    public final ComboBox placeCalculations = Menu.ComboBox("Place Calculations", new String[]{
+            "Sync",
+            "HighestEnemyDamage",
+            "LowestSelfDamage",
+            "HighestSelfDistance",
+            "LowestEnemyDistance"
+    }).parent(placing);
+    public final ComboBox placeSyncCalc = Menu.ComboBox("Place Sync Calc", new String[]{"Autonomic", "Target"}).parent(placing);
+    public final Switch placeFastCalc = Menu.Switch("Place Fast Calc").parent(placing);
+    public final Slider placeFastCalcSpeed = Menu.Slider("Place Fast Calc Speed", 0, 100).parent(placing);
+    public final Switch placeMotionPredict = Menu.Switch("Place Motion Predict").parent(placing);
+    public final Slider placeMotionPredictAmount = Menu.Slider("Place Motion Predict Amount", 0, 5).parent(placing);
+    public final Switch placeSwing = Menu.Switch("Place Swing").parent(placing);
+    public final ComboBox placeSwingHand = Menu.ComboBox("Place Swing Hand", new String[]{"Mainhand", "Offhand", "Packet"}).parent(placing);
 
-    public ParentSetting exploding = createSetting("Exploding");
-    public FloatSetting explodeRange = createSetting("Explode Range", 5.0f, 0.0f, 6.0f).setParent(exploding);
-    public FloatSetting explodeWallRange = createSetting("Explode Wall Range", 5.0f, 0.0f, 6.0f).setParent(exploding);
-    public IntegerSetting explodeDelay = createSetting("Explode Delay", 60, 0, 500).setParent(exploding);
-    public IntegerSetting explodeCalcDelay = createSetting("Explode Calc Delay", 1, 0, 500).setParent(exploding);
-    public FloatSetting explodeMinimumDamage = createSetting("Explode Minimum Damage", 8.0f, 0.0f, 36.0f).setParent(exploding);
-    public BooleanSetting explodeIgnoreMinimumDamageAndTakeHighestDamageValueWhenever = createSetting("Explode Ignore Minimum Damage And Take Highest Damage Value Whenever", false).setParent(exploding);
-    public FloatSetting explodeMaximumSelfDamage = createSetting("Explode Maximum Self Damage", 8.0f, 0.0f, 36.0f).setParent(exploding);
-    public BooleanSetting explodeAntiStuck = createSetting("Explode Anti Stuck", false).setParent(exploding);
-    public IntegerSetting explodeAntiStuckThreshold = createSetting("Explode Anti Stuck Threshold", 2, 1, 10, (Predicate<Integer>) v -> explodeAntiStuck.getValue()).setParent(exploding);
-    public BooleanSetting explodeAntiSuicide = createSetting("Explode Anti Suicide", false).setParent(exploding);
-    public BooleanSetting explodePacket = createSetting("Explode Packet", false).setParent(exploding);
-    public BooleanSetting explodeInhibit = createSetting("Explode Inhibit", false).setParent(exploding);
-    public BooleanSetting breakMotionPredict = createSetting("Break Motion Predict", false).setParent(exploding);
-    public IntegerSetting breakMotionPredictAmount = createSetting("Break Motion Predict Amount", 1, 0, 5, (Predicate<Integer>) v -> breakMotionPredict.getValue()).setParent(exploding);
-    public BooleanSetting explodeAntiWeakness = createSetting("Explode Anti Weakness", false).setParent(exploding);
-    public BooleanSetting explodeSwing = createSetting("Explode Swing", false).setParent(exploding);
-    public ModeSetting explodeSwingHand = createSetting("Explode Swing Hand", "Mainhand", Arrays.asList("Mainhand", "Offhand", "Packet"), v -> explodeSwing.getValue()).setParent(exploding);
+    public final Parent exploding = Menu.Parent("Exploding");
+    public final Slider explodeRange = Menu.Slider("Explode Range", 0.0f, 6.0f).parent(exploding);
+    public final Slider explodeWallRange = Menu.Slider("Explode Wall Range", 0.0f, 6.0f).parent(exploding);
+    public final Slider explodeDelay = Menu.Slider("Explode Delay", 0, 500).parent(exploding);
+    public final Slider explodeCalcDelay = Menu.Slider("Explode Calc Delay", 0, 500).parent(exploding);
+    public final Slider explodeMinimumDamage = Menu.Slider("Explode Minimum Damage", 0.0f, 36.0f).parent(exploding);
+    public final Switch explodeIgnoreMinimumDamageAndTakeHighestDamageValueWhenever = Menu.Switch("Explode Ignore Minimum Damage And Take Highest Damage Value Whenever").parent(exploding);
+    public final Slider explodeMaximumSelfDamage = Menu.Slider("Explode Maximum Self Damage", 0.0f, 36.0f).parent(exploding);
+    public final Switch explodeAntiStuck = Menu.Switch("Explode Anti Stuck").parent(exploding);
+    public final Slider explodeAntiStuckThreshold = Menu.Slider("Explode Anti Stuck Threshold", 1, 10).parent(exploding);
+    public final Switch explodeAntiSuicide = Menu.Switch("Explode Anti Suicide").parent(exploding);
+    public final Switch explodePacket = Menu.Switch("Explode Packet").parent(exploding);
+    public final Switch explodeInhibit = Menu.Switch("Explode Inhibit").parent(exploding);
+    public final Switch breakMotionPredict = Menu.Switch("Break Motion Predict").parent(exploding);
+    public final Slider breakMotionPredictAmount = Menu.Slider("Break Motion Predict Amount", 0, 5).parent(exploding);
+    public final Switch explodeAntiWeakness = Menu.Switch("Explode Anti Weakness").parent(exploding);
+    public final Switch explodeSwing = Menu.Switch("Explode Swing").parent(exploding);
+    public final ComboBox explodeSwingHand = Menu.ComboBox("Explode Swing Hand", new String[]{"Mainhand", "Offhand", "Packet"}).parent(exploding);
 
-    public ParentSetting facePlacing = createSetting("Face Placing");
-    public FloatSetting facePlaceHp = createSetting("Face Place HP", 10.0f, 0.0f, 36.0f).setParent(facePlacing);
-    public BooleanSetting runDetectFacePlace = createSetting("Run Detect Face Place", false).setParent(facePlacing);
-    public BooleanSetting facePlaceSlowOnCrouch = createSetting("Face Place Slow On Crouch", false).setParent(facePlacing);
+    public final Parent facePlacing = Menu.Parent("Face Placing");
+    public final Slider facePlaceHp = Menu.Slider("Face Place HP", 0.0f, 36.0f).parent(facePlacing);
+    public final Switch runDetectFacePlace = Menu.Switch("Run Detect Face Place").parent(facePlacing);
+    public final Switch facePlaceSlowOnCrouch = Menu.Switch("Face Place Slow On Crouch").parent(facePlacing);
 
-    public ParentSetting predicting = createSetting("Predicting");
-    public BooleanSetting predict = createSetting("Predict", false).setParent(predicting);
-    public IntegerSetting predictDelay = createSetting("Predict Delay", 60, 0, 500, (Predicate<Integer>) v -> predict.getValue()).setParent(predicting);
-    public BooleanSetting predictSetDead = createSetting("Predict Set Dead", false, v -> predict.getValue()).setParent(predicting);
-    public ModeSetting predictSetDeadMode = createSetting("Predict Set Dead Mode", "Packet-Confirm", Arrays.asList("Pre-Confirm", "Post-Confirm", "Packet-Confirm"), v -> predictSetDead.getValue()).setParent(predicting);
-    public BooleanSetting predictChorus = createSetting("Predict Chorus", false, v -> predict.getValue()).setParent(predicting);
+    public final Parent predicting = Menu.Parent("Predicting");
+    public final Switch predict = Menu.Switch("Predict").parent(predicting);
+    public final Slider predictDelay = Menu.Slider("Predict Delay", 0, 500).parent(predicting);
+    public final Switch predictSetDead = Menu.Switch("Predict Set Dead").parent(predicting);
+    public final ComboBox predictSetDeadMode = Menu.ComboBox("Predict Set Dead Mode", new String[]{"Post-Confirm", "Packet-Confirm"}).parent(predicting);
+    public final Switch predictChorus = Menu.Switch("Predict Chorus").parent(predicting);
 
-    public ParentSetting rendering = createSetting("Rendering");
-    public ModeSetting renderMode = createSetting("Render Mode", "Static", Arrays.asList("Static", "Fade", "Shrink", "Moving")).setParent(rendering);
+    public final Parent rendering = Menu.Parent("Rendering");
+    public final ComboBox renderMode = Menu.ComboBox("Render Mode", new String[]{"Static", "Fade", "Shrink", "Moving"}).parent(rendering);
 
-    public IntegerSetting fadeSpeed = createSetting("Fade Speed", 200, 100, 1000, (Predicate<Integer>) v -> renderMode.getValue().equals("Fade")).setParent(rendering);
-    public IntegerSetting shrinkSpeed = createSetting("Shrink Speed", 50, 1, 100, (Predicate<Integer>) v -> renderMode.getValue().equals("Shrink")).setParent(rendering);
-    public IntegerSetting moveSpeed = createSetting("Move Speed", 10, 1, 100, (Predicate<Integer>) v -> renderMode.getValue().equals("Moving")).setParent(rendering);
+    public final Slider fadeSpeed = Menu.Slider("Fade Speed", 100, 1000).parent(rendering);
+    public final Slider shrinkSpeed = Menu.Slider("Shrink Speed", 1, 100).parent(rendering);
+    public final Slider moveSpeed = Menu.Slider("Move Speed", 1, 100).parent(rendering);
 
-    public ModeSetting renderType = createSetting("Render Type", "Place", Arrays.asList("Place", "Explode", "Both")).setParent(rendering);
-
-    public BooleanSetting placeBox = createSetting("Place Box", false, v -> renderType.getValue().equals("Place") || renderType.getValue().equals("Both")).setParent(rendering);
-    public ColorSetting placeBoxColor = createSetting("Place Box Color", new Color(0xFFFFFF), v -> renderType.getValue().equals("Place") || renderType.getValue().equals("Both") && placeBox.getValue()).setParent(rendering);
-    public BooleanSetting placeOutline = createSetting("Place Outline", false, v -> renderType.getValue().equals("Place") || renderType.getValue().equals("Both")).setParent(rendering);
-    public ColorSetting placeOutlineColor = createSetting("Place Outline Color", new Color(0xFFFFFF), v -> renderType.getValue().equals("Place") || renderType.getValue().equals("Both") && placeOutline.getValue()).setParent(rendering);
-    public FloatSetting placeLineWidth = createSetting("Place Line Width", 1.0f, 0.0f, 5.0f, (Predicate<Float>) v -> placeOutline.getValue()).setParent(rendering);
-    public BooleanSetting placeText = createSetting("Place Text", false, v -> renderType.getValue().equals("Place") || renderType.getValue().equals("Both")).setParent(rendering);
-
-    public BooleanSetting explodeBox = createSetting("Explode Box", false, v -> renderType.getValue().equals("Explode") || renderType.getValue().equals("Both")).setParent(rendering);
-    public ColorSetting explodeBoxColor = createSetting("Explode Box Color", new Color(0xFFFFFF), v -> renderType.getValue().equals("Explode") || renderType.getValue().equals("Both") && explodeBox.getValue()).setParent(rendering);
-    public BooleanSetting explodeOutline = createSetting("Explode Outline", false, v -> renderType.getValue().equals("Explode") || renderType.getValue().equals("Both")).setParent(rendering);
-    public ColorSetting explodeOutlineColor = createSetting("Explode Outline Color", new Color(0xFFFFFF), v -> renderType.getValue().equals("Explode") || renderType.getValue().equals("Both") && explodeOutline.getValue()).setParent(rendering);
-    public FloatSetting explodeLineWidth = createSetting("Explode Line Width", 1.0f, 0.0f, 5.0f, (Predicate<Float>) v -> explodeOutline.getValue()).setParent(rendering);
-    public BooleanSetting explodeText = createSetting("Explode Text", false, v -> renderType.getValue().equals("Explode") || renderType.getValue().equals("Both")).setParent(rendering);
+    public final ColorSwitch placeBox = Menu.ColorSwitch("Place Box").parent(rendering);
+    public final ColorSwitch placeOutline = Menu.ColorSwitch("Place Outline").parent(rendering);
+    public final Slider placeLineWidth = Menu.Slider("Place Line Width", 0.0f, 5.0f).parent(rendering);
+    public final Switch placeText = Menu.Switch("Place Text").parent(rendering);
 
     public PlacePosition placePosition = new PlacePosition(null, 0);
     public ExplodePosition explodePosition = new ExplodePosition(null, 0);
@@ -154,7 +151,7 @@ public class AutoCrystal extends Module {
 
     @RegisterListener
     public void onChorus(ChorusEvent event) {
-        if (nullCheck() || !isEnabled() || !predict.getValue() || !predictChorus.getValue())
+        if (nullCheck() || !isEnabled() || !predict.GetSwitch() || !predictChorus.GetSwitch())
             return;
         double x = cx = event.x;
         double y = cy = event.y;
@@ -166,31 +163,31 @@ public class AutoCrystal extends Module {
 
     @RegisterListener
     public void onMove(MoveEvent event) {
-        if (nullCheck() || !isEnabled() || !onMoveCalc.getValue())
+        if (nullCheck() || !isEnabled() || !onMoveCalc.GetSwitch())
             return;
-        target = EntityUtil.getTarget(targetRange.getValue());
+        target = EntityUtil.getTarget(targetRange.GetSlider());
         if (target == null) {
             return;
         }
-        if (onMoveCalcPlace.getValue()) {
+        if (onMoveCalcPlace.GetSwitch()) {
             BlockPos currPos = null;
             if (placePosition != null)
                 currPos = placePosition.getBlockPos();
             BlockPos prevPos = null;
             if (placePosition != null && placePosition.getBlockPos() != null)
                 prevPos = placePosition.getBlockPos();
-            if (placeCalcTimer.getTime(placeCalcDelay.getValue())) {
+            if (placeCalcTimer.getTime((long) placeCalcDelay.GetSlider())) {
                 placePosition = searchPosition(prevPos);
                 placeCalcTimer.setTime(0);
             }
             if (placePosition != null && placePosition.getBlockPos() != currPos && !fadePosses.containsKey(placePosition.getBlockPos()))
-                fadePosses.put(placePosition.getBlockPos(), placeBoxColor.getValue().getAlpha());
+                fadePosses.put(placePosition.getBlockPos(), placeBox.GetColor().getAlpha());
             if (placePosition != null && pos == null)
                 pos = placePosition.getBlockPos();
             if (placePosition != null && placePosition.getBlockPos() != null && bb == null)
                 bb = new AxisAlignedBB(placePosition.getBlockPos());
         }
-        if (onMoveCalcExplode.getValue() && explodeCalcTimer.getTime(explodeCalcDelay.getValue())) {
+        if (onMoveCalcExplode.GetSwitch() && explodeCalcTimer.getTime((long) explodeCalcDelay.GetSlider())) {
             explodePosition = searchCrystal();
             explodeCalcTimer.setTime(0);
         }
@@ -203,11 +200,11 @@ public class AutoCrystal extends Module {
             return;
         if (target.getDistanceSq(cx, cy, cz) < 4.0f)
             chorusBB = null;
-        if (placePosition != null && placeTimer.getTime(placeDelay.getValue()))
+        if (placePosition != null && placeTimer.getTime((long) placeDelay.GetSlider()))
             placeCrystal(placePosition.getBlockPos());
-        if (explodePosition != null && explodeTimer.getTime(facePlaceSlowOnCrouch.getValue() && mc.gameSettings.keyBindSneak.isKeyDown() ? 500 : explodeDelay.getValue()))
+        if (explodePosition != null && explodeTimer.getTime(facePlaceSlowOnCrouch.GetSwitch() && mc.gameSettings.keyBindSneak.isKeyDown() ? 500 : (long) explodeDelay.GetSlider()))
             explodeCrystal();
-        if (runDetectFacePlace.getValue() && !RunDetect.Instance.isEnabled()) {
+        if (runDetectFacePlace.GetSwitch() && !RunDetect.Instance.isEnabled()) {
             Ruby.chatManager.sendMessage("Run Detect Face Place turned off, RunDetect needs to be enabled!");
             runDetectFacePlace.setValue(false);
         }
@@ -216,7 +213,7 @@ public class AutoCrystal extends Module {
     public void setup() {
         if (nullCheck())
             return;
-        target = EntityUtil.getTarget(targetRange.getValue());
+        target = EntityUtil.getTarget(targetRange.GetSlider());
         if (target == null) {
             return;
         }
@@ -226,16 +223,16 @@ public class AutoCrystal extends Module {
         BlockPos prevPos = null;
         if (placePosition != null && placePosition.getBlockPos() != null)
             prevPos = placePosition.getBlockPos();
-        if (placeCalcTimer.getTime(placeCalcDelay.getValue())) {
+        if (placeCalcTimer.getTime((long) placeCalcDelay.GetSlider())) {
             placePosition = searchPosition(prevPos);
             placeCalcTimer.setTime(0);
         }
-        if (explodeCalcTimer.getTime(explodeCalcDelay.getValue())) {
+        if (explodeCalcTimer.getTime((long) explodeCalcDelay.GetSlider())) {
             explodePosition = searchCrystal();
             explodeCalcTimer.setTime(0);
         }
         if (placePosition != null && placePosition.getBlockPos() != currPos && !fadePosses.containsKey(placePosition.getBlockPos()))
-            fadePosses.put(placePosition.getBlockPos(), placeBoxColor.getValue().getAlpha());
+            fadePosses.put(placePosition.getBlockPos(), placeBox.GetColor().getAlpha());
         if (placePosition != null && pos == null)
             pos = placePosition.getBlockPos();
         if (placePosition != null && placePosition.getBlockPos() != null && bb == null)
@@ -243,11 +240,11 @@ public class AutoCrystal extends Module {
     }
 
     public void explodeCrystal() {
-        if (explodeInhibit.getValue() && inhibitCrystal.contains(explodePosition.getEntity()))
+        if (explodeInhibit.GetSwitch() && inhibitCrystal.contains(explodePosition.getEntity()))
             return;
         boolean switched = false;
         int currentItem = -1;
-        if (explodeAntiWeakness.getValue()) {
+        if (explodeAntiWeakness.GetSwitch()) {
             PotionEffect weakness = mc.player.getActivePotionEffect(MobEffects.WEAKNESS);
             if (weakness != null && !mc.player.getHeldItemMainhand().getItem().equals(Items.DIAMOND_SWORD)) {
                 int swordSlot = InventoryUtil.getItemFromHotbar(Items.DIAMOND_SWORD);
@@ -256,42 +253,42 @@ public class AutoCrystal extends Module {
                 switched = true;
             }
         }
-        if (rotations.getValue())
+        if (rotations.GetSwitch())
             entityRotate(explodePosition.entity);
-        if (predictSetDead.getValue() && predictSetDeadMode.getValue().equals("Pre-Confirm"))
+        if (predictSetDead.GetSwitch() && predictSetDeadMode.GetCombo().equals("Pre-Confirm"))
             explodePosition.getEntity().setDead();
 
-        if (explodePacket.getValue())
+        if (explodePacket.GetSwitch())
             Objects.requireNonNull(mc.getConnection()).sendPacket(new CPacketUseEntity(explodePosition.getEntity()));
         else
             mc.playerController.attackEntity(mc.player, explodePosition.getEntity());
-        if (explodeAntiStuck.getValue()) {
+        if (explodeAntiStuck.GetSwitch()) {
             int i = 1;
             i += antiStuckHashMap.entrySet().stream().filter(entry -> entry.getKey().equals(explodePosition.getEntity().entityId)).mapToInt(Map.Entry::getValue).sum();
             antiStuckHashMap.put(explodePosition.getEntity().entityId, i);
         }
 
-        if (predictSetDead.getValue() && predictSetDeadMode.getValue().equals("Post-Confirm"))
+        if (predictSetDead.GetSwitch() && predictSetDeadMode.GetCombo().equals("Post-Confirm"))
             explodePosition.getEntity().setDead();
         if (switched) {
             mc.player.inventory.currentItem = currentItem;
             mc.playerController.updateController();
         }
-        if (explodeSwing.getValue())
-            EntityUtil.swingArm(explodeSwingHand.getValue().equals("Mainhand") ? EntityUtil.SwingType.MainHand : explodeSwingHand.getValue().equals("Offhand") ? EntityUtil.SwingType.OffHand : EntityUtil.SwingType.Packet);
+        if (explodeSwing.GetSwitch())
+            EntityUtil.swingArm(explodeSwingHand.GetCombo().equals("Mainhand") ? EntityUtil.SwingType.MainHand : explodeSwingHand.GetCombo().equals("Offhand") ? EntityUtil.SwingType.OffHand : EntityUtil.SwingType.Packet);
         explodeTimer.setTime(0);
-        if (explodeInhibit.getValue())
+        if (explodeInhibit.GetSwitch())
             inhibitCrystal.add(explodePosition.getEntity());
     }
 
     public void placeCrystal(BlockPos pos) {
-        if (!placeSilentSwitch.getValue() && !mc.player.getHeldItemMainhand().getItem().equals(Items.END_CRYSTAL) && !mc.player.getHeldItemOffhand().getItem().equals(Items.END_CRYSTAL))
+        if (!placeSilentSwitch.GetSwitch() && !mc.player.getHeldItemMainhand().getItem().equals(Items.END_CRYSTAL) && !mc.player.getHeldItemOffhand().getItem().equals(Items.END_CRYSTAL))
             return;
         int slot = InventoryUtil.getItemFromHotbar(Items.END_CRYSTAL);
         int currentItem = mc.player.inventory.currentItem;
-        if (placeSilentSwitch.getValue() && slot != -1 && !mc.player.getHeldItemMainhand().getItem().equals(Items.END_CRYSTAL) && !mc.player.getHeldItemOffhand().getItem().equals(Items.END_CRYSTAL))
+        if (placeSilentSwitch.GetSwitch() && slot != -1 && !mc.player.getHeldItemMainhand().getItem().equals(Items.END_CRYSTAL) && !mc.player.getHeldItemOffhand().getItem().equals(Items.END_CRYSTAL))
             InventoryUtil.switchToSlot(slot);
-        if (rotations.getValue())
+        if (rotations.GetSwitch())
             posRotate(pos);
         EnumFacing facing = null;
         try {
@@ -301,16 +298,16 @@ public class AutoCrystal extends Module {
         } catch (Exception ignored) {
             System.out.println("06d is a pedo");
         }
-        if (placePacket.getValue())
-            Objects.requireNonNull(mc.getConnection()).sendPacket(new CPacketPlayerTryUseItemOnBlock(pos, enumFacing.getValue().equals("Closest") && facing != null ? facing : EnumFacing.UP, mc.player.getHeldItemOffhand().getItem() == Items.END_CRYSTAL ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND, 0.5f, 0.5f, 0.5f));
+        if (placePacket.GetSwitch())
+            Objects.requireNonNull(mc.getConnection()).sendPacket(new CPacketPlayerTryUseItemOnBlock(pos, enumFacing.GetCombo().equals("Closest") && facing != null ? facing : EnumFacing.UP, mc.player.getHeldItemOffhand().getItem() == Items.END_CRYSTAL ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND, 0.5f, 0.5f, 0.5f));
         else
-            mc.playerController.processRightClickBlock(mc.player, mc.world, pos, enumFacing.getValue().equals("Closest") && facing != null ? facing : EnumFacing.UP, new Vec3d(mc.player.posX, -mc.player.posY, -mc.player.posZ), mc.player.getHeldItemOffhand().getItem().equals(Items.END_CRYSTAL) ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND);
-        if (placeSilentSwitch.getValue()) {
+            mc.playerController.processRightClickBlock(mc.player, mc.world, pos, enumFacing.GetCombo().equals("Closest") && facing != null ? facing : EnumFacing.UP, new Vec3d(mc.player.posX, -mc.player.posY, -mc.player.posZ), mc.player.getHeldItemOffhand().getItem().equals(Items.END_CRYSTAL) ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND);
+        if (placeSilentSwitch.GetSwitch()) {
             mc.player.inventory.currentItem = currentItem;
             mc.playerController.updateController();
         }
-        if (placeSwing.getValue())
-            EntityUtil.swingArm(placeSwingHand.getValue().equals("Mainhand") ? EntityUtil.SwingType.MainHand : placeSwingHand.getValue().equals("Offhand") ? EntityUtil.SwingType.OffHand : EntityUtil.SwingType.Packet);
+        if (placeSwing.GetSwitch())
+            EntityUtil.swingArm(placeSwingHand.GetCombo().equals("Mainhand") ? EntityUtil.SwingType.MainHand : placeSwingHand.GetCombo().equals("Offhand") ? EntityUtil.SwingType.OffHand : EntityUtil.SwingType.Packet);
         placeTimer.setTime(0);
 
     }
@@ -318,10 +315,10 @@ public class AutoCrystal extends Module {
     public PlacePosition searchPosition(BlockPos previousPos) {
         TreeMap<Float, PlacePosition> posList = new TreeMap<>();
         TreeMap<Float, PlacePosition> posListDistance = new TreeMap<>();
-        for (BlockPos pos : BlockUtil.getSphereAutoCrystal(placeRange.getValue(), true)) {
+        for (BlockPos pos : BlockUtil.getSphereAutoCrystal(placeRange.GetSlider(), true)) {
             if (BlockUtil.isPosValidForCrystal(pos, false)) {
-                if (placeMotionPredict.getValue()) {
-                    Entity j = EntityUtil.getPredictedPosition(target, placeMotionPredictAmount.getValue());
+                if (placeMotionPredict.GetSwitch()) {
+                    Entity j = EntityUtil.getPredictedPosition(target, placeMotionPredictAmount.GetSlider());
                     target.setEntityBoundingBox(j.getEntityBoundingBox());
                 }
                 if (chorusBB != null)
@@ -330,46 +327,46 @@ public class AutoCrystal extends Module {
                 float selfDamage = EntityUtil.calculatePosDamage(pos, mc.player);
                 float selfHealth = mc.player.getHealth() + mc.player.getAbsorptionAmount();
                 float targetHealth = target.getHealth() + target.getAbsorptionAmount();
-                float minimumDamageValue = placeMinimumDamage.getValue();
+                float minimumDamageValue = placeMinimumDamage.GetSlider();
 
-                if (mc.player.getDistanceSq(pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f) > (placeRange.getValue() * placeRange.getValue()))
+                if (mc.player.getDistanceSq(pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f) > (placeRange.GetSlider() * placeRange.GetSlider()))
                     continue;
 
                 if (previousPos != null) {
-                    if (placeIncludeMinOffset.getValue() && pos.getDistance(previousPos.getX(), previousPos.getY(), previousPos.getZ()) < placeMinOffset.getValue())
+                    if (placeIncludeMinOffset.GetSwitch() && pos.getDistance(previousPos.getX(), previousPos.getY(), previousPos.getZ()) < placeMinOffset.GetSlider())
                         continue;
-                    if (placeIncludeMaxOffset.getValue() && pos.getDistance(previousPos.getX(), previousPos.getY(), previousPos.getZ()) > placeMaxOffset.getValue())
+                    if (placeIncludeMaxOffset.GetSwitch() && pos.getDistance(previousPos.getX(), previousPos.getY(), previousPos.getZ()) > placeMaxOffset.GetSlider())
                         continue;
                 }
 
-                if (placeFastCalc.getValue() && fastCalcTimer.getTime(1000 - (placeFastCalcSpeed.getValue() * 10)))
+                if (placeFastCalc.GetSwitch() && fastCalcTimer.getTime((long) (1000 - (placeFastCalcSpeed.GetSlider() * 10))))
                     if (!mc.world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(new BlockPos(pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5))).isEmpty())
                         continue;
 
-                if (BlockUtil.rayTraceCheckPos(new BlockPos(pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f)) && mc.player.getDistance(pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f) > (placeWallRange.getValue() * placeWallRange.getValue()))
+                if (BlockUtil.rayTraceCheckPos(new BlockPos(pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f)) && mc.player.getDistance(pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f) > (placeWallRange.GetSlider() * placeWallRange.GetSlider()))
                     continue;
 
-                if (BlockUtil.isPlayerSafe(target) && targetHealth < facePlaceHp.getValue())
+                if (BlockUtil.isPlayerSafe(target) && targetHealth < facePlaceHp.GetSlider())
                     minimumDamageValue = 2;
 
-                if (runDetectFacePlace.getValue() && BlockUtil.isPlayerSafe(target) && RunDetect.Instance.gappledPreviouslySwordedPotentialRunnerList.contains(target))
+                if (runDetectFacePlace.GetSwitch() && BlockUtil.isPlayerSafe(target) && RunDetect.Instance.gappledPreviouslySwordedPotentialRunnerList.contains(target))
                     minimumDamageValue = 2;
 
-                if (facePlaceSlowOnCrouch.getValue() && mc.gameSettings.keyBindSneak.isKeyDown())
+                if (facePlaceSlowOnCrouch.GetSwitch() && mc.gameSettings.keyBindSneak.isKeyDown())
                     minimumDamageValue = 2;
 
                 if (targetDamage < minimumDamageValue)
                     continue;
 
-                if (selfDamage > placeMaximumSelfDamage.getValue())
+                if (selfDamage > placeMaximumSelfDamage.GetSlider())
                     continue;
 
-                if (placeAntiSuicide.getValue() && selfDamage > selfHealth)
+                if (placeAntiSuicide.GetSwitch() && selfDamage > selfHealth)
                     continue;
-                switch (placeCalculations.getValue()) {
+                switch (placeCalculations.GetCombo()) {
                     case "Sync":
                         posList.put(targetDamage, new PlacePosition(pos, targetDamage));
-                        switch (placeSyncCalc.getValue()) {
+                        switch (placeSyncCalc.GetCombo()) {
                             case "Autonomic":
                                 posListDistance.put((float) (mc.player.getDistanceSq(pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f) / 2), new PlacePosition(pos, targetDamage));
                                 break;
@@ -394,11 +391,11 @@ public class AutoCrystal extends Module {
             }
         }
         if (!posList.isEmpty()) {
-            switch (placeCalculations.getValue()) {
+            switch (placeCalculations.GetCombo()) {
                 case "Sync":
                     syncPossesDamage = posList;
                     syncPossesDistance = posListDistance;
-                    if (placeSyncCalc.getValue().equals("Autonomic") ? syncPossesDistance.lastEntry().getValue().getBlockPos().equals(syncPossesDamage.lastEntry().getValue().getBlockPos()) : syncPossesDistance.firstEntry().getValue().getBlockPos().equals(syncPossesDamage.lastEntry().getValue().getBlockPos()))
+                    if (placeSyncCalc.GetCombo().equals("Autonomic") ? syncPossesDistance.lastEntry().getValue().getBlockPos().equals(syncPossesDamage.lastEntry().getValue().getBlockPos()) : syncPossesDistance.firstEntry().getValue().getBlockPos().equals(syncPossesDamage.lastEntry().getValue().getBlockPos()))
                         return syncPossesDamage.lastEntry().getValue();
                 case "HighestEnemyDamage":
                 case "HighestSelfDistance":
@@ -408,7 +405,7 @@ public class AutoCrystal extends Module {
                     return posList.firstEntry().getValue();
             }
         }
-        if (placeFastCalc.getValue() && fastCalcTimer.getTime(1000 - (placeFastCalcSpeed.getValue() * 10)))
+        if (placeFastCalc.GetSwitch() && fastCalcTimer.getTime((long) (1000 - (placeFastCalcSpeed.GetSlider() * 10))))
             fastCalcTimer.setTime(0);
         return null;
     }
@@ -418,8 +415,8 @@ public class AutoCrystal extends Module {
         for (Entity entity : mc.world.loadedEntityList) {
             if (!(entity instanceof EntityEnderCrystal))
                 continue;
-            if (breakMotionPredict.getValue()) {
-                Entity j = EntityUtil.getPredictedPosition(target, breakMotionPredictAmount.getValue());
+            if (breakMotionPredict.GetSwitch()) {
+                Entity j = EntityUtil.getPredictedPosition(target, breakMotionPredictAmount.GetSlider());
                 target.setEntityBoundingBox(j.getEntityBoundingBox());
             }
             if (chorusBB != null)
@@ -428,40 +425,40 @@ public class AutoCrystal extends Module {
             float selfDamage = EntityUtil.calculateEntityDamage((EntityEnderCrystal) entity, mc.player);
             float targetDamage = EntityUtil.calculateEntityDamage((EntityEnderCrystal) entity, target);
             float targetHealth = target.getHealth() + target.getAbsorptionAmount();
-            float minimumDamageValue = explodeMinimumDamage.getValue();
+            float minimumDamageValue = explodeMinimumDamage.GetSlider();
 
-            if (explodeAntiStuck.getValue()) {
+            if (explodeAntiStuck.GetSwitch()) {
                 int i = 0;
                 for (Map.Entry<Integer, Integer> entry : antiStuckHashMap.entrySet())
-                    if (entry.getKey().equals(entity.entityId) && entry.getValue() > explodeAntiStuckThreshold.getValue())
+                    if (entry.getKey().equals(entity.entityId) && entry.getValue() > explodeAntiStuckThreshold.GetSlider())
                         i = 1;
                 if (i == 1)
                     continue;
             }
 
 
-            if (entity.getDistanceSq(EntityUtil.getPlayerPos(mc.player)) > (explodeRange.getValue() * explodeRange.getValue()))
+            if (entity.getDistanceSq(EntityUtil.getPlayerPos(mc.player)) > (explodeRange.GetSlider() * explodeRange.GetSlider()))
                 continue;
 
-            if (BlockUtil.rayTraceCheckPos(new BlockPos(Math.floor(entity.posX), Math.floor(entity.posY), Math.floor(entity.posZ))) && mc.player.getDistanceSq(new BlockPos(Math.floor(entity.posX), Math.floor(entity.posY), Math.floor(entity.posZ))) > (explodeWallRange.getValue() * explodeWallRange.getValue()))
+            if (BlockUtil.rayTraceCheckPos(new BlockPos(Math.floor(entity.posX), Math.floor(entity.posY), Math.floor(entity.posZ))) && mc.player.getDistanceSq(new BlockPos(Math.floor(entity.posX), Math.floor(entity.posY), Math.floor(entity.posZ))) > (explodeWallRange.GetSlider() * explodeWallRange.GetSlider()))
                 continue;
 
-            if (BlockUtil.isPlayerSafe(target) && targetHealth < facePlaceHp.getValue())
+            if (BlockUtil.isPlayerSafe(target) && targetHealth < facePlaceHp.GetSlider())
                 minimumDamageValue = 2;
 
-            if (runDetectFacePlace.getValue() && BlockUtil.isPlayerSafe(target) && RunDetect.Instance.gappledPreviouslySwordedPotentialRunnerList.contains(target))
+            if (runDetectFacePlace.GetSwitch() && BlockUtil.isPlayerSafe(target) && RunDetect.Instance.gappledPreviouslySwordedPotentialRunnerList.contains(target))
                 minimumDamageValue = 2;
 
-            if (facePlaceSlowOnCrouch.getValue() && mc.gameSettings.keyBindSneak.isKeyDown())
+            if (facePlaceSlowOnCrouch.GetSwitch() && mc.gameSettings.keyBindSneak.isKeyDown())
                 minimumDamageValue = 2;
 
-            if (targetDamage < minimumDamageValue && !explodeIgnoreMinimumDamageAndTakeHighestDamageValueWhenever.getValue())
+            if (targetDamage < minimumDamageValue && !explodeIgnoreMinimumDamageAndTakeHighestDamageValueWhenever.GetSwitch())
                 continue;
 
-            if (selfDamage > explodeMaximumSelfDamage.getValue())
+            if (selfDamage > explodeMaximumSelfDamage.GetSlider())
                 continue;
 
-            if (explodeAntiSuicide.getValue() && selfDamage > selfHealth)
+            if (explodeAntiSuicide.GetSwitch() && selfDamage > selfHealth)
                 continue;
             crystalList.put(targetDamage, new ExplodePosition(entity, targetDamage));
         }
@@ -474,22 +471,22 @@ public class AutoCrystal extends Module {
     public void onPacketReceive(PacketEvent.PacketReceiveEvent event) {
         if (nullCheck() || !isEnabled())
             return;
-        if (event.getPacket() instanceof SPacketSpawnObject && ((SPacketSpawnObject) event.getPacket()).getType() == 51 && predict.getValue() && target != null && mc.world.getEntityByID(((SPacketSpawnObject) event.getPacket()).getEntityID()) instanceof EntityEnderCrystal) {
+        if (event.getPacket() instanceof SPacketSpawnObject && ((SPacketSpawnObject) event.getPacket()).getType() == 51 && predict.GetSwitch() && target != null && mc.world.getEntityByID(((SPacketSpawnObject) event.getPacket()).getEntityID()) instanceof EntityEnderCrystal) {
             CPacketUseEntity predict = new CPacketUseEntity();
             predict.entityId = ((SPacketSpawnObject) event.getPacket()).getEntityID();
             predict.action = CPacketUseEntity.Action.ATTACK;
             mc.player.connection.sendPacket(new CPacketAnimation(EnumHand.MAIN_HAND));
             mc.player.connection.sendPacket(predict);
-            if (explodeInhibit.getValue())
+            if (explodeInhibit.GetSwitch())
                 inhibitCrystal.add(explodePosition.getEntity());
             predictTimer.setTime(0);
         }
-        if (event.getPacket() instanceof SPacketSoundEffect && predict.getValue() && predictSetDead.getValue()) {
+        if (event.getPacket() instanceof SPacketSoundEffect && predict.GetSwitch() && predictSetDead.GetSwitch()) {
             SPacketSoundEffect packet = (SPacketSoundEffect) event.getPacket();
             try {
                 if (packet.getCategory() == SoundCategory.BLOCKS && packet.getSound() == SoundEvents.ENTITY_GENERIC_EXPLODE) {
                     List<Entity> loadedEntityList = mc.world.loadedEntityList;
-                    loadedEntityList.stream().filter(entity -> entity instanceof EntityEnderCrystal && entity.getDistanceSq(packet.getX(), packet.getY(), packet.getZ()) < (explodeRange.getValue() * explodeRange.getValue())).forEach(entity -> {
+                    loadedEntityList.stream().filter(entity -> entity instanceof EntityEnderCrystal && entity.getDistanceSq(packet.getX(), packet.getY(), packet.getZ()) < (explodeRange.GetSlider() * explodeRange.GetSlider())).forEach(entity -> {
                         Objects.requireNonNull(mc.world.getEntityByID(entity.getEntityId())).setDead();
                         mc.world.removeEntityFromWorld(entity.entityId);
                     });
@@ -497,10 +494,10 @@ public class AutoCrystal extends Module {
             } catch (Exception ignored) {
             }
         }
-        if (event.getPacket() instanceof SPacketExplosion && predict.getValue() && predictSetDead.getValue()) {
+        if (event.getPacket() instanceof SPacketExplosion && predict.GetSwitch() && predictSetDead.GetSwitch()) {
             try {
                 SPacketExplosion packet = (SPacketExplosion) event.getPacket();
-                mc.world.loadedEntityList.stream().filter(entity -> entity instanceof EntityEnderCrystal && entity.getDistanceSq(packet.getX(), packet.getY(), packet.getZ()) < (explodeRange.getValue() * explodeRange.getValue())).forEach(entity -> {
+                mc.world.loadedEntityList.stream().filter(entity -> entity instanceof EntityEnderCrystal && entity.getDistanceSq(packet.getX(), packet.getY(), packet.getZ()) < (explodeRange.GetSlider() * explodeRange.GetSlider())).forEach(entity -> {
                     Objects.requireNonNull(mc.world.getEntityByID(entity.getEntityId())).setDead();
                     mc.world.removeEntityFromWorld(entity.entityId);
                 });
@@ -513,15 +510,15 @@ public class AutoCrystal extends Module {
     public void onPacketSend(PacketEvent.PacketSendEvent event) {
         if (nullCheck() || !isEnabled())
             return;
-        if (rotations.getValue() && needsRotations && event.getPacket() instanceof CPacketPlayer) {
+        if (rotations.GetSwitch() && needsRotations && event.getPacket() instanceof CPacketPlayer) {
             ((CPacketPlayer) event.getPacket()).yaw = yaw;
             ((CPacketPlayer) event.getPacket()).pitch = pitch;
             needsRotations = false;
         }
-        if (event.getPacket() instanceof CPacketUseEntity && predict.getValue() && predictTimer.getTime(facePlaceSlowOnCrouch.getValue() && mc.gameSettings.keyBindSneak.isKeyDown() ? 500 : predictDelay.getValue())) {
+        if (event.getPacket() instanceof CPacketUseEntity && predict.GetSwitch() && predictTimer.getTime(facePlaceSlowOnCrouch.GetSwitch() && mc.gameSettings.keyBindSneak.isKeyDown() ? 500 : (long) predictDelay.GetSlider())) {
             CPacketUseEntity packet = (CPacketUseEntity) event.getPacket();
             if (packet.getAction() == CPacketUseEntity.Action.ATTACK && packet.getEntityFromWorld(mc.world) instanceof EntityEnderCrystal) {
-                if (predictSetDead.getValue() && predictSetDeadMode.getValue().equals("Packet-Confirm"))
+                if (predictSetDead.GetSwitch() && predictSetDeadMode.GetCombo().equals("Packet-Confirm"))
                     Objects.requireNonNull(packet.getEntityFromWorld(mc.world)).setDead();
                 if (placePosition != null)
                     placeCrystal(placePosition.getBlockPos());
@@ -534,41 +531,34 @@ public class AutoCrystal extends Module {
     public void onGlobalRenderTick() {
         if (target == null)
             return;
-        switch (renderMode.getValue()) {
+        switch (renderMode.GetCombo()) {
             case "Static":
-                if (placePosition != null)
-                    if (renderType.getValue().equals("Place") || renderType.getValue().equals("Both")) {
-                        RenderUtil.drawBoxESP(placePosition.getBlockPos(), placeBoxColor.getValue(), true, placeOutlineColor.getValue(), placeLineWidth.getValue(), placeOutline.getValue(), placeBox.getValue(), placeBoxColor.getValue().getAlpha(), true);
-                        double damage = EntityUtil.calculatePosDamage(placePosition.getBlockPos().getX() + 0.5, placePosition.getBlockPos().getY() + 1.0, placePosition.getBlockPos().getZ() + 0.5, target);
-                        if (placeText.getValue())
-                            RenderUtil.drawText(placePosition.getBlockPos(), ((Math.floor(damage) == damage) ? Integer.valueOf((int) damage) : String.format("%.1f", damage)) + "");
-                    }
-                if (explodePosition != null)
-                    if (renderType.getValue().equals("Explode") || renderType.getValue().equals("Both")) {
-                        RenderUtil.drawBoxESP(explodePosition.getEntity().getPosition(), explodeBoxColor.getValue(), true, explodeOutlineColor.getValue(), explodeLineWidth.getValue(), explodeOutline.getValue(), explodeBox.getValue(), explodeBoxColor.getValue().getAlpha(), true);
-                        double damage = EntityUtil.calculatePosDamage(Math.floor(explodePosition.getEntity().getPosition().getX()), Math.floor(explodePosition.getEntity().getPosition().getY()), Math.floor(explodePosition.getEntity().getPosition().getZ()), target);
-                        if (explodeText.getValue())
-                            RenderUtil.drawText(explodePosition.getEntity().getPosition(), ((Math.floor(damage) == damage) ? Integer.valueOf((int) damage) : String.format("%.1f", damage)) + "");
-                    }
+                if (placePosition != null) {
+
+                    RenderUtil.drawBoxESP(placePosition.getBlockPos(), placeBox.GetColor(), true, placeOutline.GetColor(), placeLineWidth.GetSlider(), placeOutline.GetSwitch(), placeBox.GetSwitch(), placeBox.GetColor().getAlpha(), true);
+                    double damage = EntityUtil.calculatePosDamage(placePosition.getBlockPos().getX() + 0.5, placePosition.getBlockPos().getY() + 1.0, placePosition.getBlockPos().getZ() + 0.5, target);
+                    if (placeText.GetSwitch())
+                        RenderUtil.drawText(placePosition.getBlockPos(), ((Math.floor(damage) == damage) ? Integer.valueOf((int) damage) : String.format("%.1f", damage)) + "");
+                }
                 break;
             case "Fade":
                 for (Map.Entry<BlockPos, Integer> entry : fadePosses.entrySet()) {
                     if (placePosition != null && placePosition.getBlockPos() != null) {
                         if (!placePosition.getBlockPos().equals(entry.getKey()))
-                            fadePosses.put(entry.getKey(), entry.getValue() - (fadeSpeed.getValue() / 200));
+                            fadePosses.put(entry.getKey(), (int) (entry.getValue() - (fadeSpeed.GetSlider() / 200)));
                         else {
                             double damage = EntityUtil.calculatePosDamage(placePosition.getBlockPos().getX() + 0.5, placePosition.getBlockPos().getY() + 1.0, placePosition.getBlockPos().getZ() + 0.5, target);
-                            if (placeText.getValue())
+                            if (placeText.GetSwitch())
                                 RenderUtil.drawText(placePosition.getBlockPos(), ((Math.floor(damage) == damage) ? Integer.valueOf((int) damage) : String.format("%.1f", damage)) + "");
                         }
                     } else {
-                        fadePosses.put(entry.getKey(), entry.getValue() - (fadeSpeed.getValue() / 200));
+                        fadePosses.put(entry.getKey(), (int) (entry.getValue() - (fadeSpeed.GetSlider() / 200)));
                     }
                     if (entry.getValue() <= 20) {
                         fadePosses.remove(entry.getKey());
                         return;
                     } else try {
-                        RenderUtil.drawBoxESP(entry.getKey(), new Color(placeBoxColor.getValue().getRed(), placeBoxColor.getValue().getGreen(), placeBoxColor.getValue().getBlue(), entry.getValue()), true, new Color(placeOutlineColor.getValue().getRed(), placeOutlineColor.getValue().getGreen(), placeOutlineColor.getValue().getBlue(), entry.getValue() * 2), placeLineWidth.getValue(), placeOutline.getValue(), placeBox.getValue(), entry.getValue(), true);
+                        RenderUtil.drawBoxESP(entry.getKey(), new Color(placeBox.GetColor().getRed(), placeBox.GetColor().getGreen(), placeBox.GetColor().getBlue(), entry.getValue()), true, new Color(placeOutline.GetColor().getRed(), placeOutline.GetColor().getGreen(), placeOutline.GetColor().getBlue(), entry.getValue() * 2), placeLineWidth.GetSlider(), placeOutline.GetSwitch(), placeBox.GetSwitch(), entry.getValue(), true);
                     } catch (Exception exception) {
                         Ruby.chatManager.sendRemovableMessage("Alpha parameter out of range (Choose a different Alpha)" + exception, 1);
                     }
@@ -577,27 +567,27 @@ public class AutoCrystal extends Module {
             case "Shrink":
                 for (Map.Entry<BlockPos, Integer> entry : fadePosses.entrySet()) {
                     AxisAlignedBB bb = mc.world.getBlockState(entry.getKey()).getSelectedBoundingBox(mc.world, entry.getKey());
-                    bb = bb.shrink(Math.max(Math.min(RenderUtil.normalize(entry.getValue(), 100 - shrinkSpeed.getValue() / 100f), 1.0), 0.0));
+                    bb = bb.shrink(Math.max(Math.min(RenderUtil.normalize(entry.getValue(), 100 - shrinkSpeed.GetSlider() / 100f), 1.0), 0.0));
                     if (placePosition != null && placePosition.getBlockPos() != null) {
                         if (!placePosition.getBlockPos().equals(entry.getKey()))
-                            fadePosses.put(entry.getKey(), (int) (entry.getValue() - Math.max(Math.min(RenderUtil.normalize(entry.getValue(), 100 - (shrinkSpeed.getValue() / 200f)), 1.0), 0.0)));
+                            fadePosses.put(entry.getKey(), (int) (entry.getValue() - Math.max(Math.min(RenderUtil.normalize(entry.getValue(), 100 - (shrinkSpeed.GetSlider() / 200f)), 1.0), 0.0)));
                         else {
                             fadePosses.put(entry.getKey(), 100);
                             double damage = EntityUtil.calculatePosDamage(placePosition.getBlockPos().getX() + 0.5, placePosition.getBlockPos().getY() + 1.0, placePosition.getBlockPos().getZ() + 0.5, target);
-                            if (placeText.getValue())
+                            if (placeText.GetSwitch())
                                 RenderUtil.drawText(placePosition.getBlockPos(), ((Math.floor(damage) == damage) ? Integer.valueOf((int) damage) : String.format("%.1f", damage)) + "");
                         }
                     } else {
-                        fadePosses.put(entry.getKey(), (int) (entry.getValue() - Math.max(Math.min(RenderUtil.normalize(entry.getValue(), 100 - (shrinkSpeed.getValue() / 100f)), 1.0), 0.0)));
+                        fadePosses.put(entry.getKey(), (int) (entry.getValue() - Math.max(Math.min(RenderUtil.normalize(entry.getValue(), 100 - (shrinkSpeed.GetSlider() / 100f)), 1.0), 0.0)));
                     }
                     if (entry.getValue() <= 0) {
                         fadePosses.remove(entry.getKey());
                         return;
                     } else {
-                        if (placeBox.getValue())
-                            RenderUtil.drawBBBox(bb, placeBoxColor.getValue(), placeBoxColor.getValue().getAlpha());
-                        if (placeOutline.getValue())
-                            RenderUtil.drawBlockOutlineBB(bb, placeOutlineColor.getValue(), 1f);
+                        if (placeBox.GetSwitch())
+                            RenderUtil.drawBBBox(bb, placeBox.GetColor(), placeBox.GetColor().getAlpha());
+                        if (placeOutline.GetSwitch())
+                            RenderUtil.drawBlockOutlineBB(bb, placeOutline.GetColor(), 1f);
                     }
                 }
                 break;
@@ -606,11 +596,11 @@ public class AutoCrystal extends Module {
                     if (placePosition != null && placePosition.getBlockPos() != null) {
                         AxisAlignedBB cc = new AxisAlignedBB(placePosition.getBlockPos());
                         if (!bb.equals(cc)) {
-                            bb = bb.offset((placePosition.getBlockPos().getX() - bb.minX) * (moveSpeed.getValue() / 1000f), (placePosition.getBlockPos().getY() - bb.minY) * (moveSpeed.getValue() / 1000f), (placePosition.getBlockPos().getZ() - bb.minZ) * (moveSpeed.getValue() / 1000f));
-                            if (placeBox.getValue())
-                                RenderUtil.drawBBBox(bb, placeBoxColor.getValue(), placeBoxColor.getValue().getAlpha());
-                            if (placeOutline.getValue())
-                                RenderUtil.drawBlockOutlineBB(bb, placeOutlineColor.getValue(), 1f);
+                            bb = bb.offset((placePosition.getBlockPos().getX() - bb.minX) * (moveSpeed.GetSlider() / 1000f), (placePosition.getBlockPos().getY() - bb.minY) * (moveSpeed.GetSlider() / 1000f), (placePosition.getBlockPos().getZ() - bb.minZ) * (moveSpeed.GetSlider() / 1000f));
+                            if (placeBox.GetSwitch())
+                                RenderUtil.drawBBBox(bb, placeBox.GetColor(), placeBox.GetColor().getAlpha());
+                            if (placeOutline.GetSwitch())
+                                RenderUtil.drawBlockOutlineBB(bb, placeOutline.GetColor(), 1f);
                         }
                     }
                 }

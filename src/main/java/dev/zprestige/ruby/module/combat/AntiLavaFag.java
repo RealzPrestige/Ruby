@@ -1,9 +1,8 @@
 package dev.zprestige.ruby.module.combat;
 
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.setting.impl.BooleanSetting;
-import dev.zprestige.ruby.setting.impl.FloatSetting;
-import dev.zprestige.ruby.setting.impl.IntegerSetting;
+import dev.zprestige.ruby.newsettings.impl.Slider;
+import dev.zprestige.ruby.newsettings.impl.Switch;
 import dev.zprestige.ruby.util.BlockUtil;
 import dev.zprestige.ruby.util.InventoryUtil;
 import dev.zprestige.ruby.util.Timer;
@@ -21,14 +20,14 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 public class AntiLavaFag extends Module {
-    protected final IntegerSetting placeDelay = createSetting("Place Delay", 50, 0, 500);
-    protected final FloatSetting targetRange = createSetting("Target Range", 10.0f, 0.1f, 15.0f);
-    protected final FloatSetting placeRange = createSetting("Place Range", 5.0f, 0.1f, 6.0f);
-    protected final BooleanSetting packet = createSetting("Packet", false);
-    protected final BooleanSetting rotate = createSetting("Rotate", false);
-    protected final Timer timer = new Timer();
-    protected BlockPos targetPos = null;
-    protected final Vec3i[] vec3is = new Vec3i[]{
+    public final Slider placeDelay = Menu.Slider("Place Delay", 0, 500);
+    public final Slider targetRange = Menu.Slider("Target Range", 0.1f, 15.0f);
+    public final Slider placeRange = Menu.Slider("Place Range", 0.1f, 6.0f);
+    public final Switch packet = Menu.Switch("Packet");
+    public final Switch rotate = Menu.Switch("Rotate");
+    public final Timer timer = new Timer();
+    public BlockPos targetPos = null;
+    public final Vec3i[] vec3is = new Vec3i[]{
             new Vec3i(0, 0, -1),
             new Vec3i(0, 0, 1),
             new Vec3i(-1, 0, 0),
@@ -61,18 +60,18 @@ public class AntiLavaFag extends Module {
             disableModule("Not all materials found, disabling Anti Lava Fag.");
             return;
         }
-        if (timer.getTime(placeDelay.getValue())) {
+        if (timer.getTime((long) placeDelay.GetSlider())) {
             Stage stage = searchStage(targetPos);
             if (stage != null) {
                 switch (stage) {
                     case PlaceFirstNetherrack:
-                        BlockUtil.placeBlockWithSwitch(targetPos.up(), EnumHand.MAIN_HAND, rotate.getValue(), packet.getValue(), netherrackSlot, timer);
+                        BlockUtil.placeBlockWithSwitch(targetPos.up(), EnumHand.MAIN_HAND, rotate.GetSwitch(), packet.GetSwitch(), netherrackSlot, timer);
                         break;
                     case PlaceSecondNetherrack:
-                        BlockUtil.placeBlockWithSwitch(targetPos.up().up(), EnumHand.MAIN_HAND, rotate.getValue(), packet.getValue(), netherrackSlot, timer);
+                        BlockUtil.placeBlockWithSwitch(targetPos.up().up(), EnumHand.MAIN_HAND, rotate.GetSwitch(), packet.GetSwitch(), netherrackSlot, timer);
                         break;
                     case PlaceObsidian:
-                        BlockUtil.placeBlockWithSwitch(targetPos.up().up().up(), EnumHand.MAIN_HAND, rotate.getValue(), packet.getValue(), obsidianSlot, timer);
+                        BlockUtil.placeBlockWithSwitch(targetPos.up().up().up(), EnumHand.MAIN_HAND, rotate.GetSwitch(), packet.GetSwitch(), obsidianSlot, timer);
                         break;
                     case BreakFirstNetherrack:
                         mc.playerController.onPlayerDamageBlock(targetPos.up().up(), mc.objectMouseOver.sideHit);
@@ -113,7 +112,7 @@ public class AntiLavaFag extends Module {
     }
 
     protected boolean isValid(BlockPos pos) {
-        return !(mc.player.getDistanceSq(pos) / 2 > placeRange.getValue()) && (mc.world.getBlockState(pos).getBlock().equals(Blocks.WATER) || mc.world.getBlockState(pos).getBlock().equals(Blocks.FLOWING_WATER) || mc.world.getBlockState(pos).getBlock().equals(Blocks.LAVA) || mc.world.getBlockState(pos).getBlock().equals(Blocks.FLOWING_LAVA));
+        return !(mc.player.getDistanceSq(pos) / 2 > placeRange.GetSlider()) && (mc.world.getBlockState(pos).getBlock().equals(Blocks.WATER) || mc.world.getBlockState(pos).getBlock().equals(Blocks.FLOWING_WATER) || mc.world.getBlockState(pos).getBlock().equals(Blocks.LAVA) || mc.world.getBlockState(pos).getBlock().equals(Blocks.FLOWING_LAVA));
     }
 
     protected enum Stage {

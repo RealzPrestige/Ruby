@@ -18,12 +18,12 @@ import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
 public class AutoSingleMend extends Module {
-    public IntegerSetting threshold = createSetting("Threshold", 90, 1, 100);
-    public IntegerSetting actionDelay = createSetting("Action Delay", 50, 0, 1000);
-    public ParentSetting exp = createSetting("Exp");
-    public BooleanSetting packetExp = createSetting("Packet Exp", false).setParent(exp);
-    public BooleanSetting rotateDown = createSetting("Rotate Down", false, v -> packetExp.getValue()).setParent(exp);
-    public IntegerSetting packetSpeed = createSetting("Packet Speed", 1, 1, 10, (Predicate<Integer>) v -> packetExp.getValue()).setParent(exp);
+    public final Slider threshold = Menu.Switch("Threshold", 90, 1, 100);
+    public final Slider actionDelay = Menu.Switch("Action Delay", 50, 0, 1000);
+    public final Parent exp = Menu.Switch("Exp");
+    public final Switch packetExp = Menu.Switch("Packet Exp").parent(exp);
+    public final Switch rotateDown = Menu.Switch("Rotate Down", v -> packetExp.getValue()).parent(exp);
+    public final Slider packetSpeed = Menu.Switch("Packet Speed", 1, 1, 10, (Predicate<Integer>) v -> packetExp.getValue()).parent(exp);
     public Timer timer = new Timer();
     public boolean turnedOffAutoArmor;
 

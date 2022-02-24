@@ -4,7 +4,7 @@ import dev.zprestige.ruby.eventbus.annotation.Priority;
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.PacketEvent;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.setting.impl.FloatSetting;
+import dev.zprestige.ruby.newsettings.impl.Slider;
 import dev.zprestige.ruby.util.BlockUtil;
 import dev.zprestige.ruby.util.EntityUtil;
 import dev.zprestige.ruby.util.InventoryUtil;
@@ -36,20 +36,20 @@ import java.util.stream.Collectors;
 
 public class SimpleCa extends Module {
     public static SimpleCa Instance;
-    public FloatSetting targetRange = createSetting("Target Range", 9.0f, 0.1f, 15.0f);
-    public FloatSetting minDamage = createSetting("Min Damage", 6.0f, 0.1f, 15.0f);
-    public FloatSetting maxSelfDamage = createSetting("Max Self Damage", 6.0f, 0.1f, 15.0f);
+    public final Slider targetRange = Menu.Slider("Target Range", 0.1f, 15.0f);
+    public final Slider minDamage = Menu.Slider("Min Damage", 0.1f, 15.0f);
+    public final Slider maxSelfDamage = Menu.Slider("Max Self Damage", 0.1f, 15.0f);
     public ArrayList<Long> crystalsPerSecond = new ArrayList<>();
     public BlockPos pos = null;
     public boolean cantPlace = false;
 
-    public SimpleCa(){
+    public SimpleCa() {
         Instance = this;
     }
 
     @Override
     public void onTick() {
-        EntityPlayer entityPlayer = EntityUtil.getTarget(targetRange.getValue());
+        EntityPlayer entityPlayer = EntityUtil.getTarget(targetRange.GetSlider());
         pos = null;
         if (entityPlayer == null) {
             return;
@@ -61,7 +61,7 @@ public class SimpleCa extends Module {
             double selfDamage = EntityUtil.calculatePosDamage(pos, mc.player);
             double enemyDamage = EntityUtil.calculatePosDamage(pos, entityPlayer);
             ArrayList<Entity> intersecting = mc.world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos.up())).stream().filter(entity -> !(entity instanceof EntityEnderCrystal)).collect(Collectors.toCollection(ArrayList::new));
-            if (selfDamage < maxSelfDamage.getValue() && minDamage.getValue() < enemyDamage && intersecting.isEmpty()) {
+            if (selfDamage < maxSelfDamage.GetSlider() && minDamage.GetSlider() < enemyDamage && intersecting.isEmpty()) {
                 posses.put(enemyDamage - selfDamage, pos);
             }
         }

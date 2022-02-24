@@ -1,6 +1,8 @@
 package dev.zprestige.ruby.module.combat;
 
 import dev.zprestige.ruby.module.Module;
+import dev.zprestige.ruby.newsettings.impl.Slider;
+import dev.zprestige.ruby.newsettings.impl.Switch;
 import dev.zprestige.ruby.setting.impl.BooleanSetting;
 import dev.zprestige.ruby.setting.impl.FloatSetting;
 import dev.zprestige.ruby.setting.impl.IntegerSetting;
@@ -15,30 +17,30 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 
 public class AutoWeb extends Module {
-    public FloatSetting targetRange = createSetting("Target Range", 9.0f, 0.1f, 15.0f);
-    public FloatSetting placeRange = createSetting("Place Range", 5.0f, 0.1f, 6.0f);
-    public BooleanSetting predict = createSetting("Predict", false);
-    public IntegerSetting predictTicks = createSetting("Predict Ticks", 1, 1, 5);
-    public BooleanSetting packet = createSetting("Packet", false);
-    public BooleanSetting rotate = createSetting("Rotate", false);
-    public BooleanSetting onGroundOnly = createSetting("On Ground Only", false);
-    public BooleanSetting onMoveCancel = createSetting("On Move Cancel", false);
+    public final Slider targetRange = Menu.Slider("Target Range", 0.1f, 15.0f);
+    public final Slider placeRange = Menu.Slider("Place Range", 0.1f, 6.0f);
+    public final Switch predict = Menu.Switch("Predict");
+    public final Slider predictTicks = Menu.Slider("Predict Ticks", 1, 5);
+    public final Switch packet = Menu.Switch("Packet");
+    public final Switch rotate = Menu.Switch("Rotate");
+    public final Switch onGroundOnly = Menu.Switch("On Ground Only");
+    public final Switch onMoveCancel = Menu.Switch("On Move Cancel");
 
     @Override
     public void onTick() {
-        EntityPlayer entityPlayer = EntityUtil.getTarget(targetRange.getValue());
+        EntityPlayer entityPlayer = EntityUtil.getTarget(targetRange.GetSlider());
         if (entityPlayer == null)
             return;
-        if (predict.getValue())
-            entityPlayer.setEntityBoundingBox(new AxisAlignedBB(new BlockPos(EntityUtil.getPlayerPos((EntityPlayer) EntityUtil.getPredictedPosition(entityPlayer, predictTicks.getValue())))));
+        if (predict.GetSwitch())
+            entityPlayer.setEntityBoundingBox(new AxisAlignedBB(new BlockPos(EntityUtil.getPlayerPos((EntityPlayer) EntityUtil.getPredictedPosition(entityPlayer, predictTicks.GetSlider())))));
         BlockPos pos = EntityUtil.getPlayerPos(entityPlayer);
-        if (mc.player.getDistanceSq(pos) > (placeRange.getValue() * placeRange.getValue()) || !mc.world.getBlockState(pos).getBlock().equals(Blocks.AIR))
+        if (mc.player.getDistanceSq(pos) > (placeRange.GetSlider() * placeRange.GetSlider()) || !mc.world.getBlockState(pos).getBlock().equals(Blocks.AIR))
             return;
-        if ((onGroundOnly.getValue() && !mc.player.onGround) || (onMoveCancel.getValue() && EntityUtil.isMoving()))
+        if ((onGroundOnly.GetSwitch() && !mc.player.onGround) || (onMoveCancel.GetSwitch() && EntityUtil.isMoving()))
             return;
         int slot = InventoryUtil.getItemFromHotbar(Item.getItemFromBlock(Blocks.WEB));
         if (slot == -1)
             return;
-        BlockUtil.placeBlockWithSwitch(pos, EnumHand.MAIN_HAND, rotate.getValue(), packet.getValue(), slot);
+        BlockUtil.placeBlockWithSwitch(pos, EnumHand.MAIN_HAND, rotate.GetSwitch(), packet.GetSwitch(), slot);
     }
 }

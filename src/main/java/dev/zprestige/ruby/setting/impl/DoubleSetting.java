@@ -9,13 +9,13 @@ public class DoubleSetting extends Setting<Double> {
     public double minimum;
     public double maximum;
 
-    public DoubleSetting(String name, double value, double minimum, double maximum) {
+    public final Slider(String name, double value, double minimum, double maximum) {
         super(name, value);
         this.minimum = minimum;
         this.maximum = maximum;
     }
 
-    public DoubleSetting(String name, double value, double minimum, double maximum, Predicate<Double> shown) {
+    public final Slider(String name, double value, double minimum, double maximum, Predicate<Double> shown) {
         super(name, value, shown);
         this.minimum = minimum;
         this.maximum = maximum;
@@ -33,7 +33,7 @@ public class DoubleSetting extends Setting<Double> {
         return minimum;
     }
 
-    public DoubleSetting setParent(ParentSetting parentSetting){
+    public final Slider setParent(ParentSetting parentSetting){
         this.parentSetting = parentSetting;
         hasParentSetting = true;
         parentSetting.addChild(this);

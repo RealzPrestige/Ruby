@@ -16,10 +16,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class HudNotifications extends Module {
-    public ColorSetting backgroundColor = createSetting("Background Color", new Color(0x646363));
-    public ColorSetting surroundColor = createSetting("Surround Color", new Color(0xA091FF));
-    public IntegerSetting y = createSetting("Y", 400, 0, 600);
-    public FloatSetting removeSpeed = createSetting("Remove Speed", 1.0f, 0.1f, 3.0f);
+    public final ColorBox backgroundColor = Menu.Switch("Background Color", new Color(0x646363));
+    public final ColorBox surroundColor = Menu.Switch("Surround Color", new Color(0xA091FF));
+    public final Slider y = Menu.Switch("Y", 400, 0, 600);
+    public final Slider removeSpeed = Menu.Switch("Remove Speed", 1.0f, 0.1f, 3.0f);
     public HashMap<String, Integer> totemPopMap = new HashMap<>();
     public HashMap<String, Float> notificationMap = new HashMap<>();
 

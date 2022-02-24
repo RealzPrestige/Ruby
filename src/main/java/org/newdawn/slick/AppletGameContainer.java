@@ -201,7 +201,7 @@ public class AppletGameContainer extends Applet {
        * @throws Exception Failure to create display
        */
       public void start() throws Exception {
-         Display.setParent(displayParent);
+         Display.parent(displayParent);
          Display.setVSyncEnabled(true);
          
          try {

@@ -15,8 +15,8 @@ import java.util.Arrays;
 
 public class NoSlow extends Module {
     public static NoSlow Instance;
-    public BooleanSetting items = createSetting("Items", false);
-    public BooleanSetting guiMove = createSetting("Inventory", false);
+    public final Switch items = Menu.Switch("Items", false);
+    public final Switch guiMove = Menu.Switch("Inventory", false);
     public KeyBinding[] keys = new KeyBinding[]{mc.gameSettings.keyBindForward, mc.gameSettings.keyBindBack, mc.gameSettings.keyBindLeft, mc.gameSettings.keyBindRight, mc.gameSettings.keyBindJump, mc.gameSettings.keyBindSprint};
 
     public NoSlow() {

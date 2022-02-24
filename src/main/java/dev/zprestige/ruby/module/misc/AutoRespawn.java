@@ -11,8 +11,8 @@ import net.minecraft.util.math.AxisAlignedBB;
 import java.awt.*;
 
 public class AutoRespawn extends Module {
-    public BooleanSetting showDeath = createSetting("Show Death", false);
-    public ColorSetting color = createSetting("Color", new Color(-1), v -> showDeath.getValue());
+    public final Switch showDeath = Menu.Switch("Show Death");
+    public final ColorBox color = Menu.Switch("Color", new Color(-1), v -> showDeath.getValue());
     public AxisAlignedBB bb;
 
     @Override

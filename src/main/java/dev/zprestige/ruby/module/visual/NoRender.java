@@ -9,11 +9,11 @@ import net.minecraftforge.client.event.RenderBlockOverlayEvent;
 
 public class NoRender extends Module {
     public static NoRender Instance;
-    public BooleanSetting hurtCam = createSetting("Hurt Cam", false);
-    public BooleanSetting fire = createSetting("Fire", false);
-    public BooleanSetting explosions = createSetting("Explosions", false);
-    public BooleanSetting insideBlocks = createSetting("Inside Blocks", false);
-    public BooleanSetting armor = createSetting("Armor", false);
+    public final Switch hurtCam = Menu.Switch("Hurt Cam");
+    public final Switch fire = Menu.Switch("Fire", false);
+    public final Switch explosions = Menu.Switch("Explosions", false);
+    public final Switch insideBlocks = Menu.Switch("Inside Blocks", false);
+    public final Switch armor = Menu.Switch("Armor", false);
 
     public NoRender() {
         Instance = this;

@@ -3,10 +3,10 @@ package dev.zprestige.ruby.module.combat;
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.PacketEvent;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.setting.impl.BooleanSetting;
-import dev.zprestige.ruby.setting.impl.IntegerSetting;
-import dev.zprestige.ruby.setting.impl.ModeSetting;
-import dev.zprestige.ruby.setting.impl.ParentSetting;
+import dev.zprestige.ruby.newsettings.impl.ComboBox;
+import dev.zprestige.ruby.newsettings.impl.Parent;
+import dev.zprestige.ruby.newsettings.impl.Slider;
+import dev.zprestige.ruby.newsettings.impl.Switch;
 import dev.zprestige.ruby.util.BlockUtil;
 import dev.zprestige.ruby.util.EntityUtil;
 import dev.zprestige.ruby.util.InventoryUtil;
@@ -21,26 +21,25 @@ import net.minecraft.util.math.BlockPos;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class FeetPlace extends Module {
     public static FeetPlace Instance;
-    public ParentSetting placing = createSetting("Placing");
-    public ModeSetting placeMode = createSetting("Place Mode", "Instant", Arrays.asList("Instant", "Gradually", "Linear", "Obscure")).setParent(placing);
-    public ModeSetting block = createSetting("Blocks", "Obsidian", Arrays.asList("Obsidian", "EnderChests", "Fallback")).setParent(placing);
-    public IntegerSetting placeDelay = createSetting("Place Delay", 30, 0, 500, (Predicate<Integer>) v -> !placeMode.getValue().equals("Instant")).setParent(placing);
-    public ParentSetting misc = createSetting("Misc");
-    public BooleanSetting inLiquids = createSetting("In Liquids", false).setParent(misc);
-    public BooleanSetting packet = createSetting("Packet", false).setParent(misc);
-    public BooleanSetting rotate = createSetting("Rotate", false).setParent(misc);
-    public BooleanSetting onMoveCancel = createSetting("On Move Cancel", false).setParent(misc);
-    public BooleanSetting support = createSetting("Support", false).setParent(misc);
-    public BooleanSetting reCalcOnMove = createSetting("Re-Calc On Move", false).setParent(misc);
-    public BooleanSetting smartExtend = createSetting("Smart Extend", false).setParent(misc);
-    public BooleanSetting hitboxCheck = createSetting("Hitbox Check", false, v -> !smartExtend.getValue()).setParent(misc);
-    public BooleanSetting retry = createSetting("Retry", false, v -> placeMode.getValue().equals("Instant")).setParent(misc);
-    public IntegerSetting retries = createSetting("Retries", 1, 1, 10, (Predicate<Integer>) v -> placeMode.getValue().equals("Instant") && retry.getValue()).setParent(misc);
+    public final Parent placing = Menu.Parent("Placing");
+    public final ComboBox placeMode = Menu.ComboBox("Place Mode", new String[]{"Instant", "Gradually", "Linear", "Obscure"}).parent(placing);
+    public final ComboBox block = Menu.ComboBox("Blocks", new String[]{"Obsidian", "EnderChests", "Fallback"}).parent(placing);
+    public final Slider placeDelay = Menu.Slider("Place Delay", 0, 500).parent(placing);
+    public final Parent misc = Menu.Parent("Misc");
+    public final Switch inLiquids = Menu.Switch("In Liquids").parent(misc);
+    public final Switch packet = Menu.Switch("Packet").parent(misc);
+    public final Switch rotate = Menu.Switch("Rotate").parent(misc);
+    public final Switch onMoveCancel = Menu.Switch("On Move Cancel").parent(misc);
+    public final Switch support = Menu.Switch("Support").parent(misc);
+    public final Switch reCalcOnMove = Menu.Switch("Re-Calc On Move").parent(misc);
+    public final Switch smartExtend = Menu.Switch("Smart Extend").parent(misc);
+    public final Switch hitboxCheck = Menu.Switch("Hitbox Check").parent(misc);
+    public final Switch retry = Menu.Switch("Retry").parent(misc);
+    public final Slider retries = Menu.Slider("Retries", 1, 10).parent(misc);
     public ArrayList<BlockPos> blockPosList = new ArrayList<>();
     public ArrayList<BlockPos> upperPosList = new ArrayList<>();
     public ArrayList<BlockPos> bottomPosList = new ArrayList<>();
@@ -87,12 +86,12 @@ public class FeetPlace extends Module {
             disableModule();
             return;
         }
-        if (onMoveCancel.getValue() && EntityUtil.isMoving())
+        if (onMoveCancel.GetSwitch() && EntityUtil.isMoving())
             return;
-        if (!placeTimer.getTime(placeDelay.getValue()))
+        if (!placeTimer.getTime(placeDelay.GetSlider()))
             return;
         int slot = -1;
-        switch (block.getValue()) {
+        switch (block.GetCombo()) {
             case "Obsidian":
                 slot = InventoryUtil.getItemFromHotbar(Item.getItemFromBlock(Blocks.OBSIDIAN));
                 break;
@@ -110,49 +109,49 @@ public class FeetPlace extends Module {
             return;
         }
         int finalSlot = slot;
-        if (reCalcOnMove.getValue() && EntityUtil.isMoving()) {
+        if (reCalcOnMove.GetSwitch() && EntityUtil.isMoving()) {
             BlockPos pos = BlockUtil.getPlayerPos();
             addPossesMainList(pos.down(), pos.down().north(), pos.down().east(), pos.down().south(), pos.down().west(), pos.north(), pos.east(), pos.south(), pos.west());
         }
-        switch (placeMode.getValue()) {
+        switch (placeMode.GetCombo()) {
             case "Instant":
-                for (int i = 0; i < (retry.getValue() ? retries.getValue() : 1); ++i) {
-                    blockPosList.stream().filter(blockPos -> canPlace(blockPos) && ((!smartExtend.getValue() && !hitboxCheck.getValue()) || !mc.player.getEntityBoundingBox().intersects(new AxisAlignedBB(blockPos)))).forEach(blockPos -> BlockUtil.placeBlockWithSwitch(blockPos, EnumHand.MAIN_HAND, rotate.getValue(), packet.getValue(), finalSlot));
-                    if (smartExtend.getValue()) {
+                for (int i = 0; i < (retry.GetSwitch() ? retries.GetSlider() : 1); ++i) {
+                    blockPosList.stream().filter(blockPos -> canPlace(blockPos) && ((!smartExtend.GetSwitch() && !hitboxCheck.GetSwitch()) || !mc.player.getEntityBoundingBox().intersects(new AxisAlignedBB(blockPos)))).forEach(blockPos -> BlockUtil.placeBlockWithSwitch(blockPos, EnumHand.MAIN_HAND, rotate.GetSwitch(), packet.GetSwitch(), finalSlot));
+                    if (smartExtend.GetSwitch()) {
                         extendBlocks.clear();
                         addExtendedPosses();
                         if (!extendBlocks.isEmpty()) {
-                            extendBlocks.stream().filter(this::canPlace).forEach(blockPos -> BlockUtil.placeBlockWithSwitch(blockPos, EnumHand.MAIN_HAND, rotate.getValue(), packet.getValue(), finalSlot));
+                            extendBlocks.stream().filter(this::canPlace).forEach(blockPos -> BlockUtil.placeBlockWithSwitch(blockPos, EnumHand.MAIN_HAND, rotate.GetSwitch(), packet.GetSwitch(), finalSlot));
                         }
                     }
                 }
                 break;
             case "Gradually":
                 if (getTargetPos() != null)
-                    BlockUtil.placeBlockWithSwitch(getTargetPos(), EnumHand.MAIN_HAND, rotate.getValue(), packet.getValue(), slot, placeTimer);
+                    BlockUtil.placeBlockWithSwitch(getTargetPos(), EnumHand.MAIN_HAND, rotate.GetSwitch(), packet.GetSwitch(), slot, placeTimer);
                 break;
             case "Linear":
                 if (bottomBlocks() != null && !bottomBlocks().isEmpty())
-                    bottomBlocks().forEach(blockPos -> BlockUtil.placeBlockWithSwitch(blockPos, EnumHand.MAIN_HAND, rotate.getValue(), packet.getValue(), finalSlot, placeTimer));
+                    bottomBlocks().forEach(blockPos -> BlockUtil.placeBlockWithSwitch(blockPos, EnumHand.MAIN_HAND, rotate.GetSwitch(), packet.GetSwitch(), finalSlot, placeTimer));
                 else if (upperBlocks() != null && !upperBlocks().isEmpty())
-                    upperBlocks().forEach(blockPos -> BlockUtil.placeBlockWithSwitch(blockPos, EnumHand.MAIN_HAND, rotate.getValue(), packet.getValue(), finalSlot, placeTimer));
+                    upperBlocks().forEach(blockPos -> BlockUtil.placeBlockWithSwitch(blockPos, EnumHand.MAIN_HAND, rotate.GetSwitch(), packet.GetSwitch(), finalSlot, placeTimer));
                 break;
             case "Obscure":
                 if (obscureBottomToUpper() != null)
-                    BlockUtil.placeBlockWithSwitch(obscureBottomToUpper(), EnumHand.MAIN_HAND, rotate.getValue(), packet.getValue(), slot, placeTimer);
+                    BlockUtil.placeBlockWithSwitch(obscureBottomToUpper(), EnumHand.MAIN_HAND, rotate.GetSwitch(), packet.GetSwitch(), slot, placeTimer);
                 break;
         }
-        if (!support.getValue())
+        if (!support.GetSwitch())
             return;
         if (supportPos != null) {
-            BlockUtil.placeBlockWithSwitch(supportPos, EnumHand.MAIN_HAND, rotate.getValue(), packet.getValue(), slot, placeTimer);
+            BlockUtil.placeBlockWithSwitch(supportPos, EnumHand.MAIN_HAND, rotate.GetSwitch(), packet.GetSwitch(), slot, placeTimer);
             if (!canPlace(supportPos))
                 supportPos = null;
         }
     }
 
     public boolean canPlace(BlockPos pos) {
-        return mc.world.getBlockState(pos).getBlock().equals(Blocks.AIR) || (inLiquids.getValue() && ((mc.world.getBlockState(pos).getBlock().equals(Blocks.WATER) || mc.world.getBlockState(pos).getBlock().equals(Blocks.FLOWING_WATER)) || (mc.world.getBlockState(pos).getBlock().equals(Blocks.LAVA) || mc.world.getBlockState(pos).getBlock().equals(Blocks.FLOWING_LAVA))));
+        return mc.world.getBlockState(pos).getBlock().equals(Blocks.AIR) || (inLiquids.GetSwitch() && ((mc.world.getBlockState(pos).getBlock().equals(Blocks.WATER) || mc.world.getBlockState(pos).getBlock().equals(Blocks.FLOWING_WATER)) || (mc.world.getBlockState(pos).getBlock().equals(Blocks.LAVA) || mc.world.getBlockState(pos).getBlock().equals(Blocks.FLOWING_LAVA))));
     }
 
     public void addExtendedPosses() {
@@ -216,22 +215,22 @@ public class FeetPlace extends Module {
     }
 
     public List<BlockPos> bottomBlocks() {
-        List<BlockPos> posList = bottomPosList.stream().filter(blockPos -> canPlace(blockPos) && ((hitboxCheck.getValue() && !mc.world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(blockPos)).isEmpty()) || smartExtend.getValue())).collect(Collectors.toList());
+        List<BlockPos> posList = bottomPosList.stream().filter(blockPos -> canPlace(blockPos) && ((hitboxCheck.GetSwitch() && !mc.world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(blockPos)).isEmpty()) || smartExtend.GetSwitch())).collect(Collectors.toList());
         if (!posList.isEmpty())
             return posList;
         return null;
     }
 
     public List<BlockPos> upperBlocks() {
-        List<BlockPos> posList = upperPosList.stream().filter(blockPos -> canPlace(blockPos) && ((hitboxCheck.getValue() && !mc.world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(blockPos)).isEmpty()) || smartExtend.getValue())).collect(Collectors.toList());
+        List<BlockPos> posList = upperPosList.stream().filter(blockPos -> canPlace(blockPos) && ((hitboxCheck.GetSwitch() && !mc.world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(blockPos)).isEmpty()) || smartExtend.GetSwitch())).collect(Collectors.toList());
         if (!posList.isEmpty())
             return posList;
         return null;
     }
 
     public BlockPos obscureBottomToUpper() {
-        List<BlockPos> upper = upperPosList.stream().filter(blockPos -> canPlace(blockPos) && ((hitboxCheck.getValue() && !mc.world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(blockPos)).isEmpty()) || smartExtend.getValue())).collect(Collectors.toList());
-        List<BlockPos> bottom = bottomPosList.stream().filter(blockPos -> canPlace(blockPos) && ((hitboxCheck.getValue() && !mc.world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(blockPos)).isEmpty()) || smartExtend.getValue())).collect(Collectors.toList());
+        List<BlockPos> upper = upperPosList.stream().filter(blockPos -> canPlace(blockPos) && ((hitboxCheck.GetSwitch() && !mc.world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(blockPos)).isEmpty()) || smartExtend.GetSwitch())).collect(Collectors.toList());
+        List<BlockPos> bottom = bottomPosList.stream().filter(blockPos -> canPlace(blockPos) && ((hitboxCheck.GetSwitch() && !mc.world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(blockPos)).isEmpty()) || smartExtend.GetSwitch())).collect(Collectors.toList());
         if (!bottom.isEmpty())
             return bottom.stream().findFirst().orElse(null);
         else if (!upper.isEmpty())
@@ -240,6 +239,6 @@ public class FeetPlace extends Module {
     }
 
     public BlockPos getTargetPos() {
-        return blockPosList.stream().filter(blockPos -> canPlace(blockPos) && ((hitboxCheck.getValue() && !mc.world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(blockPos)).isEmpty()) || smartExtend.getValue())).findFirst().orElse(null);
+        return blockPosList.stream().filter(blockPos -> canPlace(blockPos) && ((hitboxCheck.GetSwitch() && !mc.world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(blockPos)).isEmpty()) || smartExtend.GetSwitch())).findFirst().orElse(null);
     }
 }

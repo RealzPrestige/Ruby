@@ -17,11 +17,11 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 public class LongJump extends Module {
-    public DoubleSetting speed = createSetting("Speed", 2000.0, 0.1, 3000.0);
-    public BooleanSetting disableOnLag = createSetting("Disable On Lag", false);
-    public BooleanSetting damageCheck = createSetting("Damage Check", false);
-    public FloatSetting minDamage = createSetting("Min Damage", 5.0f, 0.1f, 36.0f);
-    public BooleanSetting renderInfo = createSetting("Render Info", false);
+    public final Slider speed = Menu.Switch("Speed", 2000.0, 0.1, 3000.0);
+    public final Switch disableOnLag = Menu.Switch("Disable On Lag");
+    public final Switch damageCheck = Menu.Switch("Damage Check");
+    public final Slider minDamage = Menu.Switch("Min Damage", 5.0f, 0.1f, 36.0f);
+    public final Switch renderInfo = Menu.Switch("Render Info", false);
     public double prevDistance;
     public double moveSpeed;
     public int stage;

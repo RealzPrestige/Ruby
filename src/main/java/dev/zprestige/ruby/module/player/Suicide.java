@@ -26,23 +26,23 @@ import java.util.Objects;
 import java.util.TreeMap;
 
 public class Suicide extends Module {
-    public IntegerSetting throwDelay = createSetting("Throw Delay", 100, 0, 500);
+    public final Slider throwDelay = Menu.Switch("Throw Delay", 100, 0, 500);
 
-    public ParentSetting placing = createSetting("Placing");
-    public IntegerSetting placeDelay = createSetting("Place Delay Crystal", 100, 0, 500).setParent(placing);
-    public FloatSetting placeRange = createSetting("Place Range Crystal", 5.0f, 0.0f, 6.0f).setParent(placing);
-    public BooleanSetting silentSwitchCrystal = createSetting("Silent Switch Crystal", false).setParent(placing);
-    public BooleanSetting packetPlaceCrystal = createSetting("Packet Place Crystal", false).setParent(placing);
-    public BooleanSetting placeSwing = createSetting("Place Swing Crystal", false).setParent(placing);
-    public ModeSetting placeSwingHand = createSetting("Place Swing Hand Crystal", "Mainhand", Arrays.asList("Mainhand", "Offhand", "Packet"), v -> placeSwing.getValue()).setParent(placing);
+    public final Parent placing = Menu.Switch("Placing");
+    public final Slider placeDelay = Menu.Switch("Place Delay Crystal", 100, 0, 500).parent(placing);
+    public final Slider placeRange = Menu.Switch("Place Range Crystal", 5.0f, 0.0f, 6.0f).parent(placing);
+    public final Switch silentSwitchCrystal = Menu.Switch("Silent Switch Crystal").parent(placing);
+    public final Switch packetPlaceCrystal = Menu.Switch("Packet Place Crystal").parent(placing);
+    public final Switch placeSwing = Menu.Switch("Place Swing Crystal").parent(placing);
+    public final ComboBox placeSwingHand = Menu.Switch("Place Swing Hand Crystal", "Mainhand", Arrays.asList("Mainhand", "Offhand", "Packet"), v -> placeSwing.getValue()).parent(placing);
 
-    public ParentSetting breaking = createSetting("Breaking");
-    public IntegerSetting breakDelay = createSetting("Break Delay Crystal", 100, 0, 500).setParent(breaking);
-    public FloatSetting breakRange = createSetting("Break Range Crystal", 5.0f, 0.0f, 6.0f).setParent(breaking);
-    public BooleanSetting explodeAntiWeakness = createSetting("Explode Anti Weakness Crystal", false).setParent(breaking);
-    public BooleanSetting packetBreakCrystal = createSetting("Packet Break Crystal", false).setParent(breaking);
-    public BooleanSetting breakSwing = createSetting("Break Swing", false).setParent(breaking);
-    public ModeSetting breakSwingHand = createSetting("Break Swing", "Mainhand", Arrays.asList("Mainhand", "Offhand", "Packet"), v -> breakSwing.getValue()).setParent(breaking);
+    public final Parent breaking = Menu.Switch("Breaking");
+    public final Slider breakDelay = Menu.Switch("Break Delay Crystal", 100, 0, 500).parent(breaking);
+    public final Slider breakRange = Menu.Switch("Break Range Crystal", 5.0f, 0.0f, 6.0f).parent(breaking);
+    public final Switch explodeAntiWeakness = Menu.Switch("Explode Anti Weakness Crystal", false).parent(breaking);
+    public final Switch packetBreakCrystal = Menu.Switch("Packet Break Crystal", false).parent(breaking);
+    public final Switch breakSwing = Menu.Switch("Break Swing", false).parent(breaking);
+    public final ComboBox breakSwingHand = Menu.Switch("Break Swing", "Mainhand", Arrays.asList("Mainhand", "Offhand", "Packet"), v -> breakSwing.getValue()).parent(breaking);
 
     public Timer throwTimer = new Timer();
     public Timer placeTimer = new Timer();

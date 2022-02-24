@@ -27,18 +27,18 @@ import static org.lwjgl.opengl.GL11.glEnable;
 
 public class EntityTrails extends Module {
 
-    public BooleanSetting self = createSetting("Self", false);
-    public FloatSetting lineWidth = createSetting("LineWidth", 2.0f, 0.1f, 5.0f, (Predicate<Float>) v -> self.getValue());
-    public BooleanSetting fade = createSetting("Fade", false, v -> self.getValue());
-    public IntegerSetting removeDelay = createSetting("RemoveDelay", 1000, 0, 2000, (Predicate<Integer>) v -> self.getValue());
-    public ColorSetting startColor = createSetting("StartColor", new Color(-1), v -> self.getValue());
-    public ColorSetting endColor = createSetting("EndColor", new Color(-1), v -> self.getValue());
+    public final Switch self = Menu.Switch("Self");
+    public final Slider lineWidth = Menu.Switch("LineWidth", 2.0f, 0.1f, 5.0f, (Predicate<Float>) v -> self.getValue());
+    public final Switch fade = Menu.Switch("Fade", v -> self.getValue());
+    public final Slider removeDelay = Menu.Switch("RemoveDelay", 1000, 0, 2000, (Predicate<Integer>) v -> self.getValue());
+    public final ColorBox startColor = Menu.Switch("StartColor", new Color(-1), v -> self.getValue());
+    public final ColorBox endColor = Menu.Switch("EndColor", new Color(-1), v -> self.getValue());
 
-    public BooleanSetting entities = createSetting("Entities", false);
-    public BooleanSetting pearls = createSetting("Pearls", false, v -> entities.getValue());
-    public BooleanSetting exp = createSetting("Exp", false, v -> entities.getValue());
-    public ColorSetting pearlColor = createSetting("EntityColor", new Color(-1), v -> entities.getValue());
-    public FloatSetting pearlLineWidth = createSetting("PearlLineWidth", 3.0f, 0.0f, 10.0f, (Predicate<Float>) v -> entities.getValue());
+    public final Switch entities = Menu.Switch("Entities");
+    public final Switch pearls = Menu.Switch("Pearls", false, v -> entities.getValue());
+    public final Switch exp = Menu.Switch("Exp", false, v -> entities.getValue());
+    public final ColorBox pearlColor = Menu.Switch("EntityColor", new Color(-1), v -> entities.getValue());
+    public final Slider pearlLineWidth = Menu.Switch("PearlLineWidth", 3.0f, 0.0f, 10.0f, (Predicate<Float>) v -> entities.getValue());
 
     public HashMap<UUID, List<Vec3d>> pearlPos = new HashMap<>();
     public HashMap<UUID, Double> removeWait = new HashMap<>();

@@ -10,7 +10,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Keyboard;
 
 public class FreeLook extends Module {
-    public KeySetting holdBind = createSetting("Hold Bind", Keyboard.KEY_NONE);
+    public KeySetting holdBind = Menu.Switch("Hold Bind", Keyboard.KEY_NONE);
     public float yaw = 0F;
     public float pitch = 0F;
 

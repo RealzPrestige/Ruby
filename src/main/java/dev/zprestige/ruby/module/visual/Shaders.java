@@ -23,16 +23,16 @@ import org.lwjgl.opengl.Display;
 import java.awt.*;
 
 public class Shaders extends Module {
-    public ParentSetting targets = createSetting("Targets");
-    public BooleanSetting players = createSetting("Players", false).setParent(targets);
-    public BooleanSetting crystals = createSetting("Crystals", false).setParent(targets);
-    public BooleanSetting experienceBottles = createSetting("Experience Bottles", false).setParent(targets);
-    public BooleanSetting items = createSetting("Items", false).setParent(targets);
+    public final Parent targets = Menu.Switch("Targets");
+    public final Switch players = Menu.Switch("Players", false).parent(targets);
+    public final Switch crystals = Menu.Switch("Crystals", false).parent(targets);
+    public final Switch experienceBottles = Menu.Switch("Experience Bottles", false).parent(targets);
+    public final Switch items = Menu.Switch("Items", false).parent(targets);
 
-    public ParentSetting shader = createSetting("Shader");
-    public ColorSetting color = createSetting("Color", new Color(-1)).setParent(shader);
-    public FloatSetting radius = createSetting("Radius", 2.0f, 0.1f, 10.0f).setParent(shader);
-    public FloatSetting opacity = createSetting("Opacity", 255.0f, 0.0f, 255.0f).setParent(shader);
+    public final Parent shader = Menu.Switch("Shader");
+    public final ColorBox color = Menu.Switch("Color", new Color(-1)).parent(shader);
+    public final Slider radius = Menu.Switch("Radius", 2.0f, 0.1f, 10.0f).parent(shader);
+    public final Slider opacity = Menu.Switch("Opacity", 255.0f, 0.0f, 255.0f).parent(shader);
     public boolean forceRender = false;
 
     @RegisterListener

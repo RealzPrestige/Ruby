@@ -26,12 +26,20 @@ public class ColorSwitch extends Setting {
         this.colorValue = value;
     }
 
-    public boolean GetBool() {
+    public boolean GetSwitch() {
         return booleanValue;
     }
 
     public Color GetColor() {
         return colorValue;
+    }
+
+    public void setSwitchValue(boolean booleanValue) {
+        this.booleanValue = booleanValue;
+    }
+
+    public void setColorValue(Color colorValue) {
+        this.colorValue = colorValue;
     }
 
     public ColorSwitch parent(Parent parent){

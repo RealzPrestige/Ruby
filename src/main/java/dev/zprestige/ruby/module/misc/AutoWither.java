@@ -19,10 +19,10 @@ import java.awt.*;
 import java.util.TreeMap;
 
 public class AutoWither extends Module {
-    public IntegerSetting placeDelay = createSetting("Place Delay", 100, 0, 1000);
-    public FloatSetting placeRange = createSetting("Place Range", 5.0f, 0.1f, 6.0f);
-    public BooleanSetting packet = createSetting("Packet", false);
-    public BooleanSetting rotate = createSetting("Rotate", false);
+    public final Slider placeDelay = Menu.Switch("Place Delay", 100, 0, 1000);
+    public final Slider placeRange = Menu.Switch("Place Range", 5.0f, 0.1f, 6.0f);
+    public final Switch packet = Menu.Switch("Packet");
+    public final Switch rotate = Menu.Switch("Rotate");
     public Timer timer = new Timer();
     public Timer restartTimer = new Timer();
     public trolleyBus trolleyPos = null;

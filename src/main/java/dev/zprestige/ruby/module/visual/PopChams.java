@@ -19,20 +19,20 @@ import java.util.function.Predicate;
  * creds to le phobos
  */
 public class PopChams extends Module {
-    public ParentSetting misc = createSetting("Misc");
-    public IntegerSetting fadeTime = createSetting("Fade Time", 1500, 0, 5000).setParent(misc);
-    public BooleanSetting selfPop = createSetting("Self Pop", false).setParent(misc);
-    public BooleanSetting onDeath = createSetting("On Death", false).setParent(misc);
-    public BooleanSetting travel = createSetting("Travel", false).setParent(misc);
-    public FloatSetting travelSpeed = createSetting("Travel Speed", 1.0f, -10.0f, 10.0f, (Predicate<Float>) v -> travel.getValue()).setParent(misc);
-    public ParentSetting rendering = createSetting("Rendering");
-    public ColorSetting solidColor = createSetting("Solid Color", new Color(-1)).setParent(rendering);
-    public ColorSetting outlineColor = createSetting("Outline Color", new Color(-1)).setParent(rendering);
-    public FloatSetting outlineWidth = createSetting("Outline Width", 1.0f, 0.1f, 5.0f).setParent(rendering);
-    public BooleanSetting differDeaths = createSetting("Differ Deaths", false).setParent(rendering);
-    public ColorSetting deathSolidColor = createSetting("Death Solid Color", new Color(-1), v -> differDeaths.getValue()).setParent(rendering);
-    public ColorSetting deathOutlineColor = createSetting("Death Outline Color", new Color(-1), v -> differDeaths.getValue()).setParent(rendering);
-    public FloatSetting deathOutlineWidth = createSetting("Death Outline Width", 1.0f, 0.1f, 5.0f, (Predicate<Float>) v -> differDeaths.getValue()).setParent(rendering);
+    public final Parent misc = Menu.Switch("Misc");
+    public final Slider fadeTime = Menu.Switch("Fade Time", 1500, 0, 5000).parent(misc);
+    public final Switch selfPop = Menu.Switch("Self Pop").parent(misc);
+    public final Switch onDeath = Menu.Switch("On Death", false).parent(misc);
+    public final Switch travel = Menu.Switch("Travel", false).parent(misc);
+    public final Slider travelSpeed = Menu.Switch("Travel Speed", 1.0f, -10.0f, 10.0f, (Predicate<Float>) v -> travel.getValue()).parent(misc);
+    public final Parent rendering = Menu.Switch("Rendering");
+    public final ColorBox solidColor = Menu.Switch("Solid Color", new Color(-1)).parent(rendering);
+    public final ColorBox outlineColor = Menu.Switch("Outline Color", new Color(-1)).parent(rendering);
+    public final Slider outlineWidth = Menu.Switch("Outline Width", 1.0f, 0.1f, 5.0f).parent(rendering);
+    public final Switch differDeaths = Menu.Switch("Differ Deaths", false).parent(rendering);
+    public final ColorBox deathSolidColor = Menu.Switch("Death Solid Color", new Color(-1), v -> differDeaths.getValue()).parent(rendering);
+    public final ColorBox deathOutlineColor = Menu.Switch("Death Outline Color", new Color(-1), v -> differDeaths.getValue()).parent(rendering);
+    public final Slider deathOutlineWidth = Menu.Switch("Death Outline Width", 1.0f, 0.1f, 5.0f, (Predicate<Float>) v -> differDeaths.getValue()).parent(rendering);
     public HashMap<String, PopData> popDataHashMap = new HashMap<>();
 
     public static double HEAD_X = -0.2;

@@ -24,6 +24,10 @@ public class ComboBox extends Setting {
         return value;
     }
 
+    public String[] getValues() {
+        return values;
+    }
+
     public ComboBox parent(Parent parent){
         setHasParent(true);
         setParent(parent);

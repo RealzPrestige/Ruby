@@ -12,7 +12,7 @@ import java.util.HashMap;
 
 public class Waypoints extends Module {
     public static Waypoints Instance;
-    public ColorSetting color = createSetting("Color", new Color(-1));
+    public final ColorBox color = Menu.Switch("Color", new Color(-1));
     public HashMap<String, Waypoint> waypointHashMap = new HashMap<>();
 
     public Waypoints(){

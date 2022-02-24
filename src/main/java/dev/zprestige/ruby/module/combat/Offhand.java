@@ -3,6 +3,10 @@ package dev.zprestige.ruby.module.combat;
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.PlayerChangeEvent;
 import dev.zprestige.ruby.module.Module;
+import dev.zprestige.ruby.newsettings.impl.ComboBox;
+import dev.zprestige.ruby.newsettings.impl.Parent;
+import dev.zprestige.ruby.newsettings.impl.Slider;
+import dev.zprestige.ruby.newsettings.impl.Switch;
 import dev.zprestige.ruby.setting.impl.*;
 import dev.zprestige.ruby.util.BlockUtil;
 import dev.zprestige.ruby.util.EntityUtil;
@@ -16,36 +20,36 @@ import java.util.Arrays;
 import java.util.function.Predicate;
 
 public class Offhand extends Module {
-    public ModeSetting item = createSetting("Item", "Crystal", Arrays.asList("Crystal", "Totem"));
+    public final ComboBox item = Menu.ComboBox("Item", new String[]{"Crystal", "Totem"});
 
-    public ParentSetting crystalMisc = createSetting("Crystal Misc");
-    public BooleanSetting crystalOnSword = createSetting("Sword Crystal", false, v -> item.getValue().equals("Crystal")).setParent(crystalMisc);
-    public BooleanSetting crystalOnPickaxe = createSetting("Pickaxe Crystal", false, v -> item.getValue().equals("Crystal")).setParent(crystalMisc);
+    public final Parent crystalMisc = Menu.Parent("Crystal Misc");
+    public final Switch crystalOnSword = Menu.Switch("Sword Crystal").parent(crystalMisc);
+    public final Switch crystalOnPickaxe = Menu.Switch("Pickaxe Crystal").parent(crystalMisc);
 
-    public ParentSetting health = createSetting("Health");
-    public FloatSetting totemHealth = createSetting("Totem Health", 10f, 0f, 20f).setParent(health);
-    public BooleanSetting hole = createSetting("Hole Check", false).setParent(health);
-    public FloatSetting holeHealth = createSetting("Totem Hole Health", 10f, 0f, 20f, (Predicate<Float>) v -> hole.getValue()).setParent(health);
+    public final Parent health = Menu.Parent("Health");
+    public final Slider totemHealth = Menu.Slider("Totem Health", 0f, 20f).parent(health);
+    public final Switch hole = Menu.Switch("Hole Check").parent(health);
+    public final Slider holeHealth = Menu.Slider("Totem Hole Health", 0f, 20f).parent(health);
 
-    public ParentSetting timing = createSetting("Timing");
-    public IntegerSetting switchDelay = createSetting("Switch Delay", 50, 0, 200).setParent(timing);
+    public final Parent timing = Menu.Parent("Timing");
+    public final Slider switchDelay = Menu.Slider("Switch Delay", 0, 200).parent(timing);
 
-    public ParentSetting forcing = createSetting("Forcing");
-    public BooleanSetting postPopForceTotem = createSetting("Post Pop Force Totem", false).setParent(forcing);
-    public IntegerSetting forceTime = createSetting("Force Time", 1000, 0, 3000, (Predicate<Integer>) v -> postPopForceTotem.getValue()).setParent(forcing);
-    public BooleanSetting fallDistance = createSetting("Fall Distance Check", false, v -> item.getValue().equals("Crystal")).setParent(forcing);
-    public FloatSetting minDistance = createSetting("Min Distance", 10f, 1f, 100f, (Predicate<Float>) v -> fallDistance.getValue() && item.getValue().equals("Crystal")).setParent(forcing);
+    public final Parent forcing = Menu.Parent("Forcing");
+    public final Switch postPopForceTotem = Menu.Switch("Post Pop Force Totem").parent(forcing);
+    public final Slider forceTime = Menu.Slider("Force Time", 0, 3000).parent(forcing);
+    public final Switch fallDistance = Menu.Switch("Fall Distance Check").parent(forcing);
+    public final Slider minDistance = Menu.Slider("Min Distance", 1f, 100f).parent(forcing);
 
-    public ParentSetting misc = createSetting("Misc");
-    public BooleanSetting fallBack = createSetting("FallBack", false).setParent(misc);
-    public BooleanSetting gapple = createSetting("Gapple Switch", false).setParent(misc);
-    public BooleanSetting rightClick = createSetting("Right Click Only", false, v -> gapple.getValue()).setParent(misc);
+    public final Parent misc = Menu.Parent("Misc");
+    public final Switch fallBack = Menu.Switch("FallBack").parent(misc);
+    public final Switch gapple = Menu.Switch("Gapple Switch").parent(misc);
+    public final Switch rightClick = Menu.Switch("Right Click Only").parent(misc);
 
-    public ParentSetting threading = createSetting("Threading");
-    public BooleanSetting threadSwap = createSetting("Thread Swap", false).setParent(threading);
-    public IntegerSetting threadSwapAmount = createSetting("Thread Swap Amount", 1, 1, 10, (Predicate<Integer>) v -> threadSwap.getValue()).setParent(threading);
-    public BooleanSetting threadFindingItem = createSetting("Thread Finding Item", false).setParent(threading);
-    public IntegerSetting threadFindingItemAmount = createSetting("Thread Finding Item Amount", 1, 1, 10, (Predicate<Integer>) v -> threadFindingItem.getValue()).setParent(threading);
+    public final Parent threading = Menu.Parent("Threading");
+    public final Switch threadSwap = Menu.Switch("Thread Swap").parent(threading);
+    public final Slider threadSwapAmount = Menu.Slider("Thread Swap Amount", 1, 10).parent(threading);
+    public final Switch threadFindingItem = Menu.Switch("Thread Finding Item").parent(threading);
+    public final Slider threadFindingItemAmount = Menu.Slider("Thread Finding Item Amount", 1, 10).parent(threading);
 
     public Timer switchTimer = new Timer(), postPopTimer = new Timer();
     public int offhandSlot = -1;
@@ -56,16 +60,16 @@ public class Offhand extends Module {
     public void onTick() {
         if (mc.currentScreen != null)
             return;
-        if (threadFindingItem.getValue()) {
-            for (int i = 0; i < threadFindingItemAmount.getValue(); i++) {
+        if (threadFindingItem.GetSwitch()) {
+            for (int i = 0; i < threadFindingItemAmount.GetSlider(); i++) {
                 Thread thread = new Thread(itemThread);
                 thread.start();
             }
         } else {
             offhandSlot = InventoryUtil.getItemSlot(getOffhandItem());
         }
-        if (threadSwap.getValue()) {
-            for (int i = 0; i < threadSwapAmount.getValue(); i++) {
+        if (threadSwap.GetSwitch()) {
+            for (int i = 0; i < threadSwapAmount.GetSlider(); i++) {
                 Thread thread = new Thread(offhandThread);
                 thread.start();
             }
@@ -75,7 +79,7 @@ public class Offhand extends Module {
     }
 
     public void execute() {
-        if (mc.player.getHeldItemOffhand().getItem() != getOffhandItem() && offhandSlot != -1 && switchTimer.getTime(switchDelay.getValue())) {
+        if (mc.player.getHeldItemOffhand().getItem() != getOffhandItem() && offhandSlot != -1 && switchTimer.getTime(switchDelay.GetSlider())) {
             int slot = offhandSlot < 9 ? offhandSlot + 36 : offhandSlot;
             mc.playerController.windowClick(0, slot, 0, ClickType.PICKUP, mc.player);
             mc.playerController.windowClick(0, 45, 0, ClickType.PICKUP, mc.player);
@@ -87,32 +91,32 @@ public class Offhand extends Module {
 
     public Item getOffhandItem() {
         boolean safeToSwap = safeToSwap();
-        if (postPopForceTotem.getValue() && postPopTimer.getTimeSub(forceTime.getValue()))
+        if (postPopForceTotem.GetSwitch() && postPopTimer.getTimeSub(forceTime.GetSlider()))
             return Items.TOTEM_OF_UNDYING;
-        switch (item.getValue()) {
+        switch (item.GetCombo()) {
             case "Totem":
                 if (safeToSwap) {
-                    if (gapple.getValue() && ((rightClick.getValue() && mc.player.getHeldItemMainhand().getItem() == Items.DIAMOND_SWORD && mc.gameSettings.keyBindUseItem.isKeyDown()) || (!rightClick.getValue() && mc.player.getHeldItemMainhand().getItem() == Items.DIAMOND_SWORD)))
+                    if (gapple.GetSwitch() && ((rightClick.GetSwitch() && mc.player.getHeldItemMainhand().getItem() == Items.DIAMOND_SWORD && mc.gameSettings.keyBindUseItem.isKeyDown()) || (!rightClick.GetSwitch() && mc.player.getHeldItemMainhand().getItem() == Items.DIAMOND_SWORD)))
                         return Items.GOLDEN_APPLE;
 
-                    if (crystalOnSword.getValue() && mc.player.getHeldItemMainhand().getItem() == Items.DIAMOND_SWORD)
+                    if (crystalOnSword.GetSwitch() && mc.player.getHeldItemMainhand().getItem() == Items.DIAMOND_SWORD)
                         return Items.END_CRYSTAL;
 
-                    if (crystalOnPickaxe.getValue() && mc.player.getHeldItemMainhand().getItem() == Items.DIAMOND_PICKAXE)
+                    if (crystalOnPickaxe.GetSwitch() && mc.player.getHeldItemMainhand().getItem() == Items.DIAMOND_PICKAXE)
                         return Items.END_CRYSTAL;
 
-                    if (fallBack.getValue() && InventoryUtil.getStackCount(Items.TOTEM_OF_UNDYING) == 0)
+                    if (fallBack.GetSwitch() && InventoryUtil.getStackCount(Items.TOTEM_OF_UNDYING) == 0)
                         return Items.END_CRYSTAL;
                 }
                 return Items.TOTEM_OF_UNDYING;
             case "Crystal":
-                if (fallBack.getValue() && InventoryUtil.getStackCount(Items.END_CRYSTAL) == 0)
+                if (fallBack.GetSwitch() && InventoryUtil.getStackCount(Items.END_CRYSTAL) == 0)
                     return Items.TOTEM_OF_UNDYING;
 
-                if (fallDistance.getValue() && mc.player.fallDistance > minDistance.getValue())
+                if (fallDistance.GetSwitch() && mc.player.fallDistance > minDistance.GetSlider())
                     return Items.TOTEM_OF_UNDYING;
                 if (safeToSwap) {
-                    if (gapple.getValue() && ((rightClick.getValue() && mc.player.getHeldItemMainhand().getItem() == Items.DIAMOND_SWORD && mc.gameSettings.keyBindUseItem.isKeyDown()) || (!rightClick.getValue() && mc.player.getHeldItemMainhand().getItem() == Items.DIAMOND_SWORD)))
+                    if (gapple.GetSwitch() && ((rightClick.GetSwitch() && mc.player.getHeldItemMainhand().getItem() == Items.DIAMOND_SWORD && mc.gameSettings.keyBindUseItem.isKeyDown()) || (!rightClick.GetSwitch() && mc.player.getHeldItemMainhand().getItem() == Items.DIAMOND_SWORD)))
                         return Items.GOLDEN_APPLE;
 
                     return Items.END_CRYSTAL;
@@ -123,14 +127,14 @@ public class Offhand extends Module {
     }
 
     public boolean safeToSwap() {
-        if (hole.getValue() && BlockUtil.isPlayerSafe(mc.player) && mc.player.onGround && EntityUtil.getHealth(mc.player) < holeHealth.getValue())
+        if (hole.GetSwitch() && BlockUtil.isPlayerSafe(mc.player) && mc.player.onGround && EntityUtil.getHealth(mc.player) < holeHealth.GetSlider())
             return false;
-        return !(EntityUtil.getHealth(mc.player) < totemHealth.getValue());
+        return !(EntityUtil.getHealth(mc.player) < totemHealth.GetSlider());
     }
 
     @RegisterListener
     public void onTotemPop(PlayerChangeEvent.TotemPop event) {
-        if (nullCheck() || !isEnabled() || !postPopForceTotem.getValue() || !event.entityPlayer.equals(mc.player))
+        if (nullCheck() || !isEnabled() || !postPopForceTotem.GetSwitch() || !event.entityPlayer.equals(mc.player))
             return;
         postPopTimer.setTime(0);
     }

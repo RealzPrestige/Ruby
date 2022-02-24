@@ -1,7 +1,10 @@
 package dev.zprestige.ruby.module.combat;
 
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.setting.impl.*;
+import dev.zprestige.ruby.newsettings.impl.ComboBox;
+import dev.zprestige.ruby.newsettings.impl.Parent;
+import dev.zprestige.ruby.newsettings.impl.Slider;
+import dev.zprestige.ruby.newsettings.impl.Switch;
 import dev.zprestige.ruby.util.BlockUtil;
 import dev.zprestige.ruby.util.EntityUtil;
 import dev.zprestige.ruby.util.InventoryUtil;
@@ -21,26 +24,25 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
-import java.util.Arrays;
 import java.util.Objects;
 
 public class CevBreaker extends Module {
 
-    public FloatSetting targetRange = createSetting("Target Range", 5.0f, 0.1f, 6.0f);
-    public IntegerSetting actionDelay = createSetting("Action Delay", 100, 0, 1000);
-    public ParentSetting placing = createSetting("Placing");
-    public BooleanSetting silentSwitchCrystal = createSetting("Silent Switch Crystal", false).setParent(placing);
-    public BooleanSetting packetPlace = createSetting("Packet Place Crystal", false).setParent(placing);
-    public BooleanSetting placeSwing = createSetting("Place Swing Crystal", false).setParent(placing);
-    public ModeSetting placeSwingHand = createSetting("Place Swing Hand Crystal", "Mainhand", Arrays.asList("Mainhand", "Offhand", "Packet"), v -> placeSwing.getValue()).setParent(placing);
-    public ParentSetting exploding = createSetting("Exploding");
-    public BooleanSetting packetExplodeCrystal = createSetting("Packet Explode Crystal", false).setParent(exploding);
-    public BooleanSetting explodeSwing = createSetting("Explode Swing Crystal", false).setParent(exploding);
-    public ModeSetting explodeSwingHand = createSetting("Explode Swing Hand Crystal", "Mainhand", Arrays.asList("Mainhand", "Offhand", "Packet"), v -> placeSwing.getValue()).setParent(exploding);
-    public ParentSetting misc = createSetting("Misc");
-    public BooleanSetting selfSafe = createSetting("Self Safe", false).setParent(misc);
-    public BooleanSetting packet = createSetting("Packet", false).setParent(misc);
-    public BooleanSetting rotate = createSetting("Rotate", false).setParent(misc);
+    public final Slider targetRange = Menu.Slider("Target Range", 0.1f, 6.0f);
+    public final Slider actionDelay = Menu.Slider("Action Delay", 0, 1000);
+    public final Parent placing = Menu.Parent("Placing");
+    public final Switch silentSwitchCrystal = Menu.Switch("Silent Switch Crystal").parent(placing);
+    public final Switch packetPlace = Menu.Switch("Packet Place Crystal").parent(placing);
+    public final Switch placeSwing = Menu.Switch("Place Swing Crystal").parent(placing);
+    public final ComboBox placeSwingHand = Menu.ComboBox("Place Swing Hand Crystal", new String[]{"Mainhand", "Offhand", "Packet"}).parent(placing);
+    public final Parent exploding = Menu.Parent("Exploding");
+    public final Switch packetExplodeCrystal = Menu.Switch("Packet Explode Crystal").parent(exploding);
+    public final Switch explodeSwing = Menu.Switch("Explode Swing Crystal").parent(exploding);
+    public final ComboBox explodeSwingHand = Menu.ComboBox("Explode Swing Hand Crystal", new String[]{"Mainhand", "Offhand", "Packet"}).parent(exploding);
+    public final Parent misc = Menu.Parent("Misc");
+    public final Switch selfSafe = Menu.Switch("Self Safe").parent(misc);
+    public final Switch packet = Menu.Switch("Packet").parent(misc);
+    public final Switch rotate = Menu.Switch("Rotate").parent(misc);
     public Timer timer = new Timer();
     public boolean isMining;
     public boolean needsCrystal;
@@ -54,10 +56,10 @@ public class CevBreaker extends Module {
 
     @Override
     public void onTick() {
-        EntityPlayer entityPlayer = EntityUtil.getTarget(targetRange.getValue());
+        EntityPlayer entityPlayer = EntityUtil.getTarget(targetRange.GetSlider());
         if (entityPlayer == null)
             return;
-        if (!BlockUtil.isPlayerSafe(entityPlayer) || (selfSafe.getValue() && !BlockUtil.isPlayerSafe(mc.player)))
+        if (!BlockUtil.isPlayerSafe(entityPlayer) || (selfSafe.GetSwitch() && !BlockUtil.isPlayerSafe(mc.player)))
             return;
         if (!isPlayerCevBreakable(entityPlayer))
             return;
@@ -67,13 +69,13 @@ public class CevBreaker extends Module {
             return;
         }
         BlockPos pos = EntityUtil.getPlayerPos(entityPlayer).up().up();
-        if (!needsCrystal && mc.world.getBlockState(pos).getBlock().equals(Blocks.AIR) && isPosSurroundedByBlocks(pos) && timer.getTime(actionDelay.getValue())) {
-            BlockUtil.placeBlockWithSwitch(pos, EnumHand.MAIN_HAND, rotate.getValue(), packet.getValue(), slot);
+        if (!needsCrystal && mc.world.getBlockState(pos).getBlock().equals(Blocks.AIR) && isPosSurroundedByBlocks(pos) && timer.getTime(actionDelay.GetSlider())) {
+            BlockUtil.placeBlockWithSwitch(pos, EnumHand.MAIN_HAND, rotate.GetSwitch(), packet.GetSwitch(), slot);
             timer.setTime(0);
             needsCrystal = true;
         }
 
-        if (mc.world.getBlockState(pos).getBlock().equals(Blocks.OBSIDIAN) && mc.world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(pos.up())).isEmpty() && timer.getTime(actionDelay.getValue())) {
+        if (mc.world.getBlockState(pos).getBlock().equals(Blocks.OBSIDIAN) && mc.world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(pos.up())).isEmpty() && timer.getTime(actionDelay.GetSlider())) {
             placeCrystal(pos);
             clickBlock(pos);
             isMining = true;
@@ -86,40 +88,40 @@ public class CevBreaker extends Module {
             }
             isMining = false;
         }
-        if (timer.getTime(2000 + actionDelay.getValue())) {
+        if (timer.getTime(2000 + actionDelay.GetSlider())) {
             for (Entity entity : mc.world.loadedEntityList) {
                 if (!(entity instanceof EntityEnderCrystal))
                     continue;
                 if (entity.getDistanceSq(pos) > 4.0f)
                     continue;
-                if (packetExplodeCrystal.getValue())
+                if (packetExplodeCrystal.GetSwitch())
                     Objects.requireNonNull(mc.getConnection()).sendPacket(new CPacketUseEntity(entity));
                 else
                     mc.playerController.attackEntity(mc.player, entity);
-                if (explodeSwing.getValue())
-                    EntityUtil.swingArm(explodeSwingHand.getValue().equals("Mainhand") ? EntityUtil.SwingType.MainHand : explodeSwingHand.getValue().equals("Offhand") ? EntityUtil.SwingType.OffHand : EntityUtil.SwingType.Packet);
+                if (explodeSwing.GetSwitch())
+                    EntityUtil.swingArm(explodeSwingHand.GetCombo().equals("Mainhand") ? EntityUtil.SwingType.MainHand : explodeSwingHand.GetCombo().equals("Offhand") ? EntityUtil.SwingType.OffHand : EntityUtil.SwingType.Packet);
                 needsCrystal = false;
             }
         }
     }
 
     public void placeCrystal(BlockPos pos) {
-        if (!silentSwitchCrystal.getValue() && !mc.player.getHeldItemMainhand().getItem().equals(Items.END_CRYSTAL) && !mc.player.getHeldItemOffhand().getItem().equals(Items.END_CRYSTAL))
+        if (!silentSwitchCrystal.GetSwitch() && !mc.player.getHeldItemMainhand().getItem().equals(Items.END_CRYSTAL) && !mc.player.getHeldItemOffhand().getItem().equals(Items.END_CRYSTAL))
             return;
         int slot = InventoryUtil.getItemFromHotbar(Items.END_CRYSTAL);
         int currentItem = mc.player.inventory.currentItem;
-        if (silentSwitchCrystal.getValue() && slot != -1 && !mc.player.getHeldItemMainhand().getItem().equals(Items.END_CRYSTAL) && !mc.player.getHeldItemOffhand().getItem().equals(Items.END_CRYSTAL))
+        if (silentSwitchCrystal.GetSwitch() && slot != -1 && !mc.player.getHeldItemMainhand().getItem().equals(Items.END_CRYSTAL) && !mc.player.getHeldItemOffhand().getItem().equals(Items.END_CRYSTAL))
             InventoryUtil.switchToSlot(slot);
-        if (packetPlace.getValue())
+        if (packetPlace.GetSwitch())
             Objects.requireNonNull(mc.getConnection()).sendPacket(new CPacketPlayerTryUseItemOnBlock(pos, EnumFacing.UP, mc.player.getHeldItemOffhand().getItem() == Items.END_CRYSTAL ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND, 0.5f, 0.5f, 0.5f));
         else
             mc.playerController.processRightClickBlock(mc.player, mc.world, pos, EnumFacing.UP, new Vec3d(mc.player.posX, -mc.player.posY, -mc.player.posZ), mc.player.getHeldItemOffhand().getItem().equals(Items.END_CRYSTAL) ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND);
-        if (silentSwitchCrystal.getValue()) {
+        if (silentSwitchCrystal.GetSwitch()) {
             mc.player.inventory.currentItem = currentItem;
             mc.playerController.updateController();
         }
-        if (placeSwing.getValue())
-            EntityUtil.swingArm(placeSwingHand.getValue().equals("Mainhand") ? EntityUtil.SwingType.MainHand : placeSwingHand.getValue().equals("Offhand") ? EntityUtil.SwingType.OffHand : EntityUtil.SwingType.Packet);
+        if (placeSwing.GetSwitch())
+            EntityUtil.swingArm(placeSwingHand.GetCombo().equals("Mainhand") ? EntityUtil.SwingType.MainHand : placeSwingHand.GetCombo().equals("Offhand") ? EntityUtil.SwingType.OffHand : EntityUtil.SwingType.Packet);
     }
 
 

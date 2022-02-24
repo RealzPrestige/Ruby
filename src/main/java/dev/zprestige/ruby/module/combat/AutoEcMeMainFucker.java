@@ -1,8 +1,14 @@
 package dev.zprestige.ruby.module.combat;
 
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.setting.impl.*;
-import dev.zprestige.ruby.util.*;
+import dev.zprestige.ruby.newsettings.impl.ComboBox;
+import dev.zprestige.ruby.newsettings.impl.Parent;
+import dev.zprestige.ruby.newsettings.impl.Slider;
+import dev.zprestige.ruby.newsettings.impl.Switch;
+import dev.zprestige.ruby.util.BlockUtil;
+import dev.zprestige.ruby.util.EntityUtil;
+import dev.zprestige.ruby.util.InventoryUtil;
+import dev.zprestige.ruby.util.Timer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,28 +25,27 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
-import java.util.Arrays;
 import java.util.Objects;
 
 public class AutoEcMeMainFucker extends Module {
-    public ParentSetting timing = createSetting("Timing");
-    public IntegerSetting actionDelay = createSetting("Action Delay", 50, 0, 1000).setParent(timing);
-    public IntegerSetting extraRedstoneDelay = createSetting("Extra Redstone Delay", 10, 0, 1000).setParent(timing);
-    public IntegerSetting postCompleteNewPosDelay = createSetting("Post Complete New Pos Delay", 500, 0, 1000).setParent(timing);
+    public final Parent timing = Menu.Parent("Timing");
+    public final Slider actionDelay = Menu.Slider("Action Delay", 0, 1000).parent(timing);
+    public final Slider extraRedstoneDelay = Menu.Slider("Extra Redstone Delay", 0, 1000).parent(timing);
+    public final Slider postCompleteNewPosDelay = Menu.Slider("Post Complete New Pos Delay", 0, 1000).parent(timing);
 
-    public ParentSetting ranges = createSetting("Ranges");
-    public FloatSetting targetRange = createSetting("Target Range", 9.0f, 0.1f, 15.0f).setParent(ranges);
-    public FloatSetting placeRange = createSetting("Place Range", 5.0f, 0.1f, 6.0f).setParent(ranges);
+    public final Parent ranges = Menu.Parent("Ranges");
+    public final Slider targetRange = Menu.Slider("Target Range", 0.1f, 15.0f).parent(ranges);
+    public final Slider placeRange = Menu.Slider("Place Range", 0.1f, 6.0f).parent(ranges);
 
-    public ParentSetting misc = createSetting("Misc");
-    public BooleanSetting autoMine = createSetting("Auto Mine Redstone", false).setParent(misc);
-    public BooleanSetting pickSwitch = createSetting("Pick Switch", false, v-> autoMine.getValue()).setParent(misc);
-    public BooleanSetting attemptSelfDestruct = createSetting("Attempt Self Destruct", false).setParent(misc);
-    public BooleanSetting packet = createSetting("Packet", false).setParent(misc);
-    public BooleanSetting rotate = createSetting("Rotate", false).setParent(misc);
-    public BooleanSetting crystalRotate = createSetting("Crystal Rotate", false).setParent(misc);
-    public BooleanSetting placeSwing = createSetting("Place Swing", false).setParent(misc);
-    public ModeSetting placeSwingHand = createSetting("Place Swing Hand", "Mainhand", Arrays.asList("Mainhand", "Offhand", "Packet"), v -> placeSwing.getValue()).setParent(misc);
+    public final Parent misc = Menu.Parent("Misc");
+    public final Switch autoMine = Menu.Switch("Auto Mine Redstone").parent(misc);
+    public final Switch pickSwitch = Menu.Switch("Pick Switch").parent(misc);
+    public final Switch attemptSelfDestruct = Menu.Switch("Attempt Self Destruct").parent(misc);
+    public final Switch packet = Menu.Switch("Packet").parent(misc);
+    public final Switch rotate = Menu.Switch("Rotate").parent(misc);
+    public final Switch crystalRotate = Menu.Switch("Crystal Rotate").parent(misc);
+    public final Switch placeSwing = Menu.Switch("Place Swing").parent(misc);
+    public final ComboBox placeSwingHand = Menu.ComboBox("Place Swing Hand", new String[]{"Mainhand", "Offhand", "Packet"}).parent(misc);
     public Timer timer = new Timer(), post = new Timer();
     public int boob = -1;
 
@@ -51,7 +56,7 @@ public class AutoEcMeMainFucker extends Module {
 
     @Override
     public void onTick() {
-        EntityPlayer target = EntityUtil.getTarget(targetRange.getValue());
+        EntityPlayer target = EntityUtil.getTarget(targetRange.GetSlider());
         if (target == null) {
             disableModule("No target found, disabling AutoEcMeMainFucker.");
             return;
@@ -59,10 +64,10 @@ public class AutoEcMeMainFucker extends Module {
         if (!isFaggot(target))
             return;
         BlockPos pos = EntityUtil.getPlayerPos(target).up();
-        if (boob == -1 && post.getTime(postCompleteNewPosDelay.getValue())) {
+        if (boob == -1 && post.getTime((long) postCompleteNewPosDelay.GetSlider())) {
             boob = getPossiblePosition(target);
         }
-        if (timer.getTime(actionDelay.getValue() + (isOperatingRedstone(pos, boob) ? extraRedstoneDelay.getValue() : 0))) {
+        if (timer.getTime((long) (actionDelay.GetSlider() + (isOperatingRedstone(pos, boob) ? extraRedstoneDelay.GetSlider() : 0)))) {
             switch (boob) {
                 case 1:
                     execute(pos.north().north(), pos.north().north().up(), 1, pos.north(), pos.north().north().north().up(), pos.up(), pos.up().south());
@@ -105,7 +110,7 @@ public class AutoEcMeMainFucker extends Module {
                 disableModule("No obsidian found, disabling AutoEcMeMainFucker.");
                 return;
             }
-            BlockUtil.placeBlockWithSwitch(obsidian, EnumHand.MAIN_HAND, rotate.getValue(), packet.getValue(), obsidianSlot);
+            BlockUtil.placeBlockWithSwitch(obsidian, EnumHand.MAIN_HAND, rotate.GetSwitch(), packet.GetSwitch(), obsidianSlot);
             return;
         }
         if (!isntAir(piston)) {
@@ -128,7 +133,7 @@ public class AutoEcMeMainFucker extends Module {
                     mc.player.connection.sendPacket(new CPacketPlayer.Rotation(90, mc.player.rotationPitch, mc.player.onGround));
                     break;
             }
-            BlockUtil.placeBlockWithSwitch(piston, EnumHand.MAIN_HAND, rotate.getValue(), packet.getValue(), pistonSlot);
+            BlockUtil.placeBlockWithSwitch(piston, EnumHand.MAIN_HAND, rotate.GetSwitch(), packet.GetSwitch(), pistonSlot);
             return;
         }
         if (mc.world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(crystal.up())).isEmpty()) {
@@ -140,39 +145,39 @@ public class AutoEcMeMainFucker extends Module {
             int currentItem = mc.player.inventory.currentItem;
             InventoryUtil.switchToSlot(slot);
             float[] rotation = new float[]{mc.player.rotationYaw, mc.player.rotationPitch};
-            if (crystalRotate.getValue()) {
+            if (crystalRotate.GetSwitch()) {
                 posRotate(crystal);
             }
             Objects.requireNonNull(mc.getConnection()).sendPacket(new CPacketPlayerTryUseItemOnBlock(crystal, EnumFacing.UP, mc.player.getHeldItemOffhand().getItem() == Items.END_CRYSTAL ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND, 0.5f, 0.5f, 0.5f));
-            if (crystalRotate.getValue()) {
+            if (crystalRotate.GetSwitch()) {
                 mc.player.rotationYaw = rotation[0];
                 mc.player.rotationPitch = rotation[1];
             }
             mc.player.inventory.currentItem = currentItem;
             mc.playerController.updateController();
-            if (placeSwing.getValue())
-                EntityUtil.swingArm(placeSwingHand.getValue().equals("Mainhand") ? EntityUtil.SwingType.MainHand : placeSwingHand.getValue().equals("Offhand") ? EntityUtil.SwingType.OffHand : EntityUtil.SwingType.Packet);
+            if (placeSwing.GetSwitch())
+                EntityUtil.swingArm(placeSwingHand.GetCombo().equals("Mainhand") ? EntityUtil.SwingType.MainHand : placeSwingHand.GetCombo().equals("Offhand") ? EntityUtil.SwingType.OffHand : EntityUtil.SwingType.Packet);
             return;
         }
-        if (attemptSelfDestruct.getValue() && !isntAir(opposite)){
+        if (attemptSelfDestruct.GetSwitch() && !isntAir(opposite)) {
             int obsidianSlot = InventoryUtil.getItemFromHotbar(Item.getItemFromBlock(Blocks.OBSIDIAN));
             if (obsidianSlot == -1) {
                 disableModule("No obsidian found, disabling AutoEcMeMainFucker.");
                 return;
             }
-            BlockUtil.placeBlockWithSwitch(opposite, EnumHand.MAIN_HAND, rotate.getValue(), packet.getValue(), obsidianSlot);
+            BlockUtil.placeBlockWithSwitch(opposite, EnumHand.MAIN_HAND, rotate.GetSwitch(), packet.GetSwitch(), obsidianSlot);
             return;
         }
         if (!isntAir(redstoneBlock)) {
-            if (timer.getTime(actionDelay.getValue() + extraRedstoneDelay.getValue())) {
+            if (timer.getTime((long) (actionDelay.GetSlider() + extraRedstoneDelay.GetSlider()))) {
                 int redstoneSlot = InventoryUtil.getItemFromHotbar(Item.getItemFromBlock(Blocks.REDSTONE_BLOCK));
                 if (redstoneSlot == -1) {
                     disableModule("No redstone blocks found, disabling AutoEcMeMainFucker.");
                     return;
                 }
-                BlockUtil.placeBlockWithSwitch(redstoneBlock, EnumHand.MAIN_HAND, rotate.getValue(), packet.getValue(), redstoneSlot);
-                if (autoMine.getValue()) {
-                    if (pickSwitch.getValue()) {
+                BlockUtil.placeBlockWithSwitch(redstoneBlock, EnumHand.MAIN_HAND, rotate.GetSwitch(), packet.GetSwitch(), redstoneSlot);
+                if (autoMine.GetSwitch()) {
+                    if (pickSwitch.GetSwitch()) {
                         int slot = InventoryUtil.getItemFromHotbar(Items.DIAMOND_PICKAXE);
                         if (slot == -1)
                             return;
@@ -187,13 +192,13 @@ public class AutoEcMeMainFucker extends Module {
         }
         if (!mc.world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(top)).isEmpty()) {
             for (Entity entity : mc.world.loadedEntityList) {
-                if (entity instanceof EntityEnderCrystal && mc.player.getDistance(entity) < placeRange.getValue()) {
+                if (entity instanceof EntityEnderCrystal && mc.player.getDistance(entity) < placeRange.GetSlider()) {
                     float[] rotation = new float[]{mc.player.rotationYaw, mc.player.rotationPitch};
-                    if (crystalRotate.getValue()) {
+                    if (crystalRotate.GetSwitch()) {
                         entityRotate(entity);
                     }
                     Objects.requireNonNull(mc.getConnection()).sendPacket(new CPacketUseEntity(entity));
-                    if (crystalRotate.getValue()) {
+                    if (crystalRotate.GetSwitch()) {
                         mc.player.rotationYaw = rotation[0];
                         mc.player.rotationPitch = rotation[1];
                     }
@@ -219,16 +224,16 @@ public class AutoEcMeMainFucker extends Module {
     public int getPossiblePosition(EntityPlayer entityPlayer) {
         BlockPos pos = EntityUtil.getPlayerPos(entityPlayer).up();
         if ((mc.world.getBlockState(pos.north().north()).getBlock().equals(Blocks.OBSIDIAN) || mc.world.getBlockState(pos.north().north()).getBlock().equals(Blocks.BEDROCK) || mc.world.getBlockState(pos.north().north()).getBlock().equals(Blocks.AIR)) && mc.world.getBlockState(pos.north().up()).getBlock().equals(Blocks.AIR) && mc.world.getBlockState(pos.north().up().up()).getBlock().equals(Blocks.AIR) && (mc.world.getBlockState(pos.north().north().up()).getBlock().equals(Blocks.AIR) || mc.world.getBlockState(pos.north().north().up()).getBlock().equals(Blocks.PISTON)) && mc.world.getBlockState(pos.north().north().north().up()).getBlock().equals(Blocks.AIR))
-            if (mc.player.getDistanceSq(pos.up()) < (placeRange.getValue() * placeRange.getValue()) && mc.player.getDistanceSq(pos.north().north()) < (placeRange.getValue() * placeRange.getValue()) && mc.player.getDistanceSq(pos.north().up()) < (placeRange.getValue() * placeRange.getValue()) && mc.player.getDistanceSq(pos.north().up().up()) < (placeRange.getValue() * placeRange.getValue()) && mc.player.getDistanceSq(pos.north().north().up()) < (placeRange.getValue() * placeRange.getValue()) && mc.player.getDistanceSq(pos.north().north().north().up()) < (placeRange.getValue() * placeRange.getValue()))
+            if (mc.player.getDistanceSq(pos.up()) < (placeRange.GetSlider() * placeRange.GetSlider()) && mc.player.getDistanceSq(pos.north().north()) < (placeRange.GetSlider() * placeRange.GetSlider()) && mc.player.getDistanceSq(pos.north().up()) < (placeRange.GetSlider() * placeRange.GetSlider()) && mc.player.getDistanceSq(pos.north().up().up()) < (placeRange.GetSlider() * placeRange.GetSlider()) && mc.player.getDistanceSq(pos.north().north().up()) < (placeRange.GetSlider() * placeRange.GetSlider()) && mc.player.getDistanceSq(pos.north().north().north().up()) < (placeRange.GetSlider() * placeRange.GetSlider()))
                 return 1;
         if ((mc.world.getBlockState(pos.east().east()).getBlock().equals(Blocks.OBSIDIAN) || mc.world.getBlockState(pos.east().east()).getBlock().equals(Blocks.BEDROCK) || mc.world.getBlockState(pos.east().east()).getBlock().equals(Blocks.AIR)) && mc.world.getBlockState(pos.east().up()).getBlock().equals(Blocks.AIR) && mc.world.getBlockState(pos.east().up().up()).getBlock().equals(Blocks.AIR) && (mc.world.getBlockState(pos.east().east().up()).getBlock().equals(Blocks.AIR) || mc.world.getBlockState(pos.east().east().up()).getBlock().equals(Blocks.PISTON)) && mc.world.getBlockState(pos.east().east().east().up()).getBlock().equals(Blocks.AIR))
-            if (mc.player.getDistanceSq(pos.up()) < (placeRange.getValue() * placeRange.getValue()) && mc.player.getDistanceSq(pos.east().east()) < (placeRange.getValue() * placeRange.getValue()) && mc.player.getDistanceSq(pos.east().up()) < (placeRange.getValue() * placeRange.getValue()) && mc.player.getDistanceSq(pos.east().up().up()) < (placeRange.getValue() * placeRange.getValue()) && mc.player.getDistanceSq(pos.east().east().up()) < (placeRange.getValue() * placeRange.getValue()) && mc.player.getDistanceSq(pos.east().east().east().up()) < (placeRange.getValue() * placeRange.getValue()))
+            if (mc.player.getDistanceSq(pos.up()) < (placeRange.GetSlider() * placeRange.GetSlider()) && mc.player.getDistanceSq(pos.east().east()) < (placeRange.GetSlider() * placeRange.GetSlider()) && mc.player.getDistanceSq(pos.east().up()) < (placeRange.GetSlider() * placeRange.GetSlider()) && mc.player.getDistanceSq(pos.east().up().up()) < (placeRange.GetSlider() * placeRange.GetSlider()) && mc.player.getDistanceSq(pos.east().east().up()) < (placeRange.GetSlider() * placeRange.GetSlider()) && mc.player.getDistanceSq(pos.east().east().east().up()) < (placeRange.GetSlider() * placeRange.GetSlider()))
                 return 2;
         if ((mc.world.getBlockState(pos.south().south()).getBlock().equals(Blocks.OBSIDIAN) || mc.world.getBlockState(pos.south().south()).getBlock().equals(Blocks.BEDROCK) || mc.world.getBlockState(pos.south().south()).getBlock().equals(Blocks.AIR)) && mc.world.getBlockState(pos.south().up()).getBlock().equals(Blocks.AIR) && mc.world.getBlockState(pos.south().up().up()).getBlock().equals(Blocks.AIR) && (mc.world.getBlockState(pos.south().south().up()).getBlock().equals(Blocks.AIR) || mc.world.getBlockState(pos.south().south().up()).getBlock().equals(Blocks.PISTON)) && mc.world.getBlockState(pos.south().south().south().up()).getBlock().equals(Blocks.AIR))
-            if (mc.player.getDistanceSq(pos.up()) < (placeRange.getValue() * placeRange.getValue()) && mc.player.getDistanceSq(pos.south().south()) < (placeRange.getValue() * placeRange.getValue()) && mc.player.getDistanceSq(pos.south().up()) < (placeRange.getValue() * placeRange.getValue()) && mc.player.getDistanceSq(pos.south().up().up()) < (placeRange.getValue() * placeRange.getValue()) && mc.player.getDistanceSq(pos.south().south().up()) < (placeRange.getValue() * placeRange.getValue()) && mc.player.getDistanceSq(pos.south().south().south().up()) < (placeRange.getValue() * placeRange.getValue()))
+            if (mc.player.getDistanceSq(pos.up()) < (placeRange.GetSlider() * placeRange.GetSlider()) && mc.player.getDistanceSq(pos.south().south()) < (placeRange.GetSlider() * placeRange.GetSlider()) && mc.player.getDistanceSq(pos.south().up()) < (placeRange.GetSlider() * placeRange.GetSlider()) && mc.player.getDistanceSq(pos.south().up().up()) < (placeRange.GetSlider() * placeRange.GetSlider()) && mc.player.getDistanceSq(pos.south().south().up()) < (placeRange.GetSlider() * placeRange.GetSlider()) && mc.player.getDistanceSq(pos.south().south().south().up()) < (placeRange.GetSlider() * placeRange.GetSlider()))
                 return 3;
         if ((mc.world.getBlockState(pos.west().west()).getBlock().equals(Blocks.OBSIDIAN) || mc.world.getBlockState(pos.west().west()).getBlock().equals(Blocks.BEDROCK) || mc.world.getBlockState(pos.west().west()).getBlock().equals(Blocks.AIR)) && mc.world.getBlockState(pos.west().up()).getBlock().equals(Blocks.AIR) && mc.world.getBlockState(pos.west().up().up()).getBlock().equals(Blocks.AIR) && (mc.world.getBlockState(pos.west().west().up()).getBlock().equals(Blocks.AIR) || mc.world.getBlockState(pos.west().west().up()).getBlock().equals(Blocks.PISTON)) && mc.world.getBlockState(pos.west().west().west().up()).getBlock().equals(Blocks.AIR))
-            if (mc.player.getDistanceSq(pos.up()) < (placeRange.getValue() * placeRange.getValue()) && mc.player.getDistanceSq(pos.west().west()) < (placeRange.getValue() * placeRange.getValue()) && mc.player.getDistanceSq(pos.west().up()) < (placeRange.getValue() * placeRange.getValue()) && mc.player.getDistanceSq(pos.west().up().up()) < (placeRange.getValue() * placeRange.getValue()) && mc.player.getDistanceSq(pos.west().west().up()) < (placeRange.getValue() * placeRange.getValue()) && mc.player.getDistanceSq(pos.west().west().west().up()) < (placeRange.getValue() * placeRange.getValue()))
+            if (mc.player.getDistanceSq(pos.up()) < (placeRange.GetSlider() * placeRange.GetSlider()) && mc.player.getDistanceSq(pos.west().west()) < (placeRange.GetSlider() * placeRange.GetSlider()) && mc.player.getDistanceSq(pos.west().up()) < (placeRange.GetSlider() * placeRange.GetSlider()) && mc.player.getDistanceSq(pos.west().up().up()) < (placeRange.GetSlider() * placeRange.GetSlider()) && mc.player.getDistanceSq(pos.west().west().up()) < (placeRange.GetSlider() * placeRange.GetSlider()) && mc.player.getDistanceSq(pos.west().west().west().up()) < (placeRange.GetSlider() * placeRange.GetSlider()))
                 return 4;
         return -1;
     }

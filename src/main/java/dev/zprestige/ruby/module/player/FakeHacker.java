@@ -8,9 +8,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumHand;
 
 public class FakeHacker extends Module {
-    public StringSetting target = createSetting("Target", "John");
-    public BooleanSetting rotate = createSetting("Rotate", false);
-    public BooleanSetting swing = createSetting("Swing", false);
+    public StringSetting target = Menu.Switch("Target", "John");
+    public final Switch rotate = Menu.Switch("Rotate");
+    public final Switch swing = Menu.Switch("Swing");
     public EntityPlayer targetPlayer = null;
 
     @Override

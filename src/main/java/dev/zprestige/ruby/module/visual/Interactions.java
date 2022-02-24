@@ -16,9 +16,9 @@ import net.minecraft.util.math.BlockPos;
 import java.awt.*;
 
 public class Interactions extends Module {
-    public FloatSetting range = createSetting("Range", 100.0f, 0.1f, 300.0f);
-    public ColorSetting color = createSetting("Color", new Color(-1));
-    public ColorSetting outlineColor = createSetting("Outline Color", new Color(-1));
+    public final Slider range = Menu.Switch("Range", 100.0f, 0.1f, 300.0f);
+    public final ColorBox color = Menu.Switch("Color", new Color(-1));
+    public final ColorBox outlineColor = Menu.Switch("Outline Color", new Color(-1));
 
     @Override
     public void onGlobalRenderTick() {

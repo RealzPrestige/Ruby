@@ -20,17 +20,17 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class HoleESP extends Module {
-    protected final FloatSetting radius = createSetting("Radius", 50.0f, 1.0f, 50.0f);
-    protected final FloatSetting height = createSetting("Height", 1.0f, 0.0f, 2.0f);
-    protected final FloatSetting lineWidth = createSetting("Line Width", 1.0f, 0.1f, 5.0f);
-    protected final BooleanSetting doubles = createSetting("Doubles", false);
-    protected final ModeSetting animation = createSetting("Animation", "None", Arrays.asList("None", "Grow", "Fade"));
-    protected final FloatSetting growSpeed = createSetting("Grow Speed", 10.0f, 0.0f, 1000.0f, (Predicate<Float>) v -> animation.getValue().equals("Grow"));
-    protected final FloatSetting distanceDivision = createSetting("Distance Division", 20.0f, 0.1f, 50.0f, (Predicate<Float>) v -> animation.getValue().equals("Fade"));
-    protected final ColorSetting bedrockBox = createSetting("Bedrock Box", Color.GREEN);
-    protected final ColorSetting bedrockOutline = createSetting("Bedrock Outline", Color.GREEN);
-    protected final ColorSetting obsidianBox = createSetting("Obsidian Box", Color.RED);
-    protected final ColorSetting obsidianOutline = createSetting("Obsidian Outline", Color.RED);
+    protected final FloatSetting radius = Menu.Switch("Radius", 50.0f, 1.0f, 50.0f);
+    protected final FloatSetting height = Menu.Switch("Height", 1.0f, 0.0f, 2.0f);
+    protected final FloatSetting lineWidth = Menu.Switch("Line Width", 1.0f, 0.1f, 5.0f);
+    protected final BooleanSetting doubles = Menu.Switch("Doubles");
+    protected final ModeSetting animation = Menu.Switch("Animation", "None", Arrays.asList("None", "Grow", "Fade"));
+    protected final FloatSetting growSpeed = Menu.Switch("Grow Speed", 10.0f, 0.0f, 1000.0f, (Predicate<Float>) v -> animation.getValue().equals("Grow"));
+    protected final FloatSetting distanceDivision = Menu.Switch("Distance Division", 20.0f, 0.1f, 50.0f, (Predicate<Float>) v -> animation.getValue().equals("Fade"));
+    protected final ColorSetting bedrockBox = Menu.Switch("Bedrock Box", Color.GREEN);
+    protected final ColorSetting bedrockOutline = Menu.Switch("Bedrock Outline", Color.GREEN);
+    protected final ColorSetting obsidianBox = Menu.Switch("Obsidian Box", Color.RED);
+    protected final ColorSetting obsidianOutline = Menu.Switch("Obsidian Outline", Color.RED);
     protected final HashMap<BlockPos, Long> holePosLongHashMap = new HashMap<>();
     protected final ICamera camera = new Frustum();
 

@@ -27,13 +27,13 @@ public class MixinTabOverlay extends Gui {
         if (TabList.Instance.isEnabled()) {
             switch (TabList.Instance.order.getValue()) {
                 case "Ping":
-                    return list.stream().sorted(Comparator.comparing(NetworkPlayerInfo::getResponseTime)).limit(TabList.Instance.maxSize.getValue()).collect(Collectors.toList());
+                    return list.stream().sorted(Comparator.comparing(NetworkPlayerInfo::getResponseTime)).limit((long) TabList.Instance.maxSize.GetSlider()).collect(Collectors.toList());
                 case "Alphabet":
-                    return list.stream().sorted(Comparator.comparing(playerInfo -> playerInfo.getGameProfile().getName())).limit(TabList.Instance.maxSize.getValue()).collect(Collectors.toList());
+                    return list.stream().sorted(Comparator.comparing(playerInfo -> playerInfo.getGameProfile().getName())).limit((long) TabList.Instance.maxSize.GetSlider()).collect(Collectors.toList());
                 case "Length":
-                    return list.stream().sorted(Comparator.comparing(playerInfo -> playerInfo.getGameProfile().getName().length())).limit(TabList.Instance.maxSize.getValue()).collect(Collectors.toList());
+                    return list.stream().sorted(Comparator.comparing(playerInfo -> playerInfo.getGameProfile().getName().length())).limit((long) TabList.Instance.maxSize.GetSlider()).collect(Collectors.toList());
                 case "Normal":
-                    return list.stream().limit(TabList.Instance.maxSize.getValue()).collect(Collectors.toList());
+                    return list.stream().limit((long) TabList.Instance.maxSize.GetSlider()).collect(Collectors.toList());
             }
         }
         return list.subList(fromIndex, toIndex);
@@ -43,19 +43,19 @@ public class MixinTabOverlay extends Gui {
     @Inject(method = {"getPlayerName"}, at = {@At(value = "HEAD")}, cancellable = true)
     public void getPlayerNameHook(NetworkPlayerInfo networkPlayerInfoIn, CallbackInfoReturnable<String> callbackInfoReturnable) {
         String name = networkPlayerInfoIn.getDisplayName() != null ? networkPlayerInfoIn.getDisplayName().getFormattedText() : ScorePlayerTeam.formatPlayerName(networkPlayerInfoIn.getPlayerTeam(), networkPlayerInfoIn.getGameProfile().getName());
-        if (TabList.Instance.isEnabled() && TabList.Instance.showPing.getValue())
+        if (TabList.Instance.isEnabled() && TabList.Instance.showPing.GetSwitch())
             callbackInfoReturnable.setReturnValue(name + " [" + networkPlayerInfoIn.getResponseTime() + "]");
-        if (Friends.Instance.isEnabled() && Friends.Instance.tabHighlight.getValue() && Ruby.friendManager.isFriend(name)) {
-            if (Friends.Instance.tabPrefix.getValue())
-                callbackInfoReturnable.setReturnValue(ChatFormatting.AQUA + Friends.Instance.tabPrefixPrefix.getValue() + " " + name + (TabList.Instance.isEnabled() && TabList.Instance.showPing.getValue() ? " [" + networkPlayerInfoIn.getResponseTime() + "]" : ""));
+        if (Friends.Instance.isEnabled() && Friends.Instance.tabHighlight.GetSwitch() && Ruby.friendManager.isFriend(name)) {
+            if (Friends.Instance.tabPrefix.GetSwitch())
+                callbackInfoReturnable.setReturnValue(ChatFormatting.AQUA + "[Friend] " + name + (TabList.Instance.isEnabled() && TabList.Instance.showPing.GetSwitch() ? " [" + networkPlayerInfoIn.getResponseTime() + "]" : ""));
             else
-                callbackInfoReturnable.setReturnValue(ChatFormatting.AQUA + "" + name+ (TabList.Instance.isEnabled() && TabList.Instance.showPing.getValue() ? " [" + networkPlayerInfoIn.getResponseTime() + "]" : ""));
+                callbackInfoReturnable.setReturnValue(ChatFormatting.AQUA + "" + name+ (TabList.Instance.isEnabled() && TabList.Instance.showPing.GetSwitch() ? " [" + networkPlayerInfoIn.getResponseTime() + "]" : ""));
         }
-        if (Enemies.Instance.isEnabled() && Enemies.Instance.tabHighlight.getValue() && Ruby.enemyManager.isEnemy(name)) {
-            if (Enemies.Instance.tabPrefix.getValue())
-                callbackInfoReturnable.setReturnValue(ChatFormatting.RED + Enemies.Instance.tabPrefixPrefix.getValue() + " " + name+ (TabList.Instance.isEnabled() && TabList.Instance.showPing.getValue() ? " [" + networkPlayerInfoIn.getResponseTime() + "]" : ""));
+        if (Enemies.Instance.isEnabled() && Enemies.Instance.tabHighlight.GetSwitch() && Ruby.enemyManager.isEnemy(name)) {
+            if (Enemies.Instance.tabPrefix.GetSwitch())
+                callbackInfoReturnable.setReturnValue(ChatFormatting.RED + "[Enemy] " + name+ (TabList.Instance.isEnabled() && TabList.Instance.showPing.GetSwitch() ? " [" + networkPlayerInfoIn.getResponseTime() + "]" : ""));
             else
-                callbackInfoReturnable.setReturnValue(ChatFormatting.RED + "" + name+ (TabList.Instance.isEnabled() && TabList.Instance.showPing.getValue() ? " [" + networkPlayerInfoIn.getResponseTime() + "]" : ""));
+                callbackInfoReturnable.setReturnValue(ChatFormatting.RED + "" + name+ (TabList.Instance.isEnabled() && TabList.Instance.showPing.GetSwitch() ? " [" + networkPlayerInfoIn.getResponseTime() + "]" : ""));
         }
     }
 }

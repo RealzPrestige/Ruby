@@ -29,14 +29,14 @@ import static org.lwjgl.opengl.GL11.*;
 public class ESP extends Module {
     public static ESP Instance;
 
-    public ParentSetting items = createSetting("Items");
-    public BooleanSetting itemNames = createSetting("Item Names", false).setParent(items);
+    public final Parent items = Menu.Switch("Items");
+    public final Switch itemNames = Menu.Switch("Item Names").parent(items);
 
-    public ParentSetting player = createSetting("Player");
-    public BooleanSetting players = createSetting("Players", false).setParent(player);
-    public BooleanSetting playerMoveCancel = createSetting("Move Cancel", false, v -> players.getValue()).setParent(player);
-    public ColorSetting playerColor = createSetting("Player Color", new Color(-1), v -> players.getValue()).setParent(player);
-    public FloatSetting playerLineWidth = createSetting("Player Line Width", 1.0f, 0.1f, 5.0f, (Predicate<Float>) v -> players.getValue()).setParent(player);
+    public final Parent player = Menu.Switch("Player");
+    public final Switch players = Menu.Switch("Players").parent(player);
+    public final Switch playerMoveCancel = Menu.Switch("Move Cancel", v -> players.getValue()).parent(player);
+    public final ColorBox playerColor = Menu.Switch("Player Color", new Color(-1), v -> players.getValue()).parent(player);
+    public final Slider playerLineWidth = Menu.Switch("Player Line Width", 1.0f, 0.1f, 5.0f, (Predicate<Float>) v -> players.getValue()).parent(player);
 
     public ArrayList<Entity> entityList = new ArrayList<>();
     public List<EntityPlayer> playerList = new ArrayList<>();

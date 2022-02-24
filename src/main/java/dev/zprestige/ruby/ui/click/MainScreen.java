@@ -2,11 +2,12 @@ package dev.zprestige.ruby.ui.click;
 
 import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.client.NewGui;
-import dev.zprestige.ruby.setting.impl.KeySetting;
+import dev.zprestige.ruby.module.client.ClickGui;
+import dev.zprestige.ruby.newsettings.impl.ColorBox;
+import dev.zprestige.ruby.newsettings.impl.Key;
+import dev.zprestige.ruby.newsettings.impl.Slider;
 import dev.zprestige.ruby.ui.buttons.BlurButton;
 import dev.zprestige.ruby.ui.buttons.ConfigButton;
-import dev.zprestige.ruby.ui.click.setting.impl.GuiColor;
 import dev.zprestige.ruby.util.RenderUtil;
 import dev.zprestige.ruby.util.Timer;
 import net.minecraft.client.Minecraft;
@@ -19,8 +20,11 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainScreen extends GuiScreen {
     public ArrayList<GuiCategory> guiCategories = new ArrayList<>();
@@ -28,19 +32,20 @@ public class MainScreen extends GuiScreen {
     public ConfigButton configButton;
     public int deltaX;
     public boolean isBlurred;
+    public HashMap<Float, String> copyPasteMap = new HashMap<>();
 
     public MainScreen() {
         deltaX = 26;
-        blurButton = new BlurButton(NewGui.Instance.color.getValue(), 929, 509, 30, 30);
-        configButton = new ConfigButton(NewGui.Instance.color.getValue(), 897, 509, 30, 30);
+        blurButton = new BlurButton(ClickGui.Instance.color.GetColor(), 929, 509, 30, 30);
+        configButton = new ConfigButton(ClickGui.Instance.color.GetColor(), 897, 509, 30, 30);
         Ruby.moduleManager.getCategories().forEach(category -> guiCategories.add(new GuiCategory(category, deltaX += 101, 2, 100, 13)));
     }
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         {
-            RenderUtil.drawOutlineRect(-1, 507, 1000, 600, NewGui.Instance.color.getValue(), 2f);
-            RenderUtil.drawRect(-1, 507, 1000, 600, NewGui.Instance.backgroundColor.getValue().getRGB());
+            RenderUtil.drawOutlineRect(-1, 507, 1000, 600, ClickGui.Instance.color.GetColor(), 2f);
+            RenderUtil.drawRect(-1, 507, 1000, 600, ClickGui.Instance.backgroundColor.GetColor().getRGB());
         }
         {
             GlStateManager.enableAlpha();
@@ -55,15 +60,15 @@ public class MainScreen extends GuiScreen {
         configButton.drawScreen(mouseX, mouseY);
         guiCategories.forEach(newCategory -> newCategory.drawScreen(mouseX, mouseY));
         for (GuiCategory newCategory : guiCategories) {
-            for (GuiModule newModule : newCategory.newModuleArrayList) {
-                newModule.newSettings.stream().filter(newSetting -> newSetting.isInside(mouseX, mouseY) && getGuiModuleByModule(newSetting.getSetting().getModule()).isOpened).forEach(newSetting -> {
-                    if (newSetting.getSetting() instanceof KeySetting) {
-                        KeySetting setting = (KeySetting) newSetting.getSetting();
-                        Ruby.rubyFont.drawStringWithShadow(newSetting.getSetting().name + " | " + (setting.getValue().equals(-1) ? "None" : Keyboard.getKeyName(setting.getValue())), new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth() / 2f - (Ruby.rubyFont.getStringWidth((setting.getValue().equals(-1) ? "None" : Keyboard.getKeyName(setting.getValue()))) / 2f), 530 - (Ruby.rubyFont.getHeight((setting.getValue().equals(-1) ? "None" : Keyboard.getKeyName(setting.getValue()))) / 2f), -1);
-                    } else if (newSetting instanceof GuiColor) {
-                        Ruby.rubyFont.drawStringWithShadow(newSetting.getSetting().name + " | " + newSetting.getSetting().getValue().toString().replaceAll("java.awt.Color", "").replace("[", "").replace("]", "").replace("=", " ").replace(",", " - "), new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth() / 2f - (Ruby.rubyFont.getStringWidth(newSetting.getSetting().name + " | " + newSetting.getSetting().getValue().toString().replaceAll("java.awt.Color", "").replace("[", "").replace("]", "").replace("=", " ").replace(",", " - ")) / 2f), 530 - (Ruby.rubyFont.getHeight(newSetting.getSetting().name + " | " + newSetting.getSetting().getValue().toString().replaceAll("java.awt.Color", "").replace("[", "").replace("]", "").replace("=", " ").replace(",", " - ")) / 2f), -1);
-                    } else {
-                        Ruby.rubyFont.drawStringWithShadow(newSetting.getSetting().name + " | " + newSetting.getSetting().getValue(), new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth() / 2f - (Ruby.rubyFont.getStringWidth(newSetting.getSetting().name + " | " + newSetting.getSetting().getValue()) / 2f), 530 - (Ruby.rubyFont.getHeight(newSetting.getSetting().name + " | " + newSetting.getSetting().getValue()) / 2f), -1);
+            for (GuiModule newModule : newCategory.guiModules) {
+                newModule.settings.stream().filter(newSetting -> newSetting.isInside(mouseX, mouseY) && getGuiModuleByModule(newSetting.getSetting().getModule()).isOpened).forEach(newSetting -> {
+                    if (newSetting.getSetting() instanceof Key) {
+                        Key setting = (Key) newSetting.getSetting();
+                        Ruby.rubyFont.drawStringWithShadow(newSetting.getSetting().getName() + " | " + (setting.GetKey() == -1 ? "None" : Keyboard.getKeyName(setting.GetKey())), new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth() / 2f - (Ruby.rubyFont.getStringWidth((setting.GetKey() == -1 ? "None" : Keyboard.getKeyName(setting.GetKey()))) / 2f), 530 - (Ruby.rubyFont.getHeight((setting.GetKey() == -1 ? "None" : Keyboard.getKeyName(setting.GetKey()))) / 2f), -1);
+                    } else if (newSetting.getSetting() instanceof ColorBox) {
+                        Ruby.rubyFont.drawStringWithShadow(newSetting.getSetting().getName() + " | " + ((ColorBox) newSetting.getSetting()).GetColor().toString().replaceAll("java.awt.Color", "").replace("[", "").replace("]", "").replace("=", " ").replace(",", " - "), new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth() / 2f - (Ruby.rubyFont.getStringWidth(newSetting.getSetting().getName() + " | " + ((ColorBox) newSetting.getSetting()).GetColor().toString().replaceAll("java.awt.Color", "").replace("[", "").replace("]", "").replace("=", " ").replace(",", " - ")) / 2f), 530 - (Ruby.rubyFont.getHeight(newSetting.getSetting().getName() + " | " + ((ColorBox) newSetting.getSetting()).GetColor().toString().replaceAll("java.awt.Color", "").replace("[", "").replace("]", "").replace("=", " ").replace(",", " - ")) / 2f), -1);
+                    } else if (newSetting.getSetting() instanceof Slider) {
+                        Ruby.rubyFont.drawStringWithShadow(newSetting.getSetting().getName() + " | " + ((Slider) newSetting.getSetting()).GetSlider(), new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth() / 2f - (Ruby.rubyFont.getStringWidth(newSetting.getSetting().getName() + " | " + ((Slider) newSetting.getSetting()).GetSlider()) / 2f), 530 - (Ruby.rubyFont.getHeight(newSetting.getSetting().getName() + " | " + ((Slider) newSetting.getSetting()).GetSlider()) / 2f), -1);
                     }
                 });
             }
@@ -77,10 +82,26 @@ public class MainScreen extends GuiScreen {
             mc.entityRenderer.getShaderGroup().deleteShaderGroup();
             isBlurred = false;
         }
+        if (!copyPasteMap.isEmpty()) {
+            final ScaledResolution scaledResolution = new ScaledResolution(mc);
+            final float centerX = scaledResolution.getScaledWidth() / 2f;
+            final float height = scaledResolution.getScaledHeight();
+            float deltaY = height - (height / 4f);
+            for (Map.Entry<Float, String> entry : new HashMap<>(copyPasteMap).entrySet()) {
+                if (entry.getKey() <= 50.0f) {
+                    copyPasteMap.remove(entry.getKey());
+                    continue;
+                }
+                final String entryValue = entry.getValue();
+                Ruby.rubyFont.drawStringWithShadow(entryValue, centerX - (Ruby.rubyFont.getStringWidth(entryValue) / 2f), deltaY -= Math.min(10, entry.getKey() / 5.0f), new Color(1, 1, 1, entry.getKey() / 255.0f).getRGB());
+                copyPasteMap.put(entry.getKey() - (entry.getKey() / 100.0f), entryValue);
+                copyPasteMap.remove(entry.getKey());
+            }
+        }
     }
 
-    protected GuiModule getGuiModuleByModule(Module module){
-        return guiCategories.stream().filter(guiCategory -> guiCategory.category.equals(module.getCategory())).flatMap(guiCategory -> guiCategory.newModuleArrayList.stream()).findFirst().orElse(null);
+    protected GuiModule getGuiModuleByModule(Module module) {
+        return guiCategories.stream().filter(guiCategory -> guiCategory.category.equals(module.getCategory())).flatMap(guiCategory -> guiCategory.guiModules.stream()).findFirst().orElse(null);
     }
 
     @Override

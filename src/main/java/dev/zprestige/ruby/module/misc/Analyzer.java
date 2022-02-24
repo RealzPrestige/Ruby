@@ -28,7 +28,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Analyzer extends Module {
-    public BooleanSetting announce = createSetting("Announce", false);
+    public final Switch announce = Menu.Switch("Announce");
     public int exp = 0, crystals = 0, crystalStacks = 0, expStacks = 0;
     public EntityPlayer entityPlayer;
     public String playerName = "";

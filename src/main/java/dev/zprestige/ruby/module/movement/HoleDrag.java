@@ -16,10 +16,10 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class HoleDrag extends Module {
-    public FloatSetting holeRange = createSetting("Hole Range", 1.0f, 0.1f, 3.0f);
-    public ModeSetting dragMode = createSetting("Drag Mode", "Smooth", Arrays.asList("Smooth", "Teleport"));
-    public FloatSetting smoothSpeed = createSetting("Smooth Speed", 1.0f, 0.0f, 2.0f, (Predicate<Float>) v -> dragMode.getValue().equals("Smooth"));
-    public BooleanSetting onGroundOnly = createSetting("On Ground Only", false);
+    public final Slider holeRange = Menu.Switch("Hole Range", 1.0f, 0.1f, 3.0f);
+    public final ComboBox dragMode = Menu.Switch("Drag Mode", "Smooth", Arrays.asList("Smooth", "Teleport"));
+    public final Slider smoothSpeed = Menu.Switch("Smooth Speed", 1.0f, 0.0f, 2.0f, (Predicate<Float>) v -> dragMode.getValue().equals("Smooth"));
+    public final Switch onGroundOnly = Menu.Switch("On Ground Only");
     public Timer timer = new Timer();
 
     @Override

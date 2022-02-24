@@ -42,7 +42,7 @@ public class Slider extends Setting {
         return max;
     }
 
-    public float getValue() {
+    public long GetSlider() {
         return value;
     }
 

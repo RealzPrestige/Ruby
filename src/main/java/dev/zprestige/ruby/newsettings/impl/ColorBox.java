@@ -2,10 +2,10 @@ package dev.zprestige.ruby.newsettings.impl;
 
 import dev.zprestige.ruby.newsettings.Setting;
 
-public class Color extends Setting {
+public class ColorBox extends Setting {
     protected java.awt.Color value;
 
-    public Color(String name) {
+    public ColorBox(String name) {
         this.name = name;
         this.value = java.awt.Color.RED;
     }
@@ -22,7 +22,7 @@ public class Color extends Setting {
         return value;
     }
 
-    public Color parent(Parent parent){
+    public ColorBox parent(Parent parent){
         setHasParent(true);
         setParent(parent);
         return this;

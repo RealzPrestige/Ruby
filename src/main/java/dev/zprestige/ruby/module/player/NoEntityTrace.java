@@ -7,8 +7,8 @@ import dev.zprestige.ruby.setting.impl.BooleanSetting;
 import net.minecraft.init.Items;
 
 public class NoEntityTrace extends Module {
-    public BooleanSetting pickaxe = createSetting("Pickaxe", false);
-    public BooleanSetting gapple = createSetting("Gapple", false);
+    public final Switch pickaxe = Menu.Switch("Pickaxe");
+    public final Switch gapple = Menu.Switch("Gapple");
 
     @RegisterListener
     public void mouseOverEvent(MouseOverEvent event) {

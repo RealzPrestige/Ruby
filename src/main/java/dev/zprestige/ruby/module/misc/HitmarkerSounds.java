@@ -16,7 +16,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 
 public class HitmarkerSounds extends Module {
-    public FloatSetting volume = createSetting("Volume", 2.0f, 0.1f, 5.0f);
+    public final Slider volume = Menu.Switch("Volume", 2.0f, 0.1f, 5.0f);
     public File hitFile = new File(mc.gameDir + File.separator + "Ruby" + File.separator + "hitmarker.wav");
 
     public HitmarkerSounds() {

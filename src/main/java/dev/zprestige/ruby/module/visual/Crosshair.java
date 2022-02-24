@@ -20,14 +20,14 @@ import java.awt.*;
 import java.util.function.Predicate;
 
 public class Crosshair extends Module {
-    public IntegerSetting distance = createSetting("Gap", 30, 0, 100);
-    public IntegerSetting length = createSetting("Length", 40, 0, 100);
-    public IntegerSetting thickness = createSetting("Thickness", 25, 0, 50);
-    public BooleanSetting dynamic = createSetting("Dynamic", false);
-    public BooleanSetting dynamicAnimated = createSetting("Dynamic Animated", false, v -> dynamic.getValue());
-    public IntegerSetting dynamicGap = createSetting("Dynamic Gap", 10, 0, 100, (Predicate<Integer>) v -> dynamic.getValue());
-    public FloatSetting dynamicAnimationSpeed = createSetting("Dynamic Animation Speed", 0.1f, 0.1f, 5.0f, (Predicate<Float>) v -> dynamic.getValue());
-    public ColorSetting color = createSetting("Color", new Color(255, 0, 0));
+    public final Slider distance = Menu.Switch("Gap", 30, 0, 100);
+    public final Slider length = Menu.Switch("Length", 40, 0, 100);
+    public final Slider thickness = Menu.Switch("Thickness", 25, 0, 50);
+    public final Switch dynamic = Menu.Switch("Dynamic", false);
+    public final Switch dynamicAnimated = Menu.Switch("Dynamic Animated", false, v -> dynamic.getValue());
+    public final Slider dynamicGap = Menu.Switch("Dynamic Gap", 10, 0, 100, (Predicate<Integer>) v -> dynamic.getValue());
+    public final Slider dynamicAnimationSpeed = Menu.Switch("Dynamic Animation Speed", 0.1f, 0.1f, 5.0f, (Predicate<Float>) v -> dynamic.getValue());
+    public final ColorBox color = Menu.Switch("Color", new Color(255, 0, 0));
     float newGap;
 
     @Override

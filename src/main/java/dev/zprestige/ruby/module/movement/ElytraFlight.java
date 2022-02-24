@@ -18,12 +18,12 @@ import net.minecraft.util.EnumHand;
 import java.util.function.Predicate;
 
 public class ElytraFlight extends Module {
-    public FloatSetting speed = createSetting("Speed", 1.0f, 0.1f, 10.0f);
-    public FloatSetting verticalSpeed = createSetting("Vertical Speed", 1.0f, 0.1f, 10.0f);
-    public BooleanSetting rocketOnRubberband = createSetting("Rocket On Rubberband", false);
-    public BooleanSetting chinaSettingFor06d = createSetting("China Setting For 06d", false, v -> rocketOnRubberband.getValue());
-    public FloatSetting pitchToChina = createSetting("Pitch To China", 10.0f, 0.1f, 90.0f, (Predicate<Float>) v -> rocketOnRubberband.getValue() && chinaSettingFor06d.getValue());
-    public IntegerSetting lengthOfPitch = createSetting("Length Of Pitch", 100, 1, 1000, (Predicate<Integer>) v -> rocketOnRubberband.getValue() && chinaSettingFor06d.getValue());
+    public final Slider speed = Menu.Switch("Speed", 1.0f, 0.1f, 10.0f);
+    public final Slider verticalSpeed = Menu.Switch("Vertical Speed", 1.0f, 0.1f, 10.0f);
+    public final Switch rocketOnRubberband = Menu.Switch("Rocket On Rubberband");
+    public final Switch chinaSettingFor06d = Menu.Switch("China Setting For 06d", false, v -> rocketOnRubberband.getValue());
+    public final Slider pitchToChina = Menu.Switch("Pitch To China", 10.0f, 0.1f, 90.0f, (Predicate<Float>) v -> rocketOnRubberband.getValue() && chinaSettingFor06d.getValue());
+    public final Slider lengthOfPitch = Menu.Switch("Length Of Pitch", 100, 1, 1000, (Predicate<Integer>) v -> rocketOnRubberband.getValue() && chinaSettingFor06d.getValue());
     public boolean needsCorrection, needsCorrection2;
     public Timer pitchLength = new Timer();
 

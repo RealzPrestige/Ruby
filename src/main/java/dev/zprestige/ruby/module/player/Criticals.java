@@ -12,9 +12,9 @@ import net.minecraft.network.play.client.CPacketUseEntity;
 
 public class Criticals extends Module {
 
-    public FloatSetting offset = createSetting("Offset", 0.1f, 0.1f, 1.0f);
-    public BooleanSetting allowMoving = createSetting("Allow Moving", false);
-    public BooleanSetting onGroundOnly = createSetting("On Ground Only", false);
+    public final Slider offset = Menu.Switch("Offset", 0.1f, 0.1f, 1.0f);
+    public final Switch allowMoving = Menu.Switch("Allow Moving");
+    public final Switch onGroundOnly = Menu.Switch("On Ground Only");
 
     @RegisterListener
     public void onPacketSend(PacketEvent.PacketSendEvent event) {

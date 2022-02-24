@@ -179,7 +179,7 @@ public class AStarPathFinder implements PathFinder, PathFindingContext {
 						if (!inOpenList(neighbour) && !(inClosedList(neighbour))) {
 							neighbour.cost = nextStepCost;
 							neighbour.heuristic = getHeuristicCost(mover, xp, yp, tx, ty);
-							maxDepth = Math.max(maxDepth, neighbour.setParent(current));
+							maxDepth = Math.max(maxDepth, neighbour.parent(current));
 							addToOpen(neighbour);
 						} 
 					}

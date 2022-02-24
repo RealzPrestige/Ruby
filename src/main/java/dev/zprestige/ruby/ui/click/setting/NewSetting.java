@@ -1,7 +1,12 @@
 package dev.zprestige.ruby.ui.click.setting;
 
+import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.module.Module;
+import dev.zprestige.ruby.module.client.ClickGui;
 import dev.zprestige.ruby.newsettings.Setting;
+import dev.zprestige.ruby.util.RenderUtil;
+
+import java.awt.*;
 
 public class NewSetting {
     protected Setting setting;
@@ -12,6 +17,17 @@ public class NewSetting {
     }
 
     public void render(int mouseX, int mouseY) {
+        RenderUtil.drawRect(x, y, x + width, y + height, ClickGui.Instance.backgroundColor.GetColor().getRGB());
+        RenderUtil.drawOutlineRect(x, y, x + width, y + height, ClickGui.Instance.backgroundColor.GetColor(), 1f);
+        if (isInside(mouseX, mouseY)){
+            RenderUtil.drawRect(x, y, x + width, y + height, ClickGui.Instance.backgroundColor.GetColor().getRGB());
+        }
+    }
+
+    public void hover(int mouseX, int mouseY){
+        if (isInside(mouseX, mouseY)){
+            RenderUtil.drawRect(x, y, x + width, y + height, new Color(0, 0, 0, 50).getRGB());
+        }
     }
 
     public void click(int mouseX, int mouseY, int clickedButton) {
@@ -65,5 +81,9 @@ public class NewSetting {
 
     public boolean isInside(int mouseX, int mouseY) {
         return (mouseX > x && mouseX < x + width) && (mouseY > y && mouseY < y + height);
+    }
+
+    public float getStringMiddle(String string){
+        return y + (height / 2f) - (Ruby.rubyFont.getHeight(string) / 2f);
     }
 }

@@ -10,13 +10,13 @@ public class IntegerSetting extends Setting<Integer> {
     int maximum;
     boolean isOpen = false;
 
-    public IntegerSetting(String name, int value, int minimum, int maximum) {
+    public final Slider(String name, int value, int minimum, int maximum) {
         super(name, value);
         this.minimum = minimum;
         this.maximum = maximum;
     }
 
-    public IntegerSetting(String name, int value, int minimum, int maximum, Predicate<Integer> shown) {
+    public final Slider(String name, int value, int minimum, int maximum, Predicate<Integer> shown) {
         super(name, value, shown);
         this.minimum = minimum;
         this.maximum = maximum;
@@ -42,7 +42,7 @@ public class IntegerSetting extends Setting<Integer> {
         isOpen = open;
     }
 
-    public IntegerSetting setParent(ParentSetting parentSetting) {
+    public final Slider setParent(ParentSetting parentSetting) {
         this.parentSetting = parentSetting;
         hasParentSetting = true;
         parentSetting.addChild(this);

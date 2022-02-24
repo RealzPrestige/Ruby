@@ -4,13 +4,12 @@ import dev.zprestige.ruby.Ruby;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.culling.ICamera;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -37,6 +36,31 @@ public class RenderUtil {
         camera = new Frustum();
         tessellator = Tessellator.getInstance();
         builder = RenderUtil.tessellator.getBuffer();
+    }
+
+    public static void prepareScissor(int x, int y, int width, int height) {
+        glPushMatrix();
+        glPushAttrib(GL_SCISSOR_BIT);
+        {
+            newScissor(x, y, x + width, y + height);
+            glEnable(GL_SCISSOR_TEST);
+        }
+    }
+
+    public static void releaseScissor() {
+        glDisable(GL_SCISSOR_TEST);
+        glPopAttrib();
+        glPopMatrix();
+    }
+
+    public static void newScissor(int x, int y, int x2, int y2) {
+        ScaledResolution scaledResolution = new ScaledResolution(mc);
+        glScissor(x * scaledResolution.getScaleFactor(), (scaledResolution.getScaledHeight() - y2) * scaledResolution.getScaleFactor(), (x2 - x) * scaledResolution.getScaleFactor(), (y2 - y) * scaledResolution.getScaleFactor());
+    }
+
+    public static void image(ResourceLocation resourceLocation, int x, int y, int width, int height) {
+        mc.getTextureManager().bindTexture(resourceLocation);
+        Gui.drawModalRectWithCustomSizedTexture(x, y, 0, 0, width, height, width, height);
     }
 
     public static void drawBoxWithHeight(AxisAlignedBB bb, Color color, float height) {
@@ -78,7 +102,7 @@ public class RenderUtil {
         GlStateManager.popMatrix();
     }
 
-    public static void renderLogo(){
+    public static void renderLogo() {
         GlStateManager.enableAlpha();
         mc.getTextureManager().bindTexture(new ResourceLocation("textures/icons/ruby.png"));
         GlStateManager.color(1f, 1f, 1f);

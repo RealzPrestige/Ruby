@@ -8,11 +8,11 @@ import java.util.function.Predicate;
 public class ColorSetting extends Setting<Color> {
     boolean isSelected = false;
 
-    public ColorSetting(String name, Color value) {
+    public final ColorBox(String name, Color value) {
         super(name, value);
     }
 
-    public ColorSetting(String name, Color value, Predicate<Color> shown) {
+    public final ColorBox(String name, Color value, Predicate<Color> shown) {
         super(name, value, shown);
     }
 
@@ -36,7 +36,7 @@ public class ColorSetting extends Setting<Color> {
         isSelected = selected;
     }
 
-    public ColorSetting setParent(ParentSetting parentSetting){
+    public final ColorBox setParent(ParentSetting parentSetting){
         this.parentSetting = parentSetting;
         hasParentSetting = true;
         parentSetting.addChild(this);

@@ -29,12 +29,12 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class AutoEcMeDupe extends Module {
-    public IntegerSetting actionDelay = createSetting("Action Delay (MS)", 100, 1, 1000);
-    public IntegerSetting timeoutTime = createSetting("Timeout Time (S)", 3, 1, 15);
-    public IntegerSetting restartTimeout = createSetting("Restart Timeout (S)", 2, 1, 15);
-    public BooleanSetting afkScreenFix = createSetting("Afk Screen Fix", false);
-    public BooleanSetting autoDismount = createSetting("Auto Dismount", false);
-    public IntegerSetting dismountRetryDelay = createSetting("Dismount Retry Delay (MS)", 100, 1, 1000, (Predicate<Integer>) v-> autoDismount.getValue());
+    public final Slider actionDelay = Menu.Switch("Action Delay (MS)", 100, 1, 1000);
+    public final Slider timeoutTime = Menu.Switch("Timeout Time (S)", 3, 1, 15);
+    public final Slider restartTimeout = Menu.Switch("Restart Timeout (S)", 2, 1, 15);
+    public final Switch afkScreenFix = Menu.Switch("Afk Screen Fix", false);
+    public final Switch autoDismount = Menu.Switch("Auto Dismount", false);
+    public final Slider dismountRetryDelay = Menu.Switch("Dismount Retry Delay (MS)", 100, 1, 1000, (Predicate<Integer>) v-> autoDismount.getValue());
     public Timer timer = new Timer(), dismountTimer = new Timer();
     public int stage = 0, shulkers = 0;
     public boolean restart, bok, joe;

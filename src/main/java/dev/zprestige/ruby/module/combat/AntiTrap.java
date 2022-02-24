@@ -1,9 +1,8 @@
 package dev.zprestige.ruby.module.combat;
 
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.setting.impl.BooleanSetting;
-import dev.zprestige.ruby.setting.impl.FloatSetting;
-import dev.zprestige.ruby.setting.impl.IntegerSetting;
+import dev.zprestige.ruby.newsettings.impl.Slider;
+import dev.zprestige.ruby.newsettings.impl.Switch;
 import dev.zprestige.ruby.util.BlockUtil;
 import dev.zprestige.ruby.util.EntityUtil;
 import dev.zprestige.ruby.util.InventoryUtil;
@@ -20,21 +19,21 @@ import java.util.ArrayList;
 import java.util.TreeMap;
 
 public class AntiTrap extends Module {
-    public IntegerSetting placeDelay = createSetting("Place Delay", 0, 0, 500);
-    public FloatSetting targetRange = createSetting("Target Range", 9.0f, 0.1f, 15.0f);
-    public BooleanSetting rotate = createSetting("Rotate", false);
-    public BooleanSetting packet = createSetting("Packet", false);
+    public final Slider placeDelay = Menu.Slider("Place Delay", 0, 500);
+    public final Slider targetRange = Menu.Slider("Target Range", 0.1f, 15.0f);
+    public final Switch rotate = Menu.Switch("Rotate");
+    public final Switch packet = Menu.Switch("Packet");
     public ArrayList<BlockPos> placedPosses = new ArrayList<>();
     public Timer timer = new Timer();
 
     @Override
     public void onTick() {
-        EntityPlayer entityPlayer = EntityUtil.getTarget(targetRange.getValue());
+        EntityPlayer entityPlayer = EntityUtil.getTarget(targetRange.GetSlider());
         BlockPos pos = EntityUtil.getPlayerPos(mc.player).up();
         if (entityPlayer == null)
             return;
-            BlockPos targetPos = getBestSide(entityPlayer);
-        if (!BlockUtil.isPlayerSafe(mc.player) || !isTrapped() || targetPos == null || !timer.getTime(placeDelay.getValue())) {
+        BlockPos targetPos = getBestSide(entityPlayer);
+        if (!BlockUtil.isPlayerSafe(mc.player) || !isTrapped() || targetPos == null || !timer.getTime((long) placeDelay.GetSlider())) {
             if (!placedPosses.isEmpty())
                 placedPosses.clear();
             return;

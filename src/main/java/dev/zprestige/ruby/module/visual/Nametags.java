@@ -28,11 +28,11 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class Nametags extends Module {
     public static Nametags Instance;
-    public BooleanSetting multiThreaded = createSetting("Multi Threaded", false);
-    public BooleanSetting health = createSetting("Health", false);
-    public BooleanSetting ping = createSetting("Ping", false);
-    public BooleanSetting totemPops = createSetting("Totem Pops", false);
-    public BooleanSetting inFrustum = createSetting("In Frustum", false);
+    public final Switch multiThreaded = Menu.Switch("Multi Threaded", false);
+    public final Switch health = Menu.Switch("Health", false);
+    public final Switch ping = Menu.Switch("Ping", false);
+    public final Switch totemPops = Menu.Switch("Totem Pops", false);
+    public final Switch inFrustum = Menu.Switch("In Frustum", false);
     public List<EntityPlayer> entityPlayers = new ArrayList<>();
     public ICamera camera = new Frustum();
 

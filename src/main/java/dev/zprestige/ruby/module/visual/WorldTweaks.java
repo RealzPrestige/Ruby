@@ -15,19 +15,19 @@ import java.util.Arrays;
 
 public class WorldTweaks extends Module {
     public static WorldTweaks Instance;
-    public ParentSetting weather = createSetting("Weather");
-    public ColorSetting fogColor = createSetting("Fog Color", new Color(-1)).setParent(weather);
-    public FloatSetting density = createSetting("Density", 1.0f, 0.0f, 1000.0f).setParent(weather);
-    public ModeSetting weatherMode = createSetting("Weather", "Clear", Arrays.asList("Clear", "Rain", "Thunder")).setParent(weather);
-    public IntegerSetting time = createSetting("Time", 0, 0, 24000).setParent(weather);
-    public ParentSetting player = createSetting("Player");
-    public FloatSetting fov = createSetting("Fov", 140.0f, 50.0f, 200.0f).setParent(player);
-    public IntegerSetting chunkLoadDelay = createSetting("Chunk Load Delay", 100, 0, 300).setParent(player);
-    public BooleanSetting antiParticles = createSetting("AntiParticles", false).setParent(player);
-    public BooleanSetting noEffects = createSetting("No SPacketEffects", false).setParent(player);
-    public BooleanSetting noSwing = createSetting("No Swing", false).setParent(player);
-    public BooleanSetting noSwitchAnim = createSetting("No Switch Anim", false).setParent(player);
-    public BooleanSetting fullBright = createSetting("FullBright", false).setParent(player);
+    public final Parent weather = Menu.Switch("Weather");
+    public final ColorBox fogColor = Menu.Switch("Fog Color", new Color(-1)).parent(weather);
+    public final Slider density = Menu.Switch("Density", 1.0f, 0.0f, 1000.0f).parent(weather);
+    public final ComboBox weatherMode = Menu.Switch("Weather", "Clear", Arrays.asList("Clear", "Rain", "Thunder")).parent(weather);
+    public final Slider time = Menu.Switch("Time", 0, 0, 24000).parent(weather);
+    public final Parent player = Menu.Switch("Player");
+    public final Slider fov = Menu.Switch("Fov", 140.0f, 50.0f, 200.0f).parent(player);
+    public final Slider chunkLoadDelay = Menu.Switch("Chunk Load Delay", 100, 0, 300).parent(player);
+    public final Switch antiParticles = Menu.Switch("AntiParticles").parent(player);
+    public final Switch noEffects = Menu.Switch("No SPacketEffects").parent(player);
+    public final Switch noSwing = Menu.Switch("No Swing").parent(player);
+    public final Switch noSwitchAnim = Menu.Switch("No Switch Anim", false).parent(player);
+    public final Switch fullBright = Menu.Switch("FullBright", false).parent(player);
 
 
     public WorldTweaks() {

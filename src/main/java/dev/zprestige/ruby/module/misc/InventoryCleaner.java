@@ -12,15 +12,15 @@ import net.minecraft.inventory.ClickType;
 import net.minecraft.item.Item;
 
 public class InventoryCleaner extends Module {
-    public IntegerSetting throwDelay = createSetting("Throw Delay", 100, 0, 500);
-    public ParentSetting items = createSetting("Items");
-    public BooleanSetting chorusFruits = createSetting("Chorus Fruits", false).setParent(items);
-    public BooleanSetting obsidian = createSetting("Obsidian", false).setParent(items);
-    public BooleanSetting enderChests = createSetting("EnderChest", false).setParent(items);
-    public BooleanSetting swords = createSetting("Swords", false).setParent(items);
-    public BooleanSetting pickaxe = createSetting("Pickaxe", false).setParent(items);
-    public BooleanSetting pearls = createSetting("Pearls", false).setParent(items);
-    public BooleanSetting bows = createSetting("Bows", false).setParent(items);
+    public final Slider throwDelay = Menu.Switch("Throw Delay", 100, 0, 500);
+    public final Parent items = Menu.Switch("Items");
+    public final Switch chorusFruits = Menu.Switch("Chorus Fruits").parent(items);
+    public final Switch obsidian = Menu.Switch("Obsidian").parent(items);
+    public final Switch enderChests = Menu.Switch("EnderChest").parent(items);
+    public final Switch swords = Menu.Switch("Swords").parent(items);
+    public final Switch pickaxe = Menu.Switch("Pickaxe").parent(items);
+    public final Switch pearls = Menu.Switch("Pearls").parent(items);
+    public final Switch bows = Menu.Switch("Bows").parent(items);
     public Timer throwTimer = new Timer();
 
     @Override

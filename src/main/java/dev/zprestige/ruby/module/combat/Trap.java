@@ -1,6 +1,7 @@
 package dev.zprestige.ruby.module.combat;
 
 import dev.zprestige.ruby.module.Module;
+import dev.zprestige.ruby.newsettings.impl.*;
 import dev.zprestige.ruby.setting.impl.*;
 import dev.zprestige.ruby.util.*;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,24 +17,22 @@ import java.util.function.Predicate;
 
 public class Trap extends Module {
     public static Trap Instance;
-    public ParentSetting placing = createSetting("Placing");
-    public ModeSetting placeMode = createSetting("Place Mode", "Linear", Arrays.asList("Linear", "Gradually")).setParent(placing);
-    public IntegerSetting placeDelay = createSetting("Place Delay", 50, 0, 500).setParent(placing);
-    public ParentSetting ranges = createSetting("Ranges");
-    public FloatSetting targetRange = createSetting("Target Range", 9.0f, 0.1f, 15.0f).setParent(ranges);
-    public FloatSetting placeRange = createSetting("Place Range", 5.0f, 0.1f, 6.0f).setParent(ranges);
-    public ParentSetting misc = createSetting("Misc");
-    public BooleanSetting inLiquids = createSetting("In Liquids", false).setParent(misc);
-    public BooleanSetting extraTop = createSetting("ExtraTop", false).setParent(misc);
-    public BooleanSetting packet = createSetting("Packet", false).setParent(misc);
-    public BooleanSetting rotate = createSetting("Rotate", false).setParent(misc);
-    public ParentSetting rendering = createSetting("Rendering");
-    public BooleanSetting render = createSetting("Render", false).setParent(rendering);
-    public BooleanSetting box = createSetting("Box", false, v -> render.getValue()).setParent(rendering);
-    public ColorSetting boxColor = createSetting("Box Color", new Color(-1), v -> render.getValue() && box.getValue()).setParent(rendering);
-    public BooleanSetting outline = createSetting("Outline", false, v -> render.getValue()).setParent(rendering);
-    public ColorSetting outlineColor = createSetting("Outline Color", new Color(-1), v -> render.getValue() && outline.getValue()).setParent(rendering);
-    public FloatSetting outlineWidth = createSetting("Outline Width", 1.0f, 0.1f, 5.0f, (Predicate<Float>) v -> render.getValue() && outline.getValue()).setParent(rendering);
+    public final Parent placing = Menu.Parent("Placing");
+    public final ComboBox placeMode = Menu.ComboBox("Place Mode", new String[]{"Linear", "Gradually"}).parent(placing);
+    public final Slider placeDelay = Menu.Slider("Place Delay", 0, 500).parent(placing);
+    public final Parent ranges = Menu.Parent("Ranges");
+    public final Slider targetRange = Menu.Slider("Target Range", 0.1f, 15.0f).parent(ranges);
+    public final Slider placeRange = Menu.Slider("Place Range", 0.1f, 6.0f).parent(ranges);
+    public final Parent misc = Menu.Parent("Misc");
+    public final Switch inLiquids = Menu.Switch("In Liquids").parent(misc);
+    public final Switch extraTop = Menu.Switch("ExtraTop").parent(misc);
+    public final Switch packet = Menu.Switch("Packet").parent(misc);
+    public final Switch rotate = Menu.Switch("Rotate").parent(misc);
+    public final Parent rendering = Menu.Parent("Rendering");
+    public final Switch render = Menu.Switch("Render").parent(rendering);
+    public final ColorSwitch box = Menu.ColorSwitch("Box").parent(rendering);
+    public final ColorSwitch outline = Menu.ColorSwitch("Outline").parent(rendering);
+    public final Slider outlineWidth = Menu.Slider("Outline Width", 0.1f, 5.0).parent(rendering);
     public BlockPos placePos = null;
     public Timer timer = new Timer();
     public ArrayList<BlockPos> firstLayerPosses = new ArrayList<>();
@@ -45,7 +44,7 @@ public class Trap extends Module {
 
     @Override
     public void onTick() {
-        EntityPlayer entityPlayer = EntityUtil.getTarget(targetRange.getValue());
+        EntityPlayer entityPlayer = EntityUtil.getTarget(targetRange.GetSlider());
         if (entityPlayer == null || !BlockUtil.isPlayerSafe(entityPlayer)) {
             disableModule();
             return;
@@ -56,30 +55,30 @@ public class Trap extends Module {
             return;
         }
         BlockPos entityPlayerPos = EntityUtil.getPlayerPos(entityPlayer);
-        switch (placeMode.getValue()) {
+        switch (placeMode.GetCombo()) {
             case "Gradually":
                 setPlacePos(entityPlayerPos);
-                if (placePos != null && mc.player.getDistanceSq(placePos) < (placeRange.getValue() * placeRange.getValue()) && timer.getTime(placeDelay.getValue()))
-                    BlockUtil.placeBlockWithSwitch(placePos, EnumHand.MAIN_HAND, rotate.getValue(), packet.getValue(), slot, timer);
+                if (placePos != null && mc.player.getDistanceSq(placePos) < (placeRange.GetSlider() * placeRange.GetSlider()) && timer.getTime(placeDelay.GetSlider()))
+                    BlockUtil.placeBlockWithSwitch(placePos, EnumHand.MAIN_HAND, rotate.GetSwitch(), packet.GetSwitch(), slot, timer);
                 break;
             case "Linear":
                 setFirstLayer(entityPlayerPos);
                 if (!firstLayerPosses.isEmpty())
-                    firstLayerPosses.stream().filter(pos -> mc.player.getDistanceSq(pos) < (placeRange.getValue() * placeRange.getValue())).forEach(pos -> BlockUtil.placeBlockWithSwitch(pos, EnumHand.MAIN_HAND, rotate.getValue(), packet.getValue(), slot));
+                    firstLayerPosses.stream().filter(pos -> mc.player.getDistanceSq(pos) < (placeRange.GetSlider() * placeRange.GetSlider())).forEach(pos -> BlockUtil.placeBlockWithSwitch(pos, EnumHand.MAIN_HAND, rotate.GetSwitch(), packet.GetSwitch(), slot));
                 else if (canPlace(entityPlayerPos.up().up().north()) && canPlace(entityPlayerPos.up().up().east()) && canPlace(entityPlayerPos.up().up().south()) && canPlace(entityPlayerPos.up().up().west())) {
-                   if (mc.player.getDistanceSq(entityPlayerPos.up().up().north()) < (placeRange.getValue() * placeRange.getValue())) {
-                        BlockUtil.placeBlockWithSwitch(entityPlayerPos.up().up().north(), EnumHand.MAIN_HAND, rotate.getValue(), packet.getValue(), slot);
+                   if (mc.player.getDistanceSq(entityPlayerPos.up().up().north()) < (placeRange.GetSlider() * placeRange.GetSlider())) {
+                        BlockUtil.placeBlockWithSwitch(entityPlayerPos.up().up().north(), EnumHand.MAIN_HAND, rotate.GetSwitch(), packet.GetSwitch(), slot);
                         postFirstLayerPos = entityPlayerPos.up().up().north();
                     }
                 }
                 else if (canPlace(entityPlayerPos.up().up())) {
-                    if (mc.player.getDistanceSq(entityPlayerPos.up().up()) < (placeRange.getValue() * placeRange.getValue())) {
-                        BlockUtil.placeBlockWithSwitch(entityPlayerPos.up().up(), EnumHand.MAIN_HAND, rotate.getValue(), packet.getValue(), slot);
+                    if (mc.player.getDistanceSq(entityPlayerPos.up().up()) < (placeRange.GetSlider() * placeRange.GetSlider())) {
+                        BlockUtil.placeBlockWithSwitch(entityPlayerPos.up().up(), EnumHand.MAIN_HAND, rotate.GetSwitch(), packet.GetSwitch(), slot);
                         postFirstLayerPos = entityPlayerPos.up().up();
                     }
-                } else if (extraTop.getValue() && canPlace(entityPlayerPos.up().up().up())) {
-                    if (mc.player.getDistanceSq(entityPlayerPos.up().up().up()) < (placeRange.getValue() * placeRange.getValue())) {
-                        BlockUtil.placeBlockWithSwitch(entityPlayerPos.up().up().up(), EnumHand.MAIN_HAND, rotate.getValue(), packet.getValue(), slot);
+                } else if (extraTop.GetSwitch() && canPlace(entityPlayerPos.up().up().up())) {
+                    if (mc.player.getDistanceSq(entityPlayerPos.up().up().up()) < (placeRange.GetSlider() * placeRange.GetSlider())) {
+                        BlockUtil.placeBlockWithSwitch(entityPlayerPos.up().up().up(), EnumHand.MAIN_HAND, rotate.GetSwitch(), packet.GetSwitch(), slot);
                         postFirstLayerPos = entityPlayerPos.up().up().up();
                     }
                 } else
@@ -115,29 +114,29 @@ public class Trap extends Module {
             placePos = pos.up().up().north();
         else if (canPlace(pos.up().up()))
             placePos = pos.up().up();
-        else if (extraTop.getValue() && canPlace(pos.up().up().up()))
+        else if (extraTop.GetSwitch() && canPlace(pos.up().up().up()))
             placePos = pos.up().up().up();
         else
             placePos = null;
     }
 
     public boolean canPlace(BlockPos pos){
-        return mc.world.getBlockState(pos).getBlock().equals(Blocks.AIR) || (inLiquids.getValue() && ((mc.world.getBlockState(pos).getBlock().equals(Blocks.WATER) || mc.world.getBlockState(pos).getBlock().equals(Blocks.FLOWING_WATER))|| (mc.world.getBlockState(pos).getBlock().equals(Blocks.LAVA) || mc.world.getBlockState(pos).getBlock().equals(Blocks.FLOWING_LAVA))));
+        return mc.world.getBlockState(pos).getBlock().equals(Blocks.AIR) || (inLiquids.GetSwitch() && ((mc.world.getBlockState(pos).getBlock().equals(Blocks.WATER) || mc.world.getBlockState(pos).getBlock().equals(Blocks.FLOWING_WATER))|| (mc.world.getBlockState(pos).getBlock().equals(Blocks.LAVA) || mc.world.getBlockState(pos).getBlock().equals(Blocks.FLOWING_LAVA))));
     }
 
     @Override
     public void onGlobalRenderTick() {
-        switch (placeMode.getValue()) {
+        switch (placeMode.GetCombo()) {
             case "Gradually":
-                if (placePos == null || !render.getValue())
+                if (placePos == null || !render.GetSwitch())
                     return;
-                RenderUtil.drawBoxESP(placePos, boxColor.getValue(), true, outlineColor.getValue(), outlineWidth.getValue(), outline.getValue(), box.getValue(), boxColor.getValue().getAlpha(), true);
+                RenderUtil.drawBoxESP(placePos, box.GetColor(), true, outline.GetColor(), outlineWidth.GetSlider(), outline.GetSwitch(), box.GetSwitch(), box.GetColor().getAlpha(), true);
                 break;
             case "Linear":
                 if (!firstLayerPosses.isEmpty())
-                    firstLayerPosses.forEach(pos -> RenderUtil.drawBoxESP(pos, boxColor.getValue(), true, outlineColor.getValue(), outlineWidth.getValue(), outline.getValue(), box.getValue(), boxColor.getValue().getAlpha(), true));
+                    firstLayerPosses.forEach(pos -> RenderUtil.drawBoxESP(pos, box.GetColor(), true, outline.GetColor(), outlineWidth.GetSlider(), outline.GetSwitch(), box.GetSwitch(), box.GetColor().getAlpha(), true));
                 else if (postFirstLayerPos != null){
-                    RenderUtil.drawBoxESP(postFirstLayerPos, boxColor.getValue(), true, outlineColor.getValue(), outlineWidth.getValue(), outline.getValue(), box.getValue(), boxColor.getValue().getAlpha(), true);
+                    RenderUtil.drawBoxESP(postFirstLayerPos, box.GetColor(), true, outline.GetColor(), outlineWidth.GetSlider(), outline.GetSwitch(), box.GetSwitch(), box.GetColor().getAlpha(), true);
                 }
                 break;
         }

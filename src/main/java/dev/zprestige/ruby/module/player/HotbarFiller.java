@@ -10,8 +10,8 @@ import net.minecraft.item.ItemStack;
 import java.util.stream.IntStream;
 
 public class HotbarFiller extends Module {
-    public IntegerSetting delay = createSetting("Delay", 100, 0, 500);
-    public IntegerSetting fillAt = createSetting("Fill At", 50, 1, 64);
+    public final Slider delay = Menu.Switch("Delay", 100, 0, 500);
+    public final Slider fillAt = Menu.Switch("Fill At", 50, 1, 64);
     public Timer timer = new Timer();
 
     @Override

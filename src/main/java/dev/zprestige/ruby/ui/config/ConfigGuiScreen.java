@@ -1,7 +1,7 @@
 package dev.zprestige.ruby.ui.config;
 
 import dev.zprestige.ruby.Ruby;
-import dev.zprestige.ruby.module.client.NewGui;
+import dev.zprestige.ruby.module.client.ClickGui;
 import dev.zprestige.ruby.util.RenderUtil;
 import dev.zprestige.ruby.util.Timer;
 import net.minecraft.client.gui.GuiScreen;
@@ -84,22 +84,22 @@ public class ConfigGuiScreen extends GuiScreen {
             }
         }
         { // Background
-            RenderUtil.drawRect(x, y, x + width, y + height, NewGui.Instance.backgroundColor.getValue().getRGB());
-            RenderUtil.drawOutlineRect(x, y, x + width, y + height, NewGui.Instance.color.getValue(), 2f);
+            RenderUtil.drawRect(x, y, x + width, y + height, ClickGui.Instance.backgroundColor.GetColor().getRGB());
+            RenderUtil.drawOutlineRect(x, y, x + width, y + height, ClickGui.Instance.color.GetColor(), 2f);
         }
         { // Top Bar
-            RenderUtil.drawRect(x + 2, y + 2, x + width - 2, y + 15, NewGui.Instance.backgroundColor.getValue().getRGB());
-            RenderUtil.drawOutlineRect(x + 2, y + 2, x + width - 2, y + 15, NewGui.Instance.color.getValue(), 2f);
+            RenderUtil.drawRect(x + 2, y + 2, x + width - 2, y + 15, ClickGui.Instance.backgroundColor.GetColor().getRGB());
+            RenderUtil.drawOutlineRect(x + 2, y + 2, x + width - 2, y + 15, ClickGui.Instance.color.GetColor(), 2f);
             drawBarIcon();
             Ruby.rubyFont.drawStringWithShadow("Config Manager", x + 20, (y + (15 / 2f) - (Ruby.mc.fontRenderer.FONT_HEIGHT / 2f)), -1);
         }
         { // Config Button Area
-            RenderUtil.drawRect(x + 2, y + 17, x + width - 2, y + height - 17, NewGui.Instance.backgroundColor.getValue().getRGB());
-            RenderUtil.drawOutlineRect(x + 2, y + 17, x + width - 2, y + height - 17, NewGui.Instance.color.getValue(), 2f);
+            RenderUtil.drawRect(x + 2, y + 17, x + width - 2, y + height - 17, ClickGui.Instance.backgroundColor.GetColor().getRGB());
+            RenderUtil.drawOutlineRect(x + 2, y + 17, x + width - 2, y + height - 17, ClickGui.Instance.color.GetColor(), 2f);
         }
         { // Search bar
-            RenderUtil.drawRect(x + 2, y + height - 15, x + width - 2, y + height - 2, NewGui.Instance.backgroundColor.getValue().getRGB());
-            RenderUtil.drawOutlineRect(x + 2, y + height - 15, x + width - 2, y + height - 2, NewGui.Instance.color.getValue(), 2f);
+            RenderUtil.drawRect(x + 2, y + height - 15, x + width - 2, y + height - 2, ClickGui.Instance.backgroundColor.GetColor().getRGB());
+            RenderUtil.drawOutlineRect(x + 2, y + height - 15, x + width - 2, y + height - 2, ClickGui.Instance.color.GetColor(), 2f);
             if (searchString.equals("")) {
                 Ruby.rubyFont.drawStringWithShadow("Search"+ (isTyping ? idleSign() : ""), x + 3, y + height - 15 + (13 / 2f) - (Ruby.rubyFont.getHeight("Search"+ (isTyping ? idleSign() : "")) / 2f), Color.GRAY.getRGB());
             }else {
@@ -148,9 +148,9 @@ public class ConfigGuiScreen extends GuiScreen {
         int dWheel = Mouse.getDWheel();
         configButtons.forEach(configGuiButton -> {
             if (dWheel < 0)
-                configGuiButton.scrollY -= NewGui.Instance.scrollSpeed.getValue();
+                configGuiButton.scrollY -= ClickGui.Instance.scrollSpeed.GetSlider();
             else if (dWheel > 0)
-                configGuiButton.scrollY += NewGui.Instance.scrollSpeed.getValue();
+                configGuiButton.scrollY += ClickGui.Instance.scrollSpeed.GetSlider();
         });
     }
 

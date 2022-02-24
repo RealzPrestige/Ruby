@@ -11,7 +11,7 @@ public class Setting<T> {
     public T value;
     public Predicate<T> shown;
     public boolean isOpen = false;
-    public ParentSetting parentSetting;
+    public final Parent parentSetting;
     public boolean hasParentSetting = false;
 
     public Setting(String name) {

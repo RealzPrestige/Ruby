@@ -10,9 +10,9 @@ import java.util.Arrays;
 
 public class TickShift extends Module {
     public static TickShift Instance;
-    public FloatSetting timer = createSetting("Timer", 1.0f, 0.1f, 10.0f);
-    public IntegerSetting disableTicks = createSetting("Disable Ticks", 12, 1, 100);
-    public ModeSetting offGroundAction = createSetting("Off Ground Action", "None", Arrays.asList("None", "Ignore", "Disable"));
+    public final Slider timer = Menu.Switch("Timer", 1.0f, 0.1f, 10.0f);
+    public final Slider disableTicks = Menu.Switch("Disable Ticks", 12, 1, 100);
+    public final ComboBox offGroundAction = Menu.Switch("Off Ground Action", "None", Arrays.asList("None", "Ignore", "Disable"));
     public int ticks = 0;
 
     public TickShift() {

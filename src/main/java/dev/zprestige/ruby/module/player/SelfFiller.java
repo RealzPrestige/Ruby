@@ -15,9 +15,9 @@ import net.minecraft.util.math.BlockPos;
 import java.util.Arrays;
 
 public class SelfFiller extends Module {
-    public DoubleSetting force = createSetting("Force", 1.5, -5.0, 10.0);
-    public BooleanSetting rotate = createSetting("Rotate", false);
-    public ModeSetting block = createSetting("Block", "Obsidian", Arrays.asList("Obsidian", "EnderChests", "Fallback", "WitherSkulls", "Anvil"));
+    public final Slider force = Menu.Switch("Force", 1.5, -5.0, 10.0);
+    public final Switch rotate = Menu.Switch("Rotate");
+    public final ComboBox block = Menu.Switch("Block", "Obsidian", Arrays.asList("Obsidian", "EnderChests", "Fallback", "WitherSkulls", "Anvil"));
     public int slot = -1;
     public BlockPos startPos;
 

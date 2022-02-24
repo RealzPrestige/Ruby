@@ -15,7 +15,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class RunDetect extends Module {
     public static RunDetect Instance;
-    public FloatSetting radius = createSetting("Radius", 5.0f, 0.1f, 15.0f);
+    public final Slider radius = Menu.Switch("Radius", 5.0f, 0.1f, 15.0f);
 
     public ArrayList<EntityPlayer> potentialRunnersList = new ArrayList<>();
     public ArrayList<EntityPlayer> swordedPotentialRunnersList = new ArrayList<>();

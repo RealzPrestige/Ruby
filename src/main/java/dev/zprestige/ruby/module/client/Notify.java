@@ -6,15 +6,15 @@ import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.ModuleToggleEvent;
 import dev.zprestige.ruby.events.PacketEvent;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.setting.impl.BooleanSetting;
+import dev.zprestige.ruby.newsettings.impl.Switch;
 import net.minecraft.network.play.server.SPacketChat;
 
 
 public class Notify extends Module {
     public static Notify Instance;
-    public BooleanSetting modules = createSetting("Modules", false);
-    public BooleanSetting totemPops = createSetting("TotemPops", false);
-    public BooleanSetting zenovLolCounter = createSetting("Zenov LOL counter", false);
+    public final Switch modules = Menu.Switch("Modules");
+    public final Switch totemPops = Menu.Switch("TotemPops");
+    public final Switch zenovLolCounter = Menu.Switch("Zenov LOL counter");
     public int literalLOLS = 0, containingLOLS = 0;
 
     public Notify() {
@@ -23,7 +23,7 @@ public class Notify extends Module {
 
     @RegisterListener
     public void onPacketReceive(PacketEvent.PacketReceiveEvent event) {
-        if (nullCheck() || !isEnabled() || !(event.getPacket() instanceof SPacketChat) || !zenovLolCounter.getValue()) {
+        if (nullCheck() || !isEnabled() || !(event.getPacket() instanceof SPacketChat) || !zenovLolCounter.GetSwitch()) {
             return;
         }
         SPacketChat sPacketChat = (SPacketChat) event.getPacket();
@@ -46,14 +46,14 @@ public class Notify extends Module {
 
     @RegisterListener
     public void onModuleEnable(ModuleToggleEvent.Enable event) {
-        if (!isEnabled() || nullCheck() || !modules.getValue())
+        if (!isEnabled() || nullCheck() || !modules.GetSwitch())
             return;
         Ruby.chatManager.sendRemovableMessage(ChatFormatting.WHITE + "" + ChatFormatting.BOLD + event.getModule().getName() + ChatFormatting.RESET + " has been toggled " + ChatFormatting.GREEN + "On" + ChatFormatting.RESET + ".", 1);
     }
 
     @RegisterListener
     public void onModuleDisable(ModuleToggleEvent.Disable event) {
-        if (!isEnabled() || nullCheck() || !modules.getValue())
+        if (!isEnabled() || nullCheck() || !modules.GetSwitch())
             return;
         Ruby.chatManager.sendRemovableMessage(ChatFormatting.WHITE + "" + ChatFormatting.BOLD + event.getModule().getName() + ChatFormatting.RESET + " has been toggled " + ChatFormatting.RED + "Off" + ChatFormatting.RESET + ".", 1);
     }

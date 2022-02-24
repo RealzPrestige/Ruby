@@ -3,11 +3,8 @@ package dev.zprestige.ruby.ui.click;
 import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.client.NewGui;
-import dev.zprestige.ruby.setting.impl.ParentSetting;
-import dev.zprestige.ruby.ui.click.setting.GuiSetting;
-import dev.zprestige.ruby.ui.click.setting.impl.GuiColor;
-import dev.zprestige.ruby.ui.click.setting.impl.GuiParent;
+import dev.zprestige.ruby.module.client.ClickGui;
+import dev.zprestige.ruby.ui.click.setting.NewSetting;
 import dev.zprestige.ruby.util.AnimationUtil;
 import dev.zprestige.ruby.util.RenderUtil;
 import net.minecraft.client.gui.GuiScreen;
@@ -22,10 +19,18 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class GuiCategory {
     public Category category;
-    public int x, y, width, height, dragX, dragY, deltaY, targetAnim, animHeight;
+    public int x;
+    public int y;
+    public int width;
+    public int height;
+    public int dragX;
+    public int dragY;
+    public int deltaY;
+    public int targetAnim;
+    public int animHeight;
     public boolean isDragging;
     public boolean isOpened = true;
-    public ArrayList<GuiModule> newModuleArrayList = new ArrayList<>();
+    public ArrayList<GuiModule> guiModules = new ArrayList<>();
 
     public GuiCategory(Category category, int x, int y, int width, int height) {
         this.category = category;
@@ -34,7 +39,7 @@ public class GuiCategory {
         this.width = width;
         this.height = height;
         deltaY = y;
-        Ruby.moduleManager.getModulesInCategory(category).forEach(module -> newModuleArrayList.add(new GuiModule(module, x + 1, deltaY += (height + 1), width - 2, height)));
+        Ruby.moduleManager.getModulesInCategory(category).forEach(module -> guiModules.add(new GuiModule(module, x + 1, deltaY += (height + 1), width - 2, height)));
         Ruby.moduleManager.getModulesInCategory(category).forEach(module -> module.scrollY = 0);
     }
 
@@ -44,7 +49,7 @@ public class GuiCategory {
         x = dragX + mouseX;
         y = dragY + mouseY;
         deltaY = y;
-        for (GuiModule newModule : newModuleArrayList) {
+        for (GuiModule newModule : guiModules) {
             newModule.x = x + 1;
             newModule.y = newModule.module.scrollY + (deltaY += (height + 1));
         }
@@ -58,18 +63,12 @@ public class GuiCategory {
         }
         {
             deltaY = y;
-            newModuleArrayList.forEach(newModule -> {
+            guiModules.forEach(newModule -> {
                 deltaY += height + 1;
                 newModule.y = newModule.module.scrollY + deltaY;
                 if (newModule.isOpened) {
-                    for (GuiSetting newSetting : newModule.newSettings) {
-                        if (!newSetting.isVisible())
-                            continue;
+                    for (NewSetting newSetting : newModule.settings) {
                         deltaY += height + 1;
-                        if (newSetting instanceof GuiColor && newSetting.getSetting().isOpen)
-                            deltaY += 109;
-                        if (newSetting instanceof GuiParent)
-                            deltaY += ((ParentSetting) newSetting.getSetting()).getValue() ? 2 : 1;
                     }
                 } else {
                     deltaY += (newModule.animDeltaY - (height + 1));
@@ -77,39 +76,40 @@ public class GuiCategory {
             });
         }
         {
-            RenderUtil.drawRect(x, y, x + width, y + height, NewGui.Instance.color.getValue().getRGB());
+            RenderUtil.drawRect(x, y, x + width, y + height, ClickGui.Instance.color.GetColor().getRGB());
             Ruby.rubyFont.drawStringWithShadow(category.toString(), x + (width / 2f) - (Ruby.rubyFont.getStringWidth(category.toString()) / 2f), y + (height / 2f) - (Ruby.rubyFont.getHeight(category.toString()) / 2f), -1);
         }
         {
-            RenderUtil.drawRect(x, y + height, x + width, animHeight, NewGui.Instance.backgroundColor.getValue().getRGB());
-            RenderUtil.drawOutlineRect(x, y, x + width, animHeight, NewGui.Instance.backgroundColor.getValue(), 1f);
+            RenderUtil.drawRect(x, y + height, x + width, animHeight, ClickGui.Instance.backgroundColor.GetColor().getRGB());
+            RenderUtil.drawOutlineRect(x, y, x + width, animHeight, ClickGui.Instance.backgroundColor.GetColor(), 1f);
         }
         {
-            if (NewGui.Instance.icons.getValue())
+            if (ClickGui.Instance.icons.GetSwitch())
                 drawCategoryIcon();
         }
         {
             if (isOpened) {
                 targetAnim = deltaY + height + 1;
-                if (animHeight > targetAnim - NewGui.Instance.animationSpeed.getValue() && animHeight < targetAnim)
+                if (animHeight > targetAnim - ClickGui.Instance.animationSpeed.GetSlider() && animHeight < targetAnim)
                     animHeight = targetAnim;
                 else if (animHeight < targetAnim)
-                    animHeight = AnimationUtil.increaseNumber(animHeight, targetAnim, NewGui.Instance.animationSpeed.getValue());
+                    animHeight = AnimationUtil.increaseNumber(animHeight, targetAnim, (int) ClickGui.Instance.animationSpeed.GetSlider());
                 else if (animHeight > targetAnim)
-                    animHeight = AnimationUtil.decreaseNumber(animHeight, targetAnim, NewGui.Instance.animationSpeed.getValue());
+                    animHeight = AnimationUtil.decreaseNumber(animHeight, targetAnim, (int) ClickGui.Instance.animationSpeed.GetSlider());
             } else {
                 targetAnim = y + height;
-                animHeight = AnimationUtil.decreaseNumber(animHeight, targetAnim, NewGui.Instance.animationSpeed.getValue());
+                animHeight = AnimationUtil.decreaseNumber(animHeight, targetAnim, (int) ClickGui.Instance.animationSpeed.GetSlider());
             }
-            if (animHeight < y + height)
+            if (animHeight < y + height) {
                 animHeight = y + height;
+            }
             glPushMatrix();
             glPushAttrib(GL_SCISSOR_BIT);
             {
                 RenderUtil.scissor(x, y + height, x + 1000, animHeight);
                 glEnable(GL_SCISSOR_TEST);
             }
-            newModuleArrayList.forEach(newModule -> newModule.drawScreen(mouseX, mouseY));
+            guiModules.forEach(newModule -> newModule.drawScreen(mouseX, mouseY));
             glDisable(GL_SCISSOR_TEST);
             glPopAttrib();
             glPopMatrix();
@@ -120,9 +120,9 @@ public class GuiCategory {
         int dWheel = Mouse.getDWheel();
         for (Module module : Ruby.moduleManager.getModulesInCategory(category)) {
             if (dWheel < 0)
-                module.scrollY -= NewGui.Instance.scrollSpeed.getValue();
+                module.scrollY -= ClickGui.Instance.scrollSpeed.GetSlider();
             else if (dWheel > 0)
-                module.scrollY += NewGui.Instance.scrollSpeed.getValue();
+                module.scrollY += ClickGui.Instance.scrollSpeed.GetSlider();
         }
     }
 
@@ -132,7 +132,7 @@ public class GuiCategory {
 
     public void keyTyped(char typedChar, int keyCode) {
         if (isOpened)
-            newModuleArrayList.forEach(newModule -> newModule.keyTyped(typedChar, keyCode));
+            guiModules.forEach(newModule -> newModule.keyTyped(typedChar, keyCode));
 
     }
 
@@ -153,7 +153,7 @@ public class GuiCategory {
         }
         {
             if (isOpened)
-                newModuleArrayList.forEach(newModule -> newModule.mouseClicked(mouseX, mouseY, mouseButton));
+                guiModules.forEach(newModule -> newModule.mouseClicked(mouseX, mouseY, mouseButton));
         }
     }
 
@@ -164,7 +164,7 @@ public class GuiCategory {
         }
         {
             if (isOpened)
-                newModuleArrayList.forEach(newModule -> newModule.mouseReleased(mouseX, mouseY, state));
+                guiModules.forEach(newModule -> newModule.mouseReleased(mouseX, mouseY, state));
         }
     }
 

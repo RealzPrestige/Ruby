@@ -12,10 +12,10 @@ import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.network.play.server.SPacketExplosion;
 
 public class Velocity extends Module {
-    public BooleanSetting explosions = createSetting("Explosions", false);
-    public BooleanSetting push = createSetting("Push", false);
-    public BooleanSetting blocks = createSetting("Blocks", false);
-    public BooleanSetting pistons = createSetting("Pistons", false);
+    public final Switch explosions = Menu.Switch("Explosions");
+    public final Switch push = Menu.Switch("Push", false);
+    public final Switch blocks = Menu.Switch("Blocks", false);
+    public final Switch pistons = Menu.Switch("Pistons", false);
 
     @RegisterListener
     public void onPacketReceived(PacketEvent.PacketReceiveEvent event) {

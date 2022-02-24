@@ -2,6 +2,10 @@ package dev.zprestige.ruby.module.combat;
 
 import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.module.Module;
+import dev.zprestige.ruby.newsettings.impl.ComboBox;
+import dev.zprestige.ruby.newsettings.impl.Parent;
+import dev.zprestige.ruby.newsettings.impl.Slider;
+import dev.zprestige.ruby.newsettings.impl.Switch;
 import dev.zprestige.ruby.setting.impl.*;
 import dev.zprestige.ruby.util.*;
 import net.minecraft.entity.Entity;
@@ -26,30 +30,30 @@ import java.util.stream.Collectors;
 
 public class HolePushRewrite extends Module {
 
-    public ParentSetting ranges = createSetting("Ranges");
-    public FloatSetting targetRange = createSetting("Target Range", 9.0f, 0.1f, 15.0f).setParent(ranges);
-    public FloatSetting placeRange = createSetting("Place Range", 5.0f, 0.1f, 6.0f).setParent(ranges);
+    public final Parent ranges = Menu.Parent("Ranges");
+    public final Slider targetRange = Menu.Slider("Target Range", 0.1f, 15.0f).parent(ranges);
+    public final Slider placeRange = Menu.Slider("Place Range", 0.1f, 6.0f).parent(ranges);
 
-    public ParentSetting timing = createSetting("Timing");
-    public IntegerSetting placeDelay = createSetting("Place Delay", 100, 0, 1000).setParent(timing);
+    public final Parent timing = Menu.Parent("Timing");
+    public final Slider placeDelay = Menu.Slider("Place Delay", 0, 1000).parent(timing);
 
-    public ParentSetting rotations = createSetting("Rotations");
-    public ModeSetting rotationMode = createSetting("Rotation Mode", "Packet", Arrays.asList("Packet", "Vanilla", "TickWait")).setParent(rotations);
-    public BooleanSetting rotateBack = createSetting("Rotate Back", false, v -> !rotationMode.getValue().equals("Packet")).setParent(rotations);
+    public final Parent rotations = Menu.Parent("Rotations");
+    public final ComboBox rotationMode = Menu.ComboBox("Rotation Mode", new String[]{"Packet", "Vanilla", "TickWait"}).parent(rotations);
+    public final Switch rotateBack = Menu.Switch("Rotate Back").parent(rotations);
 
-    public ParentSetting placements = createSetting("Placements");
-    public BooleanSetting inLiquids = createSetting("In Liquids", false).setParent(placements);
-    public BooleanSetting packet = createSetting("Packet", false).setParent(placements);
+    public final Parent placements = Menu.Parent("Placements");
+    public final Switch inLiquids = Menu.Switch("In Liquids").parent(placements);
+    public final Switch packet = Menu.Switch("Packet").parent(placements);
 
-    public ParentSetting mining = createSetting("Mining");
-    public BooleanSetting mineRedstone = createSetting("Mine Redstone", false).setParent(mining);
-    public ModeSetting mineMode = createSetting("Mine Mode", "Packet", Arrays.asList("Packet", "Click", "Vanilla"), v -> mineRedstone.getValue()).setParent(mining);
-    public BooleanSetting consistent = createSetting("Consistent", false, v -> mineRedstone.getValue() && !mineMode.getValue().equals("Vanilla")).setParent(mining);
-    public BooleanSetting silentSwitch = createSetting("Silent Switch", false, v -> mineRedstone.getValue() && mineMode.getValue().equals("Vanilla")).setParent(mining);
+    public final Parent mining = Menu.Parent("Mining");
+    public final Switch mineRedstone = Menu.Switch("Mine Redstone").parent(mining);
+    public final ComboBox mineMode = Menu.ComboBox("Mine Mode", new String[]{"Packet", "Click", "Vanilla"}).parent(mining);
+    public final Switch consistent = Menu.Switch("Consistent").parent(mining);
+    public final Switch silentSwitch = Menu.Switch("Silent Switch").parent(mining);
 
-    public ParentSetting rendering = createSetting("Rendering");
-    public BooleanSetting render = createSetting("Render Bounding Boxes", false).setParent(rendering);
-    public FloatSetting lineWidth = createSetting("Line Width", 1.0f, 0.1f, 5.0f, (Predicate<Float>) v -> render.getValue()).setParent(rendering);
+    public final Parent rendering = Menu.Parent("Rendering");
+    public final Switch render = Menu.Switch("Render Bounding Boxes").parent(rendering);
+    public final Slider lineWidth = Menu.Slider("Line Width", 0.1f, 5.0f).parent(rendering);
 
     public Side side = null;
     public EntityPlayer entityPlayer = null;
@@ -59,7 +63,7 @@ public class HolePushRewrite extends Module {
 
     @Override
     public void onEnable() {
-        entityPlayer = getUntrappedClosestEntityPlayer(targetRange.getValue(), true);
+        entityPlayer = getUntrappedClosestEntityPlayer(targetRange.GetSlider(), true);
         if (entityPlayer == null) {
             disableModule("No safe Targets found, disabling HolePushRewrite!");
             return;
@@ -77,9 +81,9 @@ public class HolePushRewrite extends Module {
 
     @Override
     public void onTick() {
-        if (!timer.getTime(placeDelay.getValue()))
+        if (!timer.getTime(placeDelay.GetSlider()))
             return;
-        entityPlayer = getUntrappedClosestEntityPlayer(targetRange.getValue(), false);
+        entityPlayer = getUntrappedClosestEntityPlayer(targetRange.GetSlider(), false);
         if (entityPlayer == null) {
             disableModule("No safe Targets found, disabling HolePushRewrite!");
             return;
@@ -92,7 +96,7 @@ public class HolePushRewrite extends Module {
         }
         if (!placedPiston(entityPlayerPos)) {
             float rotationYaw = mc.player.rotationYaw;
-            switch (rotationMode.getValue()) {
+            switch (rotationMode.GetCombo()) {
                 case "Packet":
                     rotatePacket(side);
                     break;
@@ -112,16 +116,16 @@ public class HolePushRewrite extends Module {
                 disableModule("No Pistons found, disabling HolePushRewrite.");
                 return;
             }
-            BlockUtil.placeBlockWithSwitch(pistonPos, EnumHand.MAIN_HAND, false, packet.getValue(), slot, timer);
+            BlockUtil.placeBlockWithSwitch(pistonPos, EnumHand.MAIN_HAND, false, packet.GetSwitch(), slot, timer);
             placedPistonPos = pistonPos;
-            if (rotateBack.getValue() && !rotationMode.getValue().equals("Packet"))
+            if (rotateBack.GetSwitch() && !rotationMode.GetCombo().equals("Packet"))
                 mc.player.rotationYaw = rotationYaw;
             rotated = false;
             return;
         }
         if (!isPistonTriggered(pistonPos) && redstonePos != null) {
             float rotationYaw = mc.player.rotationYaw;
-            switch (rotationMode.getValue()) {
+            switch (rotationMode.GetCombo()) {
                 case "Packet":
                     rotatePacket(side);
                     break;
@@ -141,40 +145,40 @@ public class HolePushRewrite extends Module {
                 disableModule("No redstone blocks found, disabling HolePushRewrite.");
                 return;
             }
-            BlockUtil.placeBlockWithSwitch(redstonePos, EnumHand.MAIN_HAND, false, packet.getValue(), slot, timer);
-            if (rotateBack.getValue() && !rotationMode.getValue().equals("Packet"))
+            BlockUtil.placeBlockWithSwitch(redstonePos, EnumHand.MAIN_HAND, false, packet.GetSwitch(), slot, timer);
+            if (rotateBack.GetSwitch() && !rotationMode.GetCombo().equals("Packet"))
                 mc.player.rotationYaw = rotationYaw;
             placedRedstonePos = redstonePos;
             rotated = false;
             mined = false;
             return;
         }
-        if (isPistonTriggered(pistonPos) && mineRedstone.getValue() && !mined) {
+        if (isPistonTriggered(pistonPos) && mineRedstone.GetSwitch() && !mined) {
             if (!mc.player.getHeldItemMainhand().getItem().equals(Items.DIAMOND_PICKAXE))
                 return;
-            switch (mineMode.getValue()) {
+            switch (mineMode.GetCombo()) {
                 case "Packet":
                     mc.player.connection.sendPacket(new CPacketPlayerDigging(CPacketPlayerDigging.Action.START_DESTROY_BLOCK, placedRedstonePos, EnumFacing.UP));
                     mc.player.swingArm(EnumHand.MAIN_HAND);
                     mc.player.connection.sendPacket(new CPacketPlayerDigging(CPacketPlayerDigging.Action.STOP_DESTROY_BLOCK, placedRedstonePos, EnumFacing.UP));
-                    mined = !consistent.getValue();
+                    mined = !consistent.GetSwitch();
                     return;
                 case "Click":
                     mc.playerController.onPlayerDamageBlock(placedRedstonePos, mc.player.getHorizontalFacing());
                     EntityUtil.swingArm(EntityUtil.SwingType.MainHand);
-                    mined = !consistent.getValue();
+                    mined = !consistent.GetSwitch();
                     return;
                 case "Vanilla":
                     int currentItem = mc.player.inventory.currentItem;
                     int slot = InventoryUtil.getItemFromHotbar(Items.DIAMOND_PICKAXE);
-                    if (silentSwitch.getValue()) {
+                    if (silentSwitch.GetSwitch()) {
                         if (slot == -1)
                             return;
                         InventoryUtil.switchToSlot(slot);
                     }
                     mc.playerController.onPlayerDamageBlock(placedRedstonePos, mc.objectMouseOver.sideHit);
                     mc.player.swingArm(EnumHand.MAIN_HAND);
-                    if (silentSwitch.getValue() && slot != -1) {
+                    if (silentSwitch.GetSwitch() && slot != -1) {
                         mc.player.inventory.currentItem = currentItem;
                         mc.playerController.updateController();
                     }
@@ -184,11 +188,11 @@ public class HolePushRewrite extends Module {
 
     @Override
     public void onGlobalRenderTick() {
-        if (render.getValue()) {
+        if (render.GetSwitch()) {
             if (placedPistonPos != null)
-                RenderUtil.drawBlockOutlineBB(new AxisAlignedBB(placedPistonPos), new Color(0xFFFFFF), lineWidth.getValue());
+                RenderUtil.drawBlockOutlineBB(new AxisAlignedBB(placedPistonPos), new Color(0xFFFFFF), lineWidth.GetSlider());
             if (placedRedstonePos != null)
-                RenderUtil.drawBlockOutlineBB(new AxisAlignedBB(placedRedstonePos), new Color(0xFFFFFF), lineWidth.getValue());
+                RenderUtil.drawBlockOutlineBB(new AxisAlignedBB(placedRedstonePos), new Color(0xFFFFFF), lineWidth.GetSlider());
         }
     }
 
@@ -278,11 +282,11 @@ public class HolePushRewrite extends Module {
 
     public boolean canPlace(BlockPos pos) {
         ArrayList<Entity> intersecting = mc.world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos)).stream().filter(entity -> !(entity instanceof EntityEnderCrystal)).collect(Collectors.toCollection(ArrayList::new));
-        return intersecting.isEmpty() && (mc.player.getDistanceSq(pos) < (placeRange.getValue() * placeRange.getValue())) && mc.world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(pos)).isEmpty() && (mc.world.getBlockState(pos).getBlock().equals(Blocks.AIR) || (inLiquids.getValue() && ((mc.world.getBlockState(pos).getBlock().equals(Blocks.WATER) || mc.world.getBlockState(pos).getBlock().equals(Blocks.FLOWING_WATER)) || (mc.world.getBlockState(pos).getBlock().equals(Blocks.LAVA) || mc.world.getBlockState(pos).getBlock().equals(Blocks.FLOWING_LAVA)))));
+        return intersecting.isEmpty() && (mc.player.getDistanceSq(pos) < (placeRange.GetSlider() * placeRange.GetSlider())) && mc.world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(pos)).isEmpty() && (mc.world.getBlockState(pos).getBlock().equals(Blocks.AIR) || (inLiquids.GetSwitch() && ((mc.world.getBlockState(pos).getBlock().equals(Blocks.WATER) || mc.world.getBlockState(pos).getBlock().equals(Blocks.FLOWING_WATER)) || (mc.world.getBlockState(pos).getBlock().equals(Blocks.LAVA) || mc.world.getBlockState(pos).getBlock().equals(Blocks.FLOWING_LAVA)))));
     }
 
     public boolean canPlacePiston(BlockPos pos) {
-        return (mc.player.getDistanceSq(pos) < (placeRange.getValue() * placeRange.getValue())) && mc.world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(pos)).isEmpty() && (mc.world.getBlockState(pos).getBlock().equals(Blocks.PISTON) || mc.world.getBlockState(pos).getBlock().equals(Blocks.AIR) || (inLiquids.getValue() && ((mc.world.getBlockState(pos).getBlock().equals(Blocks.WATER) || mc.world.getBlockState(pos).getBlock().equals(Blocks.FLOWING_WATER)) || (mc.world.getBlockState(pos).getBlock().equals(Blocks.LAVA) || mc.world.getBlockState(pos).getBlock().equals(Blocks.FLOWING_LAVA)))));
+        return (mc.player.getDistanceSq(pos) < (placeRange.GetSlider() * placeRange.GetSlider())) && mc.world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(pos)).isEmpty() && (mc.world.getBlockState(pos).getBlock().equals(Blocks.PISTON) || mc.world.getBlockState(pos).getBlock().equals(Blocks.AIR) || (inLiquids.GetSwitch() && ((mc.world.getBlockState(pos).getBlock().equals(Blocks.WATER) || mc.world.getBlockState(pos).getBlock().equals(Blocks.FLOWING_WATER)) || (mc.world.getBlockState(pos).getBlock().equals(Blocks.LAVA) || mc.world.getBlockState(pos).getBlock().equals(Blocks.FLOWING_LAVA)))));
     }
 
     public void rotatePacket(Side side) {

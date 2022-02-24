@@ -19,8 +19,8 @@ public class Menu {
         setting.setModule(module);
     }
 
-    public Color Color(String name) {
-        Color setting = new Color(name);
+    public ColorBox Color(String name) {
+        ColorBox setting = new ColorBox(name);
         setModule(setting);
         addSetting(setting);
         return setting;

@@ -14,11 +14,11 @@ import java.util.Arrays;
 import java.util.function.Predicate;
 
 public class FastFall extends Module {
-    public ModeSetting mode = createSetting("Mode", "Motion", Arrays.asList("Motion", "Timer"));
-    public FloatSetting timerAmount = createSetting("Timer Amount", 1.0f, 0.1f, 10.0f, (Predicate<Float>) v -> mode.getValue().equals("Timer"));
-    public BooleanSetting preventHorizontalMotion = createSetting("Prevent Horizontal Motion", false, v -> mode.getValue().equals("Timer"));
-    public FloatSetting height = createSetting("Height", 2.0f, 0.1f, 10.0f);
-    public BooleanSetting strict = createSetting("Strict", false, v -> mode.getValue().equals("Motion"));
+    public final ComboBox mode = Menu.Switch("Mode", "Motion", Arrays.asList("Motion", "Timer"));
+    public final Slider timerAmount = Menu.Switch("Timer Amount", 1.0f, 0.1f, 10.0f, (Predicate<Float>) v -> mode.getValue().equals("Timer"));
+    public final Switch preventHorizontalMotion = Menu.Switch("Prevent Horizontal Motion", v -> mode.getValue().equals("Timer"));
+    public final Slider height = Menu.Switch("Height", 2.0f, 0.1f, 10.0f);
+    public final Switch strict = Menu.Switch("Strict", false, v -> mode.getValue().equals("Motion"));
     public double prevTickY;
     public boolean isTimering, prevOnGround;
 

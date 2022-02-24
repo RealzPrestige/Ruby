@@ -8,11 +8,11 @@ import java.util.function.Predicate;
 public class ParentSetting extends Setting<Boolean> {
     ArrayList<Setting> children = new ArrayList<>();
 
-    public ParentSetting(String name) {
+    public final Parent(String name) {
         super(name, false);
     }
 
-    public ParentSetting(String name, Predicate<Boolean> visibility) {
+    public final Parent(String name, Predicate<Boolean> visibility) {
         super(name, false, visibility);
     }
 

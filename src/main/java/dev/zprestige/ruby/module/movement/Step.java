@@ -13,9 +13,9 @@ import java.util.Arrays;
 
 public class Step extends Module {
     public static Step Instance;
-    public ModeSetting mode = createSetting("Mode", "Vanilla", Arrays.asList("Vanilla", "Ncp"));
-    public FloatSetting stepHeight = createSetting("Height", 2.0f, 0.1f, 4.0f);
-    public BooleanSetting autoMarkConveyerOnStep = createSetting("Auto Mark Conveyor On Step", false);
+    public final ComboBox mode = Menu.Switch("Mode", "Vanilla", Arrays.asList("Vanilla", "Ncp"));
+    public final Slider stepHeight = Menu.Switch("Height", 2.0f, 0.1f, 4.0f);
+    public final Switch autoMarkConveyerOnStep = Menu.Switch("Auto Mark Conveyor On Step", false);
 
     public Step(){
         Instance = this;

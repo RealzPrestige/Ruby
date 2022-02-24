@@ -50,7 +50,7 @@ public class TotemPopManager {
                 line += character;
                 line *= 10;
             }
-            if (Notify.Instance.isEnabled() && Notify.Instance.totemPops.getValue())
+            if (Notify.Instance.isEnabled() && Notify.Instance.totemPops.GetSwitch())
                 Ruby.chatManager.sendRemovableMessage(ChatFormatting.WHITE + "" + ChatFormatting.BOLD + event.entityPlayer.getName() + ChatFormatting.WHITE + " has died after popping " + ChatFormatting.RED + pops + ChatFormatting.WHITE + (pops == 1 ? " totem." : " totems."), line);
         }
     }
@@ -69,7 +69,7 @@ public class TotemPopManager {
                 line += character;
                 line *= 10;
             }
-            if (Notify.Instance.isEnabled() && Notify.Instance.totemPops.getValue())
+            if (Notify.Instance.isEnabled() && Notify.Instance.totemPops.GetSwitch())
                 Ruby.chatManager.sendRemovableMessage(ChatFormatting.WHITE + "" + ChatFormatting.BOLD + event.entityPlayer.getName() + ChatFormatting.WHITE + " has popped " + ChatFormatting.RED + pops + ChatFormatting.WHITE + (pops == 1 ? " totem." : " totems."), line);
         }
     }

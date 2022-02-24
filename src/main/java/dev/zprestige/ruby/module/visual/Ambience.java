@@ -8,7 +8,7 @@ import java.awt.*;
 public class Ambience extends Module {
     public static Ambience Instance;
 
-    public ColorSetting color = createSetting("Color", new Color(-1));
+    public final ColorBox color = Menu.Switch("Color", new Color(-1));
 
     public Ambience() {
         Instance = this;

@@ -61,7 +61,7 @@ public class CanvasGameContainer extends Canvas {
 					Input.disableControllers();
 					
 					try {
-						Display.setParent(CanvasGameContainer.this);
+						Display.parent(CanvasGameContainer.this);
 					} catch (LWJGLException e) {
 						throw new SlickException("Failed to setParent of canvas", e);
 					}

@@ -9,7 +9,7 @@ import net.minecraft.inventory.ClickType;
 
 public class AutoArmor extends Module {
     public static AutoArmor Instance;
-    public IntegerSetting takeOnDelay = createSetting("Take On Delay", 50, 0, 500);
+    public final Slider takeOnDelay = Menu.Switch("Take On Delay", 50, 0, 500);
     public Timer timer = new Timer();
 
     public AutoArmor() {
