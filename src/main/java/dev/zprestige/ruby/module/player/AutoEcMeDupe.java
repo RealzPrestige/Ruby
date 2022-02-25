@@ -5,8 +5,8 @@ import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.PacketEvent;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.setting.impl.BooleanSetting;
-import dev.zprestige.ruby.setting.impl.IntegerSetting;
+import dev.zprestige.ruby.newsettings.impl.Slider;
+import dev.zprestige.ruby.newsettings.impl.Switch;
 import dev.zprestige.ruby.util.BlockUtil;
 import dev.zprestige.ruby.util.InventoryUtil;
 import dev.zprestige.ruby.util.Timer;
@@ -25,16 +25,15 @@ import net.minecraft.network.play.client.CPacketPlayerTryUseItemOnBlock;
 import net.minecraft.util.EnumHand;
 
 import java.util.TreeMap;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class AutoEcMeDupe extends Module {
-    public final Slider actionDelay = Menu.Switch("Action Delay (MS)", 100, 1, 1000);
-    public final Slider timeoutTime = Menu.Switch("Timeout Time (S)", 3, 1, 15);
-    public final Slider restartTimeout = Menu.Switch("Restart Timeout (S)", 2, 1, 15);
-    public final Switch afkScreenFix = Menu.Switch("Afk Screen Fix", false);
-    public final Switch autoDismount = Menu.Switch("Auto Dismount", false);
-    public final Slider dismountRetryDelay = Menu.Switch("Dismount Retry Delay (MS)", 100, 1, 1000, (Predicate<Integer>) v-> autoDismount.getValue());
+    public final Slider actionDelay = Menu.Slider("Action Delay (MS)", 1, 1000);
+    public final Slider timeoutTime = Menu.Slider("Timeout Time (S)", 1, 15);
+    public final Slider restartTimeout = Menu.Slider("Restart Timeout (S)", 1, 15);
+    public final Switch afkScreenFix = Menu.Switch("Afk Screen Fix");
+    public final Switch autoDismount = Menu.Switch("Auto Dismount");
+    public final Slider dismountRetryDelay = Menu.Slider("Dismount Retry Delay (MS)", 1, 1000);
     public Timer timer = new Timer(), dismountTimer = new Timer();
     public int stage = 0, shulkers = 0;
     public boolean restart, bok, joe;
@@ -60,20 +59,20 @@ public class AutoEcMeDupe extends Module {
             disableModule("No chest found in hotbar, disabling AutoEcMeDupe.");
             return;
         }
-        if(afkScreenFix.getValue() && mc.currentScreen != null && !(mc.currentScreen instanceof GuiScreenHorseInventory))
+        if (afkScreenFix.GetSwitch() && mc.currentScreen != null && !(mc.currentScreen instanceof GuiScreenHorseInventory))
             mc.currentScreen = null;
-        if (joe){
+        if (joe) {
             mc.gameSettings.keyBindSneak.pressed = false;
             joe = false;
         }
-        if (autoDismount.getValue() && dismountTimer.getTime(dismountRetryDelay.getValue()) && mc.player.isRiding()) {
+        if (autoDismount.GetSwitch() && dismountTimer.getTime(dismountRetryDelay.GetSlider()) && mc.player.isRiding()) {
             mc.gameSettings.keyBindSneak.pressed = true;
             dismountTimer.setTime(0);
             joe = true;
         }
         switch (stage) {
             case 0:
-                if (timer.getTime(restart ? (restartTimeout.getValue() * 1000) : actionDelay.getValue())) {
+                if (timer.getTime(restart ? (restartTimeout.GetSlider() * 1000) : actionDelay.GetSlider())) {
                     if (restart)
                         restart = false;
                     if (entityDonkey.hasChest()) {
@@ -89,7 +88,7 @@ public class AutoEcMeDupe extends Module {
                 }
                 break;
             case 1:
-                if (timer.getTime(actionDelay.getValue())) {
+                if (timer.getTime(actionDelay.GetSlider())) {
                     mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_SNEAKING));
                     entityRotate(entityDonkey);
                     mc.playerController.interactWithEntity(mc.player, entityDonkey, EnumHand.MAIN_HAND);
@@ -102,7 +101,7 @@ public class AutoEcMeDupe extends Module {
             case 2:
                 if (shulkers >= 15) {
                     stage = 3;
-                } else if (timer.getTime(actionDelay.getValue())) {
+                } else if (timer.getTime(actionDelay.GetSlider())) {
                     if (mc.currentScreen instanceof GuiScreenHorseInventory) {
                         Ruby.chatManager.sendMessage("[AutoEcMeDupe]" + ChatFormatting.GRAY + "[Stage][" + ChatFormatting.WHITE + stage + "]" + ChatFormatting.WHITE + " transferring items started.");
                         GuiScreenHorseInventory chest = (GuiScreenHorseInventory) mc.currentScreen;
@@ -119,7 +118,7 @@ public class AutoEcMeDupe extends Module {
                 }
                 break;
             case 3:
-                if (timer.getTime(actionDelay.getValue())) {
+                if (timer.getTime(actionDelay.GetSlider())) {
                     Ruby.chatManager.sendMessage("[AutoEcMeDupe]" + ChatFormatting.GRAY + "[Stage][" + ChatFormatting.WHITE + stage + "]" + ChatFormatting.WHITE + " closing donkey.");
                     mc.displayGuiScreen(null);
                     stage = 4;
@@ -133,7 +132,7 @@ public class AutoEcMeDupe extends Module {
                     Ruby.chatManager.sendMessage("[AutoEcMeDupe]" + ChatFormatting.GRAY + "[Stage][" + ChatFormatting.WHITE + stage + "]" + ChatFormatting.WHITE + " finishing up, setting stage to 0.");
                     stage = 0;
                 }
-                if (timer.getTime(timeoutTime.getValue() * 1000)) {
+                if (timer.getTime(timeoutTime.GetSlider() * 1000)) {
                     Ruby.chatManager.sendMessage("[AutoEcMeDupe]" + ChatFormatting.GRAY + "[Stage][" + ChatFormatting.WHITE + stage + "]" + ChatFormatting.WHITE + " rotating to donkey.");
                     entityRotate(entityDonkey);
                     Ruby.chatManager.sendMessage("[AutoEcMeDupe]" + ChatFormatting.GRAY + "[Stage][" + ChatFormatting.WHITE + stage + "]" + ChatFormatting.WHITE + " setting vanilla use item pressed.");

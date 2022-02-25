@@ -1,7 +1,10 @@
 package dev.zprestige.ruby.module.player;
 
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.setting.impl.*;
+import dev.zprestige.ruby.newsettings.impl.ComboBox;
+import dev.zprestige.ruby.newsettings.impl.Parent;
+import dev.zprestige.ruby.newsettings.impl.Slider;
+import dev.zprestige.ruby.newsettings.impl.Switch;
 import dev.zprestige.ruby.util.BlockUtil;
 import dev.zprestige.ruby.util.EntityUtil;
 import dev.zprestige.ruby.util.InventoryUtil;
@@ -21,28 +24,27 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.TreeMap;
 
 public class Suicide extends Module {
-    public final Slider throwDelay = Menu.Switch("Throw Delay", 100, 0, 500);
+    public final Slider throwDelay = Menu.Slider("Throw Delay", 0, 500);
 
-    public final Parent placing = Menu.Switch("Placing");
-    public final Slider placeDelay = Menu.Switch("Place Delay Crystal", 100, 0, 500).parent(placing);
-    public final Slider placeRange = Menu.Switch("Place Range Crystal", 5.0f, 0.0f, 6.0f).parent(placing);
+    public final Parent placing = Menu.Parent("Placing");
+    public final Slider placeDelay = Menu.Slider("Place Delay Crystal", 0, 500).parent(placing);
+    public final Slider placeRange = Menu.Slider("Place Range Crystal", 0.0f, 6.0f).parent(placing);
     public final Switch silentSwitchCrystal = Menu.Switch("Silent Switch Crystal").parent(placing);
     public final Switch packetPlaceCrystal = Menu.Switch("Packet Place Crystal").parent(placing);
     public final Switch placeSwing = Menu.Switch("Place Swing Crystal").parent(placing);
-    public final ComboBox placeSwingHand = Menu.Switch("Place Swing Hand Crystal", "Mainhand", Arrays.asList("Mainhand", "Offhand", "Packet"), v -> placeSwing.getValue()).parent(placing);
+    public final ComboBox placeSwingHand = Menu.ComboBox("Place Swing Hand Crystal", new String[]{"Mainhand", "Offhand", "Packet"}).parent(placing);
 
-    public final Parent breaking = Menu.Switch("Breaking");
-    public final Slider breakDelay = Menu.Switch("Break Delay Crystal", 100, 0, 500).parent(breaking);
-    public final Slider breakRange = Menu.Switch("Break Range Crystal", 5.0f, 0.0f, 6.0f).parent(breaking);
-    public final Switch explodeAntiWeakness = Menu.Switch("Explode Anti Weakness Crystal", false).parent(breaking);
-    public final Switch packetBreakCrystal = Menu.Switch("Packet Break Crystal", false).parent(breaking);
-    public final Switch breakSwing = Menu.Switch("Break Swing", false).parent(breaking);
-    public final ComboBox breakSwingHand = Menu.Switch("Break Swing", "Mainhand", Arrays.asList("Mainhand", "Offhand", "Packet"), v -> breakSwing.getValue()).parent(breaking);
+    public final Parent breaking = Menu.Parent("Breaking");
+    public final Slider breakDelay = Menu.Slider("Break Delay Crystal", 0, 500).parent(breaking);
+    public final Slider breakRange = Menu.Slider("Break Range Crystal", 0.0f, 6.0f).parent(breaking);
+    public final Switch explodeAntiWeakness = Menu.Switch("Explode Anti Weakness Crystal").parent(breaking);
+    public final Switch packetBreakCrystal = Menu.Switch("Packet Break Crystal").parent(breaking);
+    public final Switch breakSwing = Menu.Switch("Break Swing").parent(breaking);
+    public final ComboBox breakSwingHand = Menu.ComboBox("Break Swing", new String[]{"Mainhand", "Offhand", "Packet"}).parent(breaking);
 
     public Timer throwTimer = new Timer();
     public Timer placeTimer = new Timer();
@@ -52,7 +54,7 @@ public class Suicide extends Module {
     @Override
     public void onTick() {
         currentTakeoff = getCurrentTakeOff();
-        if (currentTakeoff != -1 && throwTimer.getTime(throwDelay.getValue())) {
+        if (currentTakeoff != -1 && throwTimer.getTime(throwDelay.GetSlider())) {
             takeOff(currentTakeoff);
             return;
         }
@@ -61,20 +63,20 @@ public class Suicide extends Module {
             return;
         }
         int totemSlot = InventoryUtil.getItemSlot(Items.TOTEM_OF_UNDYING);
-        if (totemSlot != -1 && throwTimer.getTime(throwDelay.getValue())) {
+        if (totemSlot != -1 && throwTimer.getTime(throwDelay.GetSlider())) {
             takeOff(totemSlot);
             return;
         }
-        if (placeTimer.getTime(placeDelay.getValue())) {
+        if (placeTimer.getTime(placeDelay.GetSlider())) {
             BlockPos pos = getPosition();
             if (pos == null)
                 return;
             placeCrystal(pos);
             return;
         }
-        if (breakTimer.getTime(breakDelay.getValue())) {
+        if (breakTimer.getTime(breakDelay.GetSlider())) {
             for (Entity entity : mc.world.loadedEntityList) {
-                if (!(entity instanceof EntityEnderCrystal) || mc.player.getDistance(entity) > breakRange.getValue())
+                if (!(entity instanceof EntityEnderCrystal) || mc.player.getDistance(entity) > breakRange.GetSlider())
                     continue;
                 float selfDamage = EntityUtil.calculatePosDamage(new BlockPos(entity.posX + 0.5, entity.posY, entity.posZ + 0.5), mc.player);
                 if (selfDamage >= (mc.player.getHealth() + mc.player.getAbsorptionAmount()))
@@ -111,7 +113,7 @@ public class Suicide extends Module {
 
     public BlockPos getPosition() {
         TreeMap<Float, BlockPos> treeMap = new TreeMap<>();
-        for (BlockPos pos : BlockUtil.getSphereAutoCrystal(placeRange.getValue(), true)) {
+        for (BlockPos pos : BlockUtil.getSphereAutoCrystal(placeRange.GetSlider(), true)) {
             float selfDamage = EntityUtil.calculatePosDamage(pos, mc.player);
             if (mc.world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(pos.up())).isEmpty())
                 treeMap.put(selfDamage, pos);
@@ -122,29 +124,29 @@ public class Suicide extends Module {
     }
 
     public void placeCrystal(BlockPos pos) {
-        if (!silentSwitchCrystal.getValue() && !mc.player.getHeldItemMainhand().getItem().equals(Items.END_CRYSTAL) && !mc.player.getHeldItemOffhand().getItem().equals(Items.END_CRYSTAL))
+        if (!silentSwitchCrystal.GetSwitch() && !mc.player.getHeldItemMainhand().getItem().equals(Items.END_CRYSTAL) && !mc.player.getHeldItemOffhand().getItem().equals(Items.END_CRYSTAL))
             return;
         int slot = InventoryUtil.getItemFromHotbar(Items.END_CRYSTAL);
         int currentItem = mc.player.inventory.currentItem;
-        if (silentSwitchCrystal.getValue() && slot != -1 && !mc.player.getHeldItemMainhand().getItem().equals(Items.END_CRYSTAL) && !mc.player.getHeldItemOffhand().getItem().equals(Items.END_CRYSTAL))
+        if (silentSwitchCrystal.GetSwitch() && slot != -1 && !mc.player.getHeldItemMainhand().getItem().equals(Items.END_CRYSTAL) && !mc.player.getHeldItemOffhand().getItem().equals(Items.END_CRYSTAL))
             InventoryUtil.switchToSlot(slot);
-        if (packetPlaceCrystal.getValue())
+        if (packetPlaceCrystal.GetSwitch())
             Objects.requireNonNull(mc.getConnection()).sendPacket(new CPacketPlayerTryUseItemOnBlock(pos, EnumFacing.UP, mc.player.getHeldItemOffhand().getItem() == Items.END_CRYSTAL ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND, 0.5f, 0.5f, 0.5f));
         else
             mc.playerController.processRightClickBlock(mc.player, mc.world, pos, EnumFacing.UP, new Vec3d(mc.player.posX, -mc.player.posY, -mc.player.posZ), mc.player.getHeldItemOffhand().getItem().equals(Items.END_CRYSTAL) ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND);
-        if (silentSwitchCrystal.getValue()) {
+        if (silentSwitchCrystal.GetSwitch()) {
             mc.player.inventory.currentItem = currentItem;
             mc.playerController.updateController();
         }
-        if (placeSwing.getValue())
-            EntityUtil.swingArm(placeSwingHand.getValue().equals("Mainhand") ? EntityUtil.SwingType.MainHand : placeSwingHand.getValue().equals("Offhand") ? EntityUtil.SwingType.OffHand : EntityUtil.SwingType.Packet);
+        if (placeSwing.GetSwitch())
+            EntityUtil.swingArm(placeSwingHand.GetCombo().equals("Mainhand") ? EntityUtil.SwingType.MainHand : placeSwingHand.GetCombo().equals("Offhand") ? EntityUtil.SwingType.OffHand : EntityUtil.SwingType.Packet);
         placeTimer.setTime(0);
     }
 
     public void breakCrystal(EntityEnderCrystal entity) {
         boolean switched = false;
         int currentItem = -1;
-        if (explodeAntiWeakness.getValue()) {
+        if (explodeAntiWeakness.GetSwitch()) {
             PotionEffect weakness = mc.player.getActivePotionEffect(MobEffects.WEAKNESS);
             if (weakness != null && !mc.player.getHeldItemMainhand().getItem().equals(Items.DIAMOND_SWORD)) {
                 int swordSlot = InventoryUtil.getItemFromHotbar(Items.DIAMOND_SWORD);
@@ -153,7 +155,7 @@ public class Suicide extends Module {
                 switched = true;
             }
         }
-        if (packetBreakCrystal.getValue())
+        if (packetBreakCrystal.GetSwitch())
             Objects.requireNonNull(mc.getConnection()).sendPacket(new CPacketUseEntity(entity));
         else
             mc.playerController.attackEntity(mc.player, entity);
@@ -161,8 +163,8 @@ public class Suicide extends Module {
             mc.player.inventory.currentItem = currentItem;
             mc.playerController.updateController();
         }
-        if (breakSwing.getValue())
-            EntityUtil.swingArm(breakSwingHand.getValue().equals("Mainhand") ? EntityUtil.SwingType.MainHand : breakSwingHand.getValue().equals("Offhand") ? EntityUtil.SwingType.OffHand : EntityUtil.SwingType.Packet);
+        if (breakSwing.GetSwitch())
+            EntityUtil.swingArm(breakSwingHand.GetCombo().equals("Mainhand") ? EntityUtil.SwingType.MainHand : breakSwingHand.GetCombo().equals("Offhand") ? EntityUtil.SwingType.OffHand : EntityUtil.SwingType.Packet);
         breakTimer.setTime(0);
         disableModule("Completed suicide");
     }

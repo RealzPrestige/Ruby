@@ -1,6 +1,7 @@
 package dev.zprestige.ruby.module.player;
 
 import dev.zprestige.ruby.module.Module;
+import dev.zprestige.ruby.newsettings.impl.Slider;
 import dev.zprestige.ruby.setting.impl.IntegerSetting;
 import dev.zprestige.ruby.util.InventoryUtil;
 import dev.zprestige.ruby.util.Timer;
@@ -9,7 +10,7 @@ import net.minecraft.inventory.ClickType;
 
 public class AutoArmor extends Module {
     public static AutoArmor Instance;
-    public final Slider takeOnDelay = Menu.Switch("Take On Delay", 50, 0, 500);
+    public final Slider takeOnDelay = Menu.Slider("Take On Delay", 0, 500);
     public Timer timer = new Timer();
 
     public AutoArmor() {
@@ -20,7 +21,7 @@ public class AutoArmor extends Module {
     public void onTick() {
         if (mc.currentScreen != null)
             return;
-        if (getSlot() != -1 && timer.getTime(takeOnDelay.getValue())) {
+        if (getSlot() != -1 && timer.getTime(takeOnDelay.GetSlider())) {
             mc.playerController.windowClick(mc.player.inventoryContainer.windowId, getSlot(), 0, ClickType.QUICK_MOVE, mc.player);
             timer.setTime(0);
         }

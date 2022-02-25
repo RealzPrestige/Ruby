@@ -34,7 +34,7 @@ public class FakeHacker extends Module {
         if (targetPlayer != null) {
             if (mc.player.getDistance(targetPlayer) < mc.playerController.getBlockReachDistance()) {
                 if (rotate.GetSwitch()) {
-                    float[] angle = BlockUtil.calcAngle(targetPlayer.getPositionEyes(mc.getRenderPartialTicks()), mc.player.getPositionVector());
+                    final float[] angle = BlockUtil.calcAngle(targetPlayer.getPositionEyes(mc.getRenderPartialTicks()), mc.player.getPositionVector());
                     targetPlayer.rotationYaw = angle[0];
                     targetPlayer.rotationYawHead = angle[0];
                     targetPlayer.rotationPitch = angle[1];

@@ -97,7 +97,7 @@ public class Robot extends Module {
         lastHole = null;
         nextHole = null;
         NoSlow noSlow = NoSlow.Instance;
-        value = noSlow.guiMove.getValue();
+        value = noSlow.guiMove.GetSwitch();
         noSlow.guiMove.setValue(false);
         if (!SimpleCa.Instance.isEnabled())
             SimpleCa.Instance.enableModule();
@@ -449,10 +449,10 @@ public class Robot extends Module {
                 int expSlot = InventoryUtil.getItemFromHotbar(Items.EXPERIENCE_BOTTLE);
                 if (expSlot != -1) {
                     InventoryUtil.switchToSlot(expSlot);
-                    mode = fastExp.mode.getValue();
-                    triggerMode = fastExp.triggerMode.getValue();
-                    handOnly = fastExp.handOnly.getValue();
-                    packets = fastExp.packets.getValue();
+                    mode = fastExp.mode.GetCombo();
+                    triggerMode = fastExp.triggerMode.GetCombo();
+                    handOnly = fastExp.handOnly.GetSwitch();
+                    packets = (int) fastExp.packets.GetSlider();
                     fastExp.mode.setValue("Packet");
                     fastExp.triggerMode.setValue("RightClick");
                     fastExp.handOnly.setValue(true);
