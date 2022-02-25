@@ -3,6 +3,7 @@ package dev.zprestige.ruby;
 import dev.zprestige.ruby.eventbus.EventBus;
 import dev.zprestige.ruby.events.listener.EventListener;
 import dev.zprestige.ruby.manager.*;
+import dev.zprestige.ruby.module.visual.Nametags;
 import dev.zprestige.ruby.ui.font.RubyFont;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.Mod;

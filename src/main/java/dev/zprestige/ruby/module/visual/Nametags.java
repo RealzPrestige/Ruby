@@ -15,6 +15,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 
 import java.math.BigDecimal;
@@ -35,7 +37,7 @@ public class Nametags extends Module {
     public List<EntityPlayer> entityPlayers = new ArrayList<>();
     public ICamera camera = new Frustum();
 
-    public Nametags() {
+    public Nametags(){
         Instance = this;
     }
 

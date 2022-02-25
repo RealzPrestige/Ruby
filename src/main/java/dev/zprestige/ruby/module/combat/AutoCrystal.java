@@ -14,6 +14,7 @@ import dev.zprestige.ruby.util.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
@@ -31,10 +32,12 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3i;
 
 import java.awt.*;
 import java.util.List;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class AutoCrystal extends Module {
     public final Parent targets = Menu.Parent("Targets");
@@ -46,9 +49,7 @@ public class AutoCrystal extends Module {
             "Closest"
     }).parent(others);
     public final Switch rotations = Menu.Switch("Rotations").parent(others);
-    public final Switch onMoveCalc = Menu.Switch("On Move Calc").parent(others);
-    public final Switch onMoveCalcPlace = Menu.Switch("On Move Calc Place").parent(others);
-    public final Switch onMoveCalcExplode = Menu.Switch("On Move Calc Explode").parent(others);
+    public final Switch antiSelfHolePush = Menu.Switch("Anti Self Hole Push").parent(others);
 
     public final Parent placing = Menu.Parent("Placing");
     public final Slider placeRange = Menu.Slider("Place Range", 0.0f, 6.0f).parent(placing);
@@ -64,6 +65,7 @@ public class AutoCrystal extends Module {
     public final Switch placeSilentSwitch = Menu.Switch("Place Silent Switch").parent(placing);
     public final Switch placeAntiSuicide = Menu.Switch("Place Anti Suicide").parent(placing);
     public final Switch placePacket = Menu.Switch("Place Packet").parent(placing);
+    public final Switch placeOnePointThirteen = Menu.Switch("One Point Thirteen").parent(placing);
     public final ComboBox placeCalculations = Menu.ComboBox("Place Calculations", new String[]{
             "Sync",
             "HighestEnemyDamage",
@@ -108,7 +110,6 @@ public class AutoCrystal extends Module {
     public final Slider predictDelay = Menu.Slider("Predict Delay", 0, 500).parent(predicting);
     public final Switch predictSetDead = Menu.Switch("Predict Set Dead").parent(predicting);
     public final ComboBox predictSetDeadMode = Menu.ComboBox("Predict Set Dead Mode", new String[]{"Post-Confirm", "Packet-Confirm"}).parent(predicting);
-    public final Switch predictChorus = Menu.Switch("Predict Chorus").parent(predicting);
 
     public final Parent rendering = Menu.Parent("Rendering");
     public final ComboBox renderMode = Menu.ComboBox("Render Mode", new String[]{"Static", "Fade", "Shrink", "Moving"}).parent(rendering);
@@ -147,50 +148,6 @@ public class AutoCrystal extends Module {
     @Override
     public void onEnable() {
         antiStuckHashMap.clear();
-    }
-
-    @RegisterListener
-    public void onChorus(ChorusEvent event) {
-        if (nullCheck() || !isEnabled() || !predict.GetSwitch() || !predictChorus.GetSwitch())
-            return;
-        double x = cx = event.x;
-        double y = cy = event.y;
-        double z = cz = event.z;
-        if (mc.player.getDistanceSq(new BlockPos(x, y, z)) < 4.0f || mc.player.getDistanceSq(new BlockPos(x, y, z)) > 400.0)
-            return;
-        chorusBB = new AxisAlignedBB(new BlockPos(x, y, z));
-    }
-
-    @RegisterListener
-    public void onMove(MoveEvent event) {
-        if (nullCheck() || !isEnabled() || !onMoveCalc.GetSwitch())
-            return;
-        target = EntityUtil.getTarget(targetRange.GetSlider());
-        if (target == null) {
-            return;
-        }
-        if (onMoveCalcPlace.GetSwitch()) {
-            BlockPos currPos = null;
-            if (placePosition != null)
-                currPos = placePosition.getBlockPos();
-            BlockPos prevPos = null;
-            if (placePosition != null && placePosition.getBlockPos() != null)
-                prevPos = placePosition.getBlockPos();
-            if (placeCalcTimer.getTime((long) placeCalcDelay.GetSlider())) {
-                placePosition = searchPosition(prevPos);
-                placeCalcTimer.setTime(0);
-            }
-            if (placePosition != null && placePosition.getBlockPos() != currPos && !fadePosses.containsKey(placePosition.getBlockPos()))
-                fadePosses.put(placePosition.getBlockPos(), placeBox.GetColor().getAlpha());
-            if (placePosition != null && pos == null)
-                pos = placePosition.getBlockPos();
-            if (placePosition != null && placePosition.getBlockPos() != null && bb == null)
-                bb = new AxisAlignedBB(placePosition.getBlockPos());
-        }
-        if (onMoveCalcExplode.GetSwitch() && explodeCalcTimer.getTime((long) explodeCalcDelay.GetSlider())) {
-            explodePosition = searchCrystal();
-            explodeCalcTimer.setTime(0);
-        }
     }
 
     @Override
@@ -312,11 +269,37 @@ public class AutoCrystal extends Module {
 
     }
 
+    protected final Vec3i[] offsets = new Vec3i[]{
+      new Vec3i(0, 1, 1),
+      new Vec3i(0, 1, -1),
+      new Vec3i(1, 1, 0),
+      new Vec3i(-1, 1, 0)
+    };
+
+    protected boolean canPlace(BlockPos pos) {
+        ArrayList<Entity> intersecting = mc.world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos)).stream().filter(entity -> !(entity instanceof EntityEnderCrystal)).collect(Collectors.toCollection(ArrayList::new));
+        return intersecting.isEmpty() && (mc.player.getDistanceSq(pos) < (placeRange.GetSlider() * placeRange.GetSlider())) && (mc.world.getBlockState(pos).getBlock().equals(Blocks.OBSIDIAN) || mc.world.getBlockState(pos).getBlock().equals(Blocks.BEDROCK)) && mc.world.getBlockState(pos.up()).getBlock().equals(Blocks.AIR) && (mc.world.getBlockState(pos.up().up()).getBlock().equals(Blocks.AIR) || placeOnePointThirteen.GetSwitch());
+    }
+
     public PlacePosition searchPosition(BlockPos previousPos) {
         TreeMap<Float, PlacePosition> posList = new TreeMap<>();
         TreeMap<Float, PlacePosition> posListDistance = new TreeMap<>();
+        BlockPos selfPos = BlockUtil.getPlayerPos();
+        if (antiSelfHolePush.GetSwitch()){
+            for (Vec3i vec3i : offsets){
+                BlockPos pos = selfPos.add(vec3i);
+                if (mc.world.getBlockState(pos).getBlock().equals(Blocks.PISTON)){
+                    for (Vec3i vec3i1 : offsets){
+                        BlockPos pos1 = pos.add(vec3i1);
+                        if (canPlace(pos1)){
+                            return new PlacePosition(pos1, 1000);
+                        }
+                    }
+                }
+            }
+        }
         for (BlockPos pos : BlockUtil.getSphereAutoCrystal(placeRange.GetSlider(), true)) {
-            if (BlockUtil.isPosValidForCrystal(pos, false)) {
+            if (BlockUtil.isPosValidForCrystal(pos, placeOnePointThirteen.GetSwitch())) {
                 if (placeMotionPredict.GetSwitch()) {
                     Entity j = EntityUtil.getPredictedPosition(target, placeMotionPredictAmount.GetSlider());
                     target.setEntityBoundingBox(j.getEntityBoundingBox());

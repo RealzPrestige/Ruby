@@ -20,6 +20,11 @@ public class ConfigManager {
     protected final ArrayList<Module> moduleList = Ruby.moduleManager.moduleList;
     protected File configPath = new File(mc.gameDir + separator + "Ruby" + separator + "Configs");
 
+    public ConfigManager(){
+        if (!configPath.exists())
+            configPath.mkdirs();
+    }
+
     public ConfigManager loadFromActiveConfig() {
         String activeConfig = readActiveConfig();
         if (!activeConfig.equals("NONE")) {
@@ -78,6 +83,9 @@ public class ConfigManager {
 
     protected String readActiveConfig() {
         final File file = registerFileAndCreate(mc.gameDir + separator + "Ruby");
+        if (file.exists()){
+            return "NONE";
+        }
         try {
             final BufferedReader bufferReader = new BufferedReader(new InputStreamReader(new DataInputStream(new FileInputStream(file))));
             String activeConfig = bufferReader.readLine().replace("\"", "");

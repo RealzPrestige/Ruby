@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-public class HolePushRewrite extends Module {
+public class HolePush extends Module {
 
     public final Parent ranges = Menu.Parent("Ranges");
     public final Slider targetRange = Menu.Slider("Target Range", 0.1f, 15.0f).parent(ranges);
