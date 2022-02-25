@@ -7,7 +7,7 @@ import dev.zprestige.ruby.events.MoveEvent;
 import dev.zprestige.ruby.events.PacketEvent;
 import dev.zprestige.ruby.module.Module;
 import dev.zprestige.ruby.module.visual.ESP;
-import dev.zprestige.ruby.setting.impl.*;
+import dev.zprestige.ruby.newsettings.impl.*;
 import dev.zprestige.ruby.util.EntityUtil;
 import dev.zprestige.ruby.util.Timer;
 import net.minecraft.init.MobEffects;
@@ -19,39 +19,37 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import org.lwjgl.input.Keyboard;
 
-import java.util.Arrays;
 import java.util.Objects;
-import java.util.function.Predicate;
 
 public class Speed extends Module {
     public static Speed Instance;
-    public final Parent modes = Menu.Switch("Modes");
-    public final ComboBox mode = Menu.Switch("Mode", "Normal", Arrays.asList("Normal", "Switch")).parent(modes);
-    public final Key switchKey = Menu.Switch("Switch Key", Keyboard.KEY_NONE, v -> mode.getValue().equals("Switch")).parent(modes);
-    public final Switch announceSwitch = Menu.Switch("Announce Switch", v -> mode.getValue().equals("Switch")).parent(modes);
-    public final Switch switchPullToGround = Menu.Switch("Switch Pull To Ground", false, v -> mode.getValue().equals("Switch")).parent(modes);
-    public final ComboBox speedMode = Menu.Switch("Speed Mode", "Strafe", Arrays.asList("OnGround", "Strafe")).parent(modes);
+    public final Parent modes = Menu.Parent("Modes");
+    public final ComboBox mode = Menu.ComboBox("Mode", new String[]{"Normal", "Switch"}).parent(modes);
+    public final Key switchKey = Menu.Key("Switch Key", Keyboard.KEY_NONE).parent(modes);
+    public final Switch announceSwitch = Menu.Switch("Announce Switch").parent(modes);
+    public final Switch switchPullToGround = Menu.Switch("Switch Pull To Ground").parent(modes);
+    public final ComboBox speedMode = Menu.ComboBox("Speed Mode", new String[]{"OnGround", "Strafe"}).parent(modes);
 
-    public final Parent misc = Menu.Switch("Misc");
-    public final Switch returnOnShift = Menu.Switch("Return On Shift", false).parent(misc);
-    public final Switch slowdownOnGroundNearHoles = Menu.Switch("Slow Down On Ground Near Holes", false).parent(misc);
-    public final Slider slowDownValue = Menu.Switch("Slow Down Value", 1.0f, 0.1f, 5.0f).parent(misc);
-    public final Switch liquids = Menu.Switch("Liquids", false).parent(misc);
-    public final Switch useTimer = Menu.Switch("Use Timer", false).parent(misc);
-    public final Slider timerAmount = Menu.Switch("Timer Amount", 1.0f, 0.9f, 2.0f, (Predicate<Float>) v -> useTimer.getValue()).parent(misc);
-    public final Parent factoring = Menu.Switch("Factoring");
-    public final ComboBox strafeFactorMode = Menu.Switch("Strafe Factor Mode", "Manual", Arrays.asList("Manual", "Auto")).parent(factoring);
-    public final ComboBox reFactorizeMode = Menu.Switch("Re-Factorize Mode", "Accelerating", Arrays.asList("Accelerating", "Instant"), v -> strafeFactorMode.getValue().equals("Auto")).parent(factoring);
-    public final Slider reFactorizeStartDelay = Menu.Switch("Re-Factorize Start Delay", 100, 10, 500, (Predicate<Integer>) v -> strafeFactorMode.getValue().equals("Auto")).parent(factoring);
-    public final Slider reFactorizeStart = Menu.Switch("Re-Factorize Start Value", 1.0f, 0.1f, 1.0f, (Predicate<Float>) v -> strafeFactorMode.getValue().equals("Auto")).parent(factoring);
-    public final Slider reFactorizeTarget = Menu.Switch("Re-Factorize Target", 1.1f, 0.1f, 3.0f, (Predicate<Float>) v -> strafeFactorMode.getValue().equals("Auto")).parent(factoring);
-    public final Slider accelerationFactor = Menu.Switch("Acceleration Factor", 1.0f, 0.1f, 5.0f, (Predicate<Float>) v -> strafeFactorMode.getValue().equals("Auto") && reFactorizeMode.getValue().equals("Accelerating")).parent(factoring);
-    public final Slider strafeFactor = Menu.Switch("Strafe Factor", 1.0f, 0.1f, 3.0f, (Predicate<Float>) v -> ((mode.getValue().equals("Normal") && speedMode.getValue().equals("Strafe")) || mode.getValue().equals("Switch")) && strafeFactorMode.getValue().equals("Manual")).parent(factoring);
-    public final Slider strafeFactorSpeed = Menu.Switch("Strafe Factor Speed Amplifier", 1.2f, 0.1f, 3.0f, (Predicate<Float>) v -> ((mode.getValue().equals("Normal") && speedMode.getValue().equals("Strafe")) || mode.getValue().equals("Switch")) && strafeFactorMode.getValue().equals("Manual") ).parent(factoring);
+    public final Parent misc = Menu.Parent("Misc");
+    public final Switch returnOnShift = Menu.Switch("Return On Shift").parent(misc);
+    public final Switch slowdownOnGroundNearHoles = Menu.Switch("Slow Down On Ground Near Holes").parent(misc);
+    public final Slider slowDownValue = Menu.Slider("Slow Down Value", 0.1f, 5.0f).parent(misc);
+    public final Switch liquids = Menu.Switch("Liquids").parent(misc);
+    public final Switch useTimer = Menu.Switch("Use Timer").parent(misc);
+    public final Slider timerAmount = Menu.Slider("Timer Amount", 0.9f, 2.0f).parent(misc);
+    public final Parent factoring = Menu.Parent("Factoring");
+    public final ComboBox strafeFactorMode = Menu.ComboBox("Strafe Factor Mode", new String[]{"Manual", "Auto"}).parent(factoring);
+    public final ComboBox reFactorizeMode = Menu.ComboBox("Re-Factorize Mode", new String[]{"Accelerating", "Instant"}).parent(factoring);
+    public final Slider reFactorizeStartDelay = Menu.Slider("Re-Factorize Start Delay", 10, 500).parent(factoring);
+    public final Slider reFactorizeStart = Menu.Slider("Re-Factorize Start Value", 0.1f, 1.0f).parent(factoring);
+    public final Slider reFactorizeTarget = Menu.Slider("Re-Factorize Target", 0.1f, 3.0f).parent(factoring);
+    public final Slider accelerationFactor = Menu.Slider("Acceleration Factor", 0.1f, 5.0f).parent(factoring);
+    public final Slider strafeFactor = Menu.Slider("Strafe Factor", 0.1f, 3.0f).parent(factoring);
+    public final Slider strafeFactorSpeed = Menu.Slider("Strafe Factor Speed Amplifier", 0.1f, 3.0f).parent(factoring);
     public double previousDistance;
     public double motionSpeed;
     public int currentState = 1;
-    public float f = strafeFactor.getValue();
+    public float f = strafeFactor.GetSlider();
     public Timer factorTimer = new Timer();
     public Timer postSwitchTimer = new Timer();
     public boolean isCloseToHole, isTimering;
@@ -68,43 +66,43 @@ public class Speed extends Module {
 
     @SubscribeEvent
     public void onKeyInput(InputEvent.KeyInputEvent event) {
-        if (Ruby.mc.player == null || Ruby.mc.world == null || !mode.getValue().equals("Switch") || mc.currentScreen != null || !isEnabled())
+        if (Ruby.mc.player == null || Ruby.mc.world == null || !mode.GetCombo().equals("Switch") || mc.currentScreen != null || !isEnabled())
             return;
-        if (Keyboard.getEventKeyState() && switchKey.getValue() != -1 && switchKey.getValue().equals(Keyboard.getEventKey())) {
-                switch (speedMode.getValue()) {
-                    case "OnGround":
-                        speedMode.setValue("Strafe");
-                        break;
-                    case "Strafe":
-                        speedMode.setValue("OnGround");
-                        if (switchPullToGround.getValue())
-                            postSwitchTimer.setTime(0);
-                        break;
-                }
-            if (announceSwitch.getValue())
-                Ruby.chatManager.sendRemovableMessage(ChatFormatting.BOLD + "Speed " + ChatFormatting.RESET + "switched mode to " + ChatFormatting.RED + speedMode.getValue() + ChatFormatting.RESET + ".", 1);
+        if (Keyboard.getEventKeyState() && switchKey.GetKey() != -1 && switchKey.GetKey() == Keyboard.getEventKey()) {
+            switch (speedMode.GetCombo()) {
+                case "OnGround":
+                    speedMode.setValue("Strafe");
+                    break;
+                case "Strafe":
+                    speedMode.setValue("OnGround");
+                    if (switchPullToGround.GetSwitch())
+                        postSwitchTimer.setTime(0);
+                    break;
+            }
+            if (announceSwitch.GetSwitch())
+                Ruby.chatManager.sendRemovableMessage(ChatFormatting.BOLD + "Speed " + ChatFormatting.RESET + "switched mode to " + ChatFormatting.RED + speedMode.GetCombo() + ChatFormatting.RESET + ".", 1);
         }
     }
 
     @Override
     public void onTick() {
         previousDistance = Math.sqrt((mc.player.posX - mc.player.prevPosX) * (mc.player.posX - mc.player.prevPosX) + (mc.player.posZ - mc.player.prevPosZ) * (mc.player.posZ - mc.player.prevPosZ));
-        if (!strafeFactorMode.getValue().equals("Manual") && f < reFactorizeTarget.getValue()) {
-            switch (reFactorizeMode.getValue()) {
+        if (!strafeFactorMode.GetCombo().equals("Manual") && f < reFactorizeTarget.getMin()) {
+            switch (reFactorizeMode.GetCombo()) {
                 case "Instant":
-                    if (factorTimer.getTime(reFactorizeStartDelay.getValue()))
-                        f = reFactorizeTarget.getValue();
+                    if (factorTimer.getTime(reFactorizeStartDelay.GetSlider()))
+                        f = reFactorizeTarget.GetSlider();
                     break;
                 case "Accelerating":
-                    if (factorTimer.getTime(reFactorizeStartDelay.getValue()))
-                        f += accelerationFactor.getValue() / 10;
+                    if (factorTimer.getTime(reFactorizeStartDelay.GetSlider()))
+                        f += accelerationFactor.GetSlider() / 10f;
                     break;
 
             }
         }
-        if (switchPullToGround.getValue() && postSwitchTimer.getTimeSub(20))
+        if (switchPullToGround.GetSwitch() && postSwitchTimer.getTimeSub(20))
             mc.player.motionY = -1;
-        if (slowdownOnGroundNearHoles.getValue()) {
+        if (slowdownOnGroundNearHoles.GetSwitch()) {
             isCloseToHole = false;
             if (ESP.Instance.bedrockHoles != null)
                 for (BlockPos pos : ESP.Instance.bedrockHoles) {
@@ -121,23 +119,23 @@ public class Speed extends Module {
 
     @RegisterListener
     public void onMove(MoveEvent event) {
-        if (nullCheck() || !isEnabled() || (!liquids.getValue() && (mc.player.isInWater() || mc.player.isInLava() || mc.player.isSpectator())) || (switchPullToGround.getValue() && postSwitchTimer.getTimeSub(20)) || mc.player.isElytraFlying())
+        if (nullCheck() || !isEnabled() || (!liquids.GetSwitch() && (mc.player.isInWater() || mc.player.isInLava() || mc.player.isSpectator())) || (switchPullToGround.GetSwitch() && postSwitchTimer.getTimeSub(20)) || mc.player.isElytraFlying())
             return;
-        if (returnOnShift.getValue() && mc.gameSettings.keyBindSprint.isKeyDown())
+        if (returnOnShift.GetSwitch() && mc.gameSettings.keyBindSprint.isKeyDown())
             return;
         if (!mc.player.isSprinting())
             mc.player.setSprinting(true);
-        if (!dev.zprestige.ruby.module.exploit.Timer.Instance.isEnabled() && !TickShift.Instance.isEnabled() && timerAmount.getValue() != 1.0f) {
-            if (useTimer.getValue() && (Ruby.mc.player.moveForward != 0.0 || Ruby.mc.player.moveStrafing != 0.0)) {
-                mc.timer.tickLength = 50.0f / timerAmount.getValue();
+        if (!dev.zprestige.ruby.module.exploit.Timer.Instance.isEnabled() && !TickShift.Instance.isEnabled() && timerAmount.GetSlider() != 1.0f) {
+            if (useTimer.GetSwitch() && (Ruby.mc.player.moveForward != 0.0 || Ruby.mc.player.moveStrafing != 0.0)) {
+                mc.timer.tickLength = 50.0f / timerAmount.GetSlider();
                 isTimering = true;
-            }else if (isTimering){
+            } else if (isTimering) {
                 mc.timer.tickLength = 50.0f;
                 isTimering = false;
             }
         }
         PotionEffect speed = mc.player.getActivePotionEffect(MobEffects.SPEED);
-        switch (speedMode.getValue()) {
+        switch (speedMode.GetCombo()) {
             case "Strafe":
                 switch (currentState) {
                     case 0:
@@ -160,9 +158,9 @@ public class Speed extends Module {
                         }
                         break;
                     case 3:
-                        motionSpeed = previousDistance - 0.76 * (previousDistance - EntityUtil.getBaseMotionSpeed() * (strafeFactorMode.getValue().equals("Auto") ? f : speed != null ? strafeFactorSpeed.getValue() : strafeFactor.getValue()));
+                        motionSpeed = previousDistance - 0.76 * (previousDistance - EntityUtil.getBaseMotionSpeed() * (strafeFactorMode.GetCombo().equals("Auto") ? f : speed != null ? strafeFactorSpeed.GetSlider() : strafeFactor.GetSlider()));
                 }
-                motionSpeed = Math.max(motionSpeed, EntityUtil.getBaseMotionSpeed() * (strafeFactorMode.getValue().equals("Auto") ? f : speed != null ? strafeFactorSpeed.getValue() : strafeFactor.getValue()));
+                motionSpeed = Math.max(motionSpeed, EntityUtil.getBaseMotionSpeed() * (strafeFactorMode.GetCombo().equals("Auto") ? f : speed != null ? strafeFactorSpeed.GetSlider() : strafeFactor.GetSlider()));
                 double var4 = mc.player.movementInput.moveForward;
                 double var6 = mc.player.movementInput.moveStrafe;
                 double var8 = mc.player.rotationYaw;
@@ -195,8 +193,8 @@ public class Speed extends Module {
                         moveStrafe = moveStrafe == 0.0f ? moveStrafe : ((double) moveStrafe > 0.0 ? 1.0f : -1.0f);
                         final double cos = Math.cos(Math.toRadians(rotationYaw + 90.0f));
                         final double sin = Math.sin(Math.toRadians(rotationYaw + 90.0f));
-                        event.motionX = ((double) moveForward * EntityUtil.getMaxSpeed() * cos + (double) moveStrafe * EntityUtil.getMaxSpeed() * sin) / (slowdownOnGroundNearHoles.getValue() && isCloseToHole ? slowDownValue.getValue() : 1.0);
-                        event.motionZ = ((double) moveForward * EntityUtil.getMaxSpeed() * sin - (double) moveStrafe * EntityUtil.getMaxSpeed() * cos) / (slowdownOnGroundNearHoles.getValue() && isCloseToHole ? slowDownValue.getValue() : 1.0);
+                        event.motionX = ((double) moveForward * EntityUtil.getMaxSpeed() * cos + (double) moveStrafe * EntityUtil.getMaxSpeed() * sin) / (slowdownOnGroundNearHoles.GetSwitch() && isCloseToHole ? slowDownValue.GetSlider() : 1.0);
+                        event.motionZ = ((double) moveForward * EntityUtil.getMaxSpeed() * sin - (double) moveStrafe * EntityUtil.getMaxSpeed() * cos) / (slowdownOnGroundNearHoles.GetSwitch() && isCloseToHole ? slowDownValue.GetSlider() : 1.0);
                     }
                 }
                 break;
@@ -205,9 +203,9 @@ public class Speed extends Module {
 
     @RegisterListener
     public void onPacketReceive(PacketEvent.PacketReceiveEvent event) {
-        if (nullCheck() || !isEnabled() || strafeFactorMode.getValue().equals("Manual") || !(event.getPacket() instanceof SPacketPlayerPosLook))
+        if (nullCheck() || !isEnabled() || strafeFactorMode.GetCombo().equals("Manual") || !(event.getPacket() instanceof SPacketPlayerPosLook))
             return;
-        f = reFactorizeStart.getValue();
+        f = reFactorizeStart.GetSlider();
         factorTimer.setTime(0);
     }
 }

@@ -6,6 +6,8 @@ import dev.zprestige.ruby.events.MotionUpdateEvent;
 import dev.zprestige.ruby.events.MoveEvent;
 import dev.zprestige.ruby.events.PacketEvent;
 import dev.zprestige.ruby.module.Module;
+import dev.zprestige.ruby.newsettings.impl.Slider;
+import dev.zprestige.ruby.newsettings.impl.Switch;
 import dev.zprestige.ruby.setting.impl.BooleanSetting;
 import dev.zprestige.ruby.setting.impl.DoubleSetting;
 import dev.zprestige.ruby.setting.impl.FloatSetting;
@@ -17,11 +19,11 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 public class LongJump extends Module {
-    public final Slider speed = Menu.Switch("Speed", 2000.0, 0.1, 3000.0);
+    public final Slider speed = Menu.Slider("Speed", 0.1, 3000.0);
     public final Switch disableOnLag = Menu.Switch("Disable On Lag");
     public final Switch damageCheck = Menu.Switch("Damage Check");
-    public final Slider minDamage = Menu.Switch("Min Damage", 5.0f, 0.1f, 36.0f);
-    public final Switch renderInfo = Menu.Switch("Render Info", false);
+    public final Slider minDamage = Menu.Slider("Min Damage", 0.1f, 36.0f);
+    public final Switch renderInfo = Menu.Switch("Render Info");
     public double prevDistance;
     public double moveSpeed;
     public int stage;
@@ -48,7 +50,7 @@ public class LongJump extends Module {
     public void onPacketReceive(PacketEvent.PacketReceiveEvent event) {
         if (nullCheck() || !isEnabled() || !(event.getPacket() instanceof SPacketPlayerPosLook))
             return;
-        if (disableOnLag.getValue())
+        if (disableOnLag.GetSwitch())
             disableModule("Rubberband detected, disabling LongJump.");
     }
 
@@ -65,7 +67,7 @@ public class LongJump extends Module {
     public void onMove(MoveEvent event) {
         if (nullCheck() || !isEnabled() || event.isCancelled())
             return;
-        if (damageCheck.getValue() && damage < minDamage.getValue())
+        if (damageCheck.GetSwitch() && damage < minDamage.GetSlider())
             return;
         if (mc.player.collidedHorizontally || (mc.player.moveForward == 0.0f && mc.player.moveStrafing == 0.0f)) {
             stage = 0;
@@ -81,7 +83,7 @@ public class LongJump extends Module {
                 moveSpeed = 1.0 + EntityUtil.getDefaultSpeed() - 0.05;
             else if (stage == 2 && mc.player.collidedVertically) {
                 event.motionY = mc.player.motionY = 0;
-                moveSpeed *= speed.getValue() / 100f;
+                moveSpeed *= speed.GetSlider() / 100f;
             } else if (stage == 3) {
                 moveSpeed = prevDistance - 0.66 * (prevDistance - EntityUtil.getDefaultSpeed());
             } else
@@ -103,11 +105,11 @@ public class LongJump extends Module {
 
     @Override
     public void onOverlayTick() {
-        if (!renderInfo.getValue())
+        if (!renderInfo.GetSwitch())
             return;
         int screenWidth = new ScaledResolution(mc).getScaledWidth();
         int screenHeight = new ScaledResolution(mc).getScaledHeight();
-        String string = "LongJump: [" + "Stage: " + stage + " | PrevDistance: " + roundNumber(prevDistance, 1) + " | Ticks: " + ticks + " | MoveSpeed: " + roundNumber(moveSpeed, 1) + " | DamageCheck: " + roundNumber(damage, 1) + " - " + (damage > minDamage.getValue()) + "]";
+        String string = "LongJump: [" + "Stage: " + stage + " | PrevDistance: " + roundNumber(prevDistance, 1) + " | Ticks: " + ticks + " | MoveSpeed: " + roundNumber(moveSpeed, 1) + " | DamageCheck: " + roundNumber(damage, 1) + " - " + (damage > minDamage.GetSlider()) + "]";
         Ruby.rubyFont.drawStringWithShadow(string, (screenWidth / 2f) - (Ruby.rubyFont.getStringWidth(string) / 2f), screenHeight - 100, -1);
     }
 

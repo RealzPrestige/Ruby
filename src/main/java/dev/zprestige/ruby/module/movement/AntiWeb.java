@@ -1,6 +1,8 @@
 package dev.zprestige.ruby.module.movement;
 
 import dev.zprestige.ruby.module.Module;
+import dev.zprestige.ruby.newsettings.impl.ComboBox;
+import dev.zprestige.ruby.newsettings.impl.Slider;
 import dev.zprestige.ruby.setting.impl.FloatSetting;
 import dev.zprestige.ruby.setting.impl.ModeSetting;
 
@@ -8,10 +10,10 @@ import java.util.Arrays;
 import java.util.function.Predicate;
 
 public class AntiWeb extends Module {
-    public final ComboBox mode = Menu.Switch("Mode", "Vanilla", Arrays.asList("Vanilla", "Motion", "Timer"));
-    public final Slider horizontalSpeed = Menu.Switch("Horizontal Speed", 1.0f, 0.1f, 2.0f, (Predicate<Float>) v-> mode.getValue().equals("Motion"));
-    public final Slider verticalSpeed = Menu.Switch("Vertical Speed", 1.0f, 0.1f, 2.0f, (Predicate<Float>) v-> mode.getValue().equals("Motion"));
-    public final Slider timerAmount = Menu.Switch("Timer Amount", 1.0f, 0.1f, 10.0f, (Predicate<Float>) v-> mode.getValue().equals("Timer"));
+    public final ComboBox mode = Menu.ComboBox("Mode", new String[]{"Vanilla", "Motion", "Timer"});
+    public final Slider horizontalSpeed = Menu.Slider("Horizontal Speed", 0.1f, 2.0f);
+    public final Slider verticalSpeed = Menu.Slider("Vertical Speed", 0.1f, 2.0f);
+    public final Slider timerAmount = Menu.Slider("Timer Amount", 0.1f, 10.0f);
     public boolean isTimering;
 
     @Override
@@ -23,17 +25,17 @@ public class AntiWeb extends Module {
             }
             return;
         }
-        switch (mode.getValue()){
+        switch (mode.GetCombo()){
             case "Vanilla":
                 mc.player.isInWeb = false;
                 break;
             case "Motion":
-                mc.player.motionX *= (1 + horizontalSpeed.getValue());
-                mc.player.motionY = -verticalSpeed.getValue();
-                mc.player.motionZ *= (1 + horizontalSpeed.getValue());
+                mc.player.motionX *= (1 + horizontalSpeed.GetSlider());
+                mc.player.motionY = -verticalSpeed.GetSlider();
+                mc.player.motionZ *= (1 + horizontalSpeed.GetSlider());
                 break;
             case "Timer":
-                mc.timer.tickLength = 50.0f / timerAmount.getValue();
+                mc.timer.tickLength = 50.0f / timerAmount.GetSlider();
                 isTimering = true;
                 break;
         }
