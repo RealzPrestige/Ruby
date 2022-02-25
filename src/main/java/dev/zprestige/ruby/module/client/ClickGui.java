@@ -7,8 +7,6 @@ import dev.zprestige.ruby.settings.impl.Slider;
 import dev.zprestige.ruby.settings.impl.Switch;
 import dev.zprestige.ruby.ui.click.MainScreen;
 import dev.zprestige.ruby.ui.config.ConfigGuiScreen;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Keyboard;
 
 public class ClickGui extends Module {
@@ -42,14 +40,8 @@ public class ClickGui extends Module {
 
     @Override
     public void onTick() {
-        if (!(mc.currentScreen instanceof MainScreen) && !(mc.currentScreen instanceof ConfigGuiScreen))
+        if (!(mc.currentScreen instanceof MainScreen) && !(mc.currentScreen instanceof ConfigGuiScreen)) {
             disableModule();
-    }
-
-
-    @SubscribeEvent
-    public void onRenderOverlay(RenderGameOverlayEvent event) {
-        if (isEnabled() && event.getType().equals(RenderGameOverlayEvent.ElementType.ALL))
-            event.setCanceled(true);
+        }
     }
 }

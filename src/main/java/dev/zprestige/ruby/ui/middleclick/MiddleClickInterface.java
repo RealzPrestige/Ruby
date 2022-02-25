@@ -1,4 +1,4 @@
-package dev.zprestige.ruby.ui.buttons;
+package dev.zprestige.ruby.ui.middleclick;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 import dev.zprestige.ruby.Ruby;

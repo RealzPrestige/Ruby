@@ -5,6 +5,7 @@ import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.*;
 import dev.zprestige.ruby.module.Module;
+import dev.zprestige.ruby.module.client.ClickGui;
 import dev.zprestige.ruby.module.visual.Nametags;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -62,6 +63,14 @@ public class EventListener {
             moduleList.stream().filter(module -> module.isEnabled() && !(module instanceof Nametags)).forEach(module -> module.onGlobalRenderTick(render3DEvent));
         }
         mc.profiler.endSection();
+    }
+
+
+    @SubscribeEvent
+    public void onRenderOverlay(RenderGameOverlayEvent event) {
+        if (ClickGui.Instance.isEnabled()){
+            event.setCanceled(true);
+        }
     }
 
     @SubscribeEvent

@@ -3,7 +3,7 @@ package dev.zprestige.ruby.module.misc;
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.PacketEvent;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.ui.buttons.MiddleClickInterface;
+import dev.zprestige.ruby.ui.middleclick.MiddleClickInterface;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.play.server.SPacketChat;
