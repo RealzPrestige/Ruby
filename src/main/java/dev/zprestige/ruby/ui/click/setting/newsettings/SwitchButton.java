@@ -2,7 +2,7 @@ package dev.zprestige.ruby.ui.click.setting.newsettings;
 
 import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.module.client.ClickGui;
-import dev.zprestige.ruby.newsettings.impl.Switch;
+import dev.zprestige.ruby.settings.impl.Switch;
 import dev.zprestige.ruby.ui.click.setting.NewSetting;
 import dev.zprestige.ruby.util.RenderUtil;
 

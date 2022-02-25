@@ -1,12 +1,9 @@
 package dev.zprestige.ruby.module.player;
 
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.newsettings.impl.Parent;
-import dev.zprestige.ruby.newsettings.impl.Slider;
-import dev.zprestige.ruby.newsettings.impl.Switch;
-import dev.zprestige.ruby.setting.impl.BooleanSetting;
-import dev.zprestige.ruby.setting.impl.IntegerSetting;
-import dev.zprestige.ruby.setting.impl.ParentSetting;
+import dev.zprestige.ruby.settings.impl.Parent;
+import dev.zprestige.ruby.settings.impl.Slider;
+import dev.zprestige.ruby.settings.impl.Switch;
 import dev.zprestige.ruby.util.InventoryUtil;
 import dev.zprestige.ruby.util.Timer;
 import net.minecraft.init.Items;
@@ -17,7 +14,6 @@ import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.network.play.client.CPacketPlayerTryUseItem;
 import net.minecraft.util.EnumHand;
 
-import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
 public class AutoSingleMend extends Module {
@@ -29,6 +25,11 @@ public class AutoSingleMend extends Module {
     public final Slider packetSpeed = Menu.Slider("Packet Speed", 1, 10).parent(exp);
     public Timer timer = new Timer();
     public boolean turnedOffAutoArmor;
+
+    public static float getPercentage(ItemStack stack) {
+        float durability = stack.getMaxDamage() - stack.getItemDamage();
+        return (durability / (float) stack.getMaxDamage()) * 100F;
+    }
 
     @Override
     public void onEnable() {
@@ -49,7 +50,7 @@ public class AutoSingleMend extends Module {
     @Override
     public void onTick() {
         int mendableArmor = getMendableArmorInArmorSlots();
-        if (timer.getTime(actionDelay.GetSlider()) && takeOff(mendableArmor)) {
+        if (timer.getTime((long) actionDelay.GetSlider()) && takeOff(mendableArmor)) {
             takeOff(mendableArmor);
             timer.setTime(0);
             return;
@@ -57,7 +58,7 @@ public class AutoSingleMend extends Module {
         if (packetExp.GetSwitch()) {
             float prevPitch = mc.player.rotationPitch;
             int slot = InventoryUtil.getItemFromHotbar(Items.EXPERIENCE_BOTTLE);
-            if (slot == -1){
+            if (slot == -1) {
                 disableModule("No exp found in hotbar, disabling AutoSingleMend.");
                 return;
             }
@@ -137,7 +138,6 @@ public class AutoSingleMend extends Module {
         return false;
     }
 
-
     public int getMendableArmorInArmorSlots() {
         ItemStack head = mc.player.inventory.getStackInSlot(39);
         ItemStack chest = mc.player.inventory.getStackInSlot(38);
@@ -160,11 +160,5 @@ public class AutoSingleMend extends Module {
 
         return -1;
 
-    }
-
-
-    public static float getPercentage(ItemStack stack) {
-        float durability = stack.getMaxDamage() - stack.getItemDamage();
-        return (durability / (float) stack.getMaxDamage()) * 100F;
     }
 }

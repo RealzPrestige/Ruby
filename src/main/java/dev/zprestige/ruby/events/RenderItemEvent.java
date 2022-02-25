@@ -8,7 +8,7 @@ public class RenderItemEvent extends Event {
     public ItemStack stack;
     public EntityLivingBase entityLivingBase;
 
-    public RenderItemEvent(ItemStack stack, EntityLivingBase entityLivingBase){
+    public RenderItemEvent(ItemStack stack, EntityLivingBase entityLivingBase) {
         this.stack = stack;
         this.entityLivingBase = entityLivingBase;
     }

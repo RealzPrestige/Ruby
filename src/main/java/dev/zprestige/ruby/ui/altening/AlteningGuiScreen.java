@@ -93,7 +93,7 @@ public class AlteningGuiScreen extends GuiScreen {
                 new Thread(AlteningGuiScreen.this::checkFreeToken).start();
             }
         }
-        if (generator.isMouseOver()){
+        if (generator.isMouseOver()) {
             useButton.playPressSound(mc.getSoundHandler());
             try {
                 Desktop.getDesktop().browse(URI.create("https://thealtening.com/free/free-minecraft-alt"));

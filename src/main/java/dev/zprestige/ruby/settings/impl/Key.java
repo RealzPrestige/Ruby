@@ -1,11 +1,11 @@
-package dev.zprestige.ruby.newsettings.impl;
+package dev.zprestige.ruby.settings.impl;
 
-import dev.zprestige.ruby.newsettings.Setting;
+import dev.zprestige.ruby.settings.Setting;
 
 public class Key extends Setting {
     protected int key;
 
-    public Key(String name, int key){
+    public Key(String name, int key) {
         this.name = name;
         this.key = key;
     }
@@ -22,7 +22,7 @@ public class Key extends Setting {
         return key;
     }
 
-    public Key parent(Parent parent){
+    public Key parent(Parent parent) {
         setHasParent(true);
         setParent(parent);
         return this;

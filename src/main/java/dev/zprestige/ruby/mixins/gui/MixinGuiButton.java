@@ -27,9 +27,9 @@ public abstract class MixinGuiButton {
     @Shadow
     public boolean enabled;
     @Shadow
-    protected boolean hovered;
-    @Shadow
     public String displayString;
+    @Shadow
+    protected boolean hovered;
 
     @Shadow
     protected abstract void mouseDragged(Minecraft mc, int mouseX, int mouseY);
@@ -38,9 +38,9 @@ public abstract class MixinGuiButton {
     protected void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
         if (visible) {
             hovered = (mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height);
-            RenderUtil.drawRect(x, y, x + width, y + height, new Color(0,0, 0, 50).getRGB());
+            RenderUtil.drawRect(x, y, x + width, y + height, new Color(0, 0, 0, 50).getRGB());
             if (hovered)
-                RenderUtil.drawRect(x, y, x + width, y + height, new Color(0,0, 0, 50).getRGB());
+                RenderUtil.drawRect(x, y, x + width, y + height, new Color(0, 0, 0, 50).getRGB());
             Ruby.rubyFont.drawStringWithShadow(displayString, x + (width / 2f) - (Ruby.rubyFont.getStringWidth(displayString) / 2f), y + (height - 10) / 2f, enabled ? (hovered ? 16777120 : 14737632) : 10526880);
             mouseDragged(mc, mouseX, mouseY);
         }

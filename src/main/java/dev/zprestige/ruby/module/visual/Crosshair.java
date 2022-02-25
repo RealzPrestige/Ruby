@@ -1,10 +1,9 @@
 package dev.zprestige.ruby.module.visual;
 
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.setting.impl.BooleanSetting;
-import dev.zprestige.ruby.setting.impl.ColorSetting;
-import dev.zprestige.ruby.setting.impl.FloatSetting;
-import dev.zprestige.ruby.setting.impl.IntegerSetting;
+import dev.zprestige.ruby.settings.impl.ColorBox;
+import dev.zprestige.ruby.settings.impl.Slider;
+import dev.zprestige.ruby.settings.impl.Switch;
 import dev.zprestige.ruby.util.AnimationUtil;
 import dev.zprestige.ruby.util.EntityUtil;
 import net.minecraft.client.gui.ScaledResolution;
@@ -16,30 +15,27 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.opengl.GL11;
 
-import java.awt.*;
-import java.util.function.Predicate;
-
 public class Crosshair extends Module {
-    public final Slider distance = Menu.Switch("Gap", 30, 0, 100);
-    public final Slider length = Menu.Switch("Length", 40, 0, 100);
-    public final Slider thickness = Menu.Switch("Thickness", 25, 0, 50);
-    public final Switch dynamic = Menu.Switch("Dynamic", false);
-    public final Switch dynamicAnimated = Menu.Switch("Dynamic Animated", false, v -> dynamic.getValue());
-    public final Slider dynamicGap = Menu.Switch("Dynamic Gap", 10, 0, 100, (Predicate<Integer>) v -> dynamic.getValue());
-    public final Slider dynamicAnimationSpeed = Menu.Switch("Dynamic Animation Speed", 0.1f, 0.1f, 5.0f, (Predicate<Float>) v -> dynamic.getValue());
-    public final ColorBox color = Menu.Switch("Color", new Color(255, 0, 0));
+    public final Slider distance = Menu.Slider("Gap", 0, 100);
+    public final Slider length = Menu.Slider("Length", 0, 100);
+    public final Slider thickness = Menu.Slider("Thickness", 0, 50);
+    public final Switch dynamic = Menu.Switch("Dynamic");
+    public final Switch dynamicAnimated = Menu.Switch("Dynamic Animated");
+    public final Slider dynamicGap = Menu.Slider("Dynamic Gap", 0, 100);
+    public final Slider dynamicAnimationSpeed = Menu.Slider("Dynamic Animation Speed", 0.1f, 5.0f);
+    public final ColorBox color = Menu.Color("Color");
     float newGap;
 
     @Override
     public void onTick() {
-        if (dynamicAnimated.getValue()) {
+        if (dynamicAnimated.GetSwitch()) {
             if (EntityUtil.isMoving())
-                newGap = AnimationUtil.increaseNumber(newGap, dynamicGap.getValue() / 10f, dynamicAnimationSpeed.getValue());
+                newGap = AnimationUtil.increaseNumber(newGap, dynamicGap.GetSlider() / 10f, dynamicAnimationSpeed.GetSlider());
             else
-                newGap = AnimationUtil.decreaseNumber(newGap, 0, dynamicAnimationSpeed.getValue());
+                newGap = AnimationUtil.decreaseNumber(newGap, 0, dynamicAnimationSpeed.GetSlider());
         } else {
             if (EntityUtil.isMoving())
-                newGap = dynamicGap.getValue() / 10f;
+                newGap = dynamicGap.GetSlider() / 10f;
             else
                 newGap = 0;
         }
@@ -49,7 +45,7 @@ public class Crosshair extends Module {
     public void onRenderGameOverlay(RenderGameOverlayEvent event) {
         if (event.getType() == RenderGameOverlayEvent.ElementType.CROSSHAIRS && isEnabled()) {
             event.setCanceled(true);
-            drawCrosshairs(distance.getValue() / 10f, length.getValue() / 10f, thickness.getValue() / 10f, dynamic.getValue(), newGap, color.getValue().getRGB());
+            drawCrosshairs(distance.GetSlider() / 10f, length.GetSlider() / 10f, thickness.GetSlider() / 10f, dynamic.GetSwitch(), newGap, color.GetColor().getRGB());
         }
     }
 

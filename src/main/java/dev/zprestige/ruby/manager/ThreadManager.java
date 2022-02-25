@@ -7,6 +7,6 @@ public class ThreadManager {
     ExecutorService executorService = Executors.newFixedThreadPool(2);
 
     public void run(Runnable command) {
-            executorService.execute(command);
+        executorService.execute(command);
     }
 }

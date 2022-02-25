@@ -1,13 +1,12 @@
-package dev.zprestige.ruby.newsettings.impl;
+package dev.zprestige.ruby.settings.impl;
 
-import dev.zprestige.ruby.newsettings.Setting;
+import dev.zprestige.ruby.settings.Setting;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Parent extends Setting {
-    protected final List<Setting> settings = new ArrayList<>();
+    protected final List<Setting> children = new ArrayList<>();
     protected boolean value;
 
     public Parent(String name) {
@@ -28,6 +27,6 @@ public class Parent extends Setting {
     }
 
     public List<Setting> getChildren() {
-        return settings;
+        return children;
     }
 }

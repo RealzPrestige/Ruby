@@ -7,7 +7,7 @@ import dev.zprestige.ruby.events.MoveEvent;
 import dev.zprestige.ruby.events.PacketEvent;
 import dev.zprestige.ruby.module.Module;
 import dev.zprestige.ruby.module.visual.ESP;
-import dev.zprestige.ruby.newsettings.impl.*;
+import dev.zprestige.ruby.settings.impl.*;
 import dev.zprestige.ruby.util.EntityUtil;
 import dev.zprestige.ruby.util.Timer;
 import net.minecraft.init.MobEffects;
@@ -45,11 +45,11 @@ public class Speed extends Module {
     public final Slider reFactorizeTarget = Menu.Slider("Re-Factorize Target", 0.1f, 3.0f).parent(factoring);
     public final Slider accelerationFactor = Menu.Slider("Acceleration Factor", 0.1f, 5.0f).parent(factoring);
     public final Slider strafeFactor = Menu.Slider("Strafe Factor", 0.1f, 3.0f).parent(factoring);
+    public float f = strafeFactor.GetSlider();
     public final Slider strafeFactorSpeed = Menu.Slider("Strafe Factor Speed Amplifier", 0.1f, 3.0f).parent(factoring);
     public double previousDistance;
     public double motionSpeed;
     public int currentState = 1;
-    public float f = strafeFactor.GetSlider();
     public Timer factorTimer = new Timer();
     public Timer postSwitchTimer = new Timer();
     public boolean isCloseToHole, isTimering;
@@ -90,11 +90,11 @@ public class Speed extends Module {
         if (!strafeFactorMode.GetCombo().equals("Manual") && f < reFactorizeTarget.getMin()) {
             switch (reFactorizeMode.GetCombo()) {
                 case "Instant":
-                    if (factorTimer.getTime(reFactorizeStartDelay.GetSlider()))
+                    if (factorTimer.getTime((long) reFactorizeStartDelay.GetSlider()))
                         f = reFactorizeTarget.GetSlider();
                     break;
                 case "Accelerating":
-                    if (factorTimer.getTime(reFactorizeStartDelay.GetSlider()))
+                    if (factorTimer.getTime((long) reFactorizeStartDelay.GetSlider()))
                         f += accelerationFactor.GetSlider() / 10f;
                     break;
 

@@ -3,11 +3,10 @@ package dev.zprestige.ruby.module.combat;
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.PlayerChangeEvent;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.newsettings.impl.ComboBox;
-import dev.zprestige.ruby.newsettings.impl.Parent;
-import dev.zprestige.ruby.newsettings.impl.Slider;
-import dev.zprestige.ruby.newsettings.impl.Switch;
-import dev.zprestige.ruby.setting.impl.*;
+import dev.zprestige.ruby.settings.impl.ComboBox;
+import dev.zprestige.ruby.settings.impl.Parent;
+import dev.zprestige.ruby.settings.impl.Slider;
+import dev.zprestige.ruby.settings.impl.Switch;
 import dev.zprestige.ruby.util.BlockUtil;
 import dev.zprestige.ruby.util.EntityUtil;
 import dev.zprestige.ruby.util.InventoryUtil;
@@ -15,9 +14,6 @@ import dev.zprestige.ruby.util.Timer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.item.Item;
-
-import java.util.Arrays;
-import java.util.function.Predicate;
 
 public class Offhand extends Module {
     public final ComboBox item = Menu.ComboBox("Item", new String[]{"Crystal", "Totem"});
@@ -44,13 +40,11 @@ public class Offhand extends Module {
     public final Switch fallBack = Menu.Switch("FallBack").parent(misc);
     public final Switch gapple = Menu.Switch("Gapple Switch").parent(misc);
     public final Switch rightClick = Menu.Switch("Right Click Only").parent(misc);
-
     public final Parent threading = Menu.Parent("Threading");
     public final Switch threadSwap = Menu.Switch("Thread Swap").parent(threading);
     public final Slider threadSwapAmount = Menu.Slider("Thread Swap Amount", 1, 10).parent(threading);
     public final Switch threadFindingItem = Menu.Switch("Thread Finding Item").parent(threading);
     public final Slider threadFindingItemAmount = Menu.Slider("Thread Finding Item Amount", 1, 10).parent(threading);
-
     public Timer switchTimer = new Timer(), postPopTimer = new Timer();
     public int offhandSlot = -1;
     public Thread itemThread = new Thread(() -> offhandSlot = InventoryUtil.getItemSlot(getOffhandItem()));
@@ -79,7 +73,7 @@ public class Offhand extends Module {
     }
 
     public void execute() {
-        if (mc.player.getHeldItemOffhand().getItem() != getOffhandItem() && offhandSlot != -1 && switchTimer.getTime(switchDelay.GetSlider())) {
+        if (mc.player.getHeldItemOffhand().getItem() != getOffhandItem() && offhandSlot != -1 && switchTimer.getTime((long) switchDelay.GetSlider())) {
             int slot = offhandSlot < 9 ? offhandSlot + 36 : offhandSlot;
             mc.playerController.windowClick(0, slot, 0, ClickType.PICKUP, mc.player);
             mc.playerController.windowClick(0, 45, 0, ClickType.PICKUP, mc.player);
@@ -91,7 +85,7 @@ public class Offhand extends Module {
 
     public Item getOffhandItem() {
         boolean safeToSwap = safeToSwap();
-        if (postPopForceTotem.GetSwitch() && postPopTimer.getTimeSub(forceTime.GetSlider()))
+        if (postPopForceTotem.GetSwitch() && postPopTimer.getTimeSub((long) forceTime.GetSlider()))
             return Items.TOTEM_OF_UNDYING;
         switch (item.GetCombo()) {
             case "Totem":

@@ -1,7 +1,7 @@
 package dev.zprestige.ruby.ui.click.setting.newsettings;
 
 import dev.zprestige.ruby.Ruby;
-import dev.zprestige.ruby.newsettings.impl.Key;
+import dev.zprestige.ruby.settings.impl.Key;
 import dev.zprestige.ruby.ui.click.MainScreen;
 import dev.zprestige.ruby.ui.click.setting.NewSetting;
 import org.lwjgl.input.Keyboard;

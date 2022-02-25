@@ -16,11 +16,10 @@ import static org.lwjgl.opengl.GL20.glUseProgram;
 
 public abstract class FramebufferShader extends Shader {
 
-    private static Framebuffer framebuffer;
     protected static int lastScale;
     protected static int lastScaleWidth;
     protected static int lastScaleHeight;
-
+    private static Framebuffer framebuffer;
     protected float red, green, blue, alpha = 1F;
     protected float radius = 2F;
     protected float quality = 1F;

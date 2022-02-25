@@ -3,7 +3,10 @@ package dev.zprestige.ruby.module.visual;
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.PlayerChangeEvent;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.setting.impl.*;
+import dev.zprestige.ruby.settings.impl.ColorBox;
+import dev.zprestige.ruby.settings.impl.Parent;
+import dev.zprestige.ruby.settings.impl.Slider;
+import dev.zprestige.ruby.settings.impl.Switch;
 import dev.zprestige.ruby.util.RenderUtil;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,28 +16,11 @@ import net.minecraft.util.math.MathHelper;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Predicate;
 
 /**
  * creds to le phobos
  */
 public class PopChams extends Module {
-    public final Parent misc = Menu.Switch("Misc");
-    public final Slider fadeTime = Menu.Switch("Fade Time", 1500, 0, 5000).parent(misc);
-    public final Switch selfPop = Menu.Switch("Self Pop").parent(misc);
-    public final Switch onDeath = Menu.Switch("On Death", false).parent(misc);
-    public final Switch travel = Menu.Switch("Travel", false).parent(misc);
-    public final Slider travelSpeed = Menu.Switch("Travel Speed", 1.0f, -10.0f, 10.0f, (Predicate<Float>) v -> travel.getValue()).parent(misc);
-    public final Parent rendering = Menu.Switch("Rendering");
-    public final ColorBox solidColor = Menu.Switch("Solid Color", new Color(-1)).parent(rendering);
-    public final ColorBox outlineColor = Menu.Switch("Outline Color", new Color(-1)).parent(rendering);
-    public final Slider outlineWidth = Menu.Switch("Outline Width", 1.0f, 0.1f, 5.0f).parent(rendering);
-    public final Switch differDeaths = Menu.Switch("Differ Deaths", false).parent(rendering);
-    public final ColorBox deathSolidColor = Menu.Switch("Death Solid Color", new Color(-1), v -> differDeaths.getValue()).parent(rendering);
-    public final ColorBox deathOutlineColor = Menu.Switch("Death Outline Color", new Color(-1), v -> differDeaths.getValue()).parent(rendering);
-    public final Slider deathOutlineWidth = Menu.Switch("Death Outline Width", 1.0f, 0.1f, 5.0f, (Predicate<Float>) v -> differDeaths.getValue()).parent(rendering);
-    public HashMap<String, PopData> popDataHashMap = new HashMap<>();
-
     public static double HEAD_X = -0.2;
     public static double HEAD_Y = 1.5;
     public static double HEAD_Z = -0.25;
@@ -71,21 +57,36 @@ public class PopChams extends Module {
     public static double LEG2_X1 = 0.15;
     public static double LEG2_Y1 = 0.8;
     public static double LEG2_Z1 = -0.25;
+    public final Parent misc = Menu.Parent("Misc");
+    public final Slider fadeTime = Menu.Slider("Fade Time", 0, 5000).parent(misc);
+    public final Switch selfPop = Menu.Switch("Self Pop").parent(misc);
+    public final Switch onDeath = Menu.Switch("On Death").parent(misc);
+    public final Switch travel = Menu.Switch("Travel").parent(misc);
+    public final Slider travelSpeed = Menu.Slider("Travel Speed", -10.0f, 10.0f).parent(misc);
+    public final Parent rendering = Menu.Parent("Rendering");
+    public final ColorBox solidColor = Menu.Color("Solid Color").parent(rendering);
+    public final ColorBox outlineColor = Menu.Color("Outline Color").parent(rendering);
+    public final Slider outlineWidth = Menu.Slider("Outline Width", 0.1f, 5.0f).parent(rendering);
+    public final Switch differDeaths = Menu.Switch("Differ Deaths").parent(rendering);
+    public final ColorBox deathSolidColor = Menu.Color("Death Solid Color").parent(rendering);
+    public final ColorBox deathOutlineColor = Menu.Color("Death Outline Color").parent(rendering);
+    public final Slider deathOutlineWidth = Menu.Slider("Death Outline Width", 0.1f, 5.0f).parent(rendering);
+    public HashMap<String, PopData> popDataHashMap = new HashMap<>();
 
     @RegisterListener
     public void onTotemPop(PlayerChangeEvent.TotemPop event) {
         if (!isEnabled() || nullCheck())
             return;
-        if (event.entityPlayer.equals(mc.player) && !selfPop.getValue())
+        if (event.entityPlayer.equals(mc.player) && !selfPop.GetSwitch())
             return;
         popDataHashMap.put(event.entityPlayer.getName(), new PopChams.PopData(event.entityPlayer, System.currentTimeMillis(), event.entityPlayer.rotationYaw, event.entityPlayer.rotationPitch, event.entityPlayer.posX, event.entityPlayer.posY, event.entityPlayer.posZ, false));
     }
 
     @RegisterListener
     public void onDeath(PlayerChangeEvent.Death event) {
-        if (!isEnabled() || nullCheck() || !onDeath.getValue())
+        if (!isEnabled() || nullCheck() || !onDeath.GetSwitch())
             return;
-        if (event.entityPlayer.equals(mc.player) && !selfPop.getValue())
+        if (event.entityPlayer.equals(mc.player) && !selfPop.GetSwitch())
             return;
         popDataHashMap.put(event.entityPlayer.getName(), new PopChams.PopData(event.entityPlayer, System.currentTimeMillis(), event.entityPlayer.rotationYaw, event.entityPlayer.rotationPitch, event.entityPlayer.posX, event.entityPlayer.posY, event.entityPlayer.posZ, true));
     }
@@ -96,8 +97,8 @@ public class PopChams extends Module {
         HashMap<String, PopChams.PopData> save = new HashMap<>(popDataHashMap);
         for (Map.Entry<String, PopChams.PopData> entry : save.entrySet()) {
             PopChams.PopData data = entry.getValue();
-            if (travel.getValue())
-                data.y += travelSpeed.getValue() / 100.0f;
+            if (travel.GetSwitch())
+                data.y += travelSpeed.GetSlider() / 100.0f;
             double x = data.getX() - mc.getRenderManager().viewerPosX;
             double y = data.getY() - mc.getRenderManager().viewerPosY;
             double z = data.getZ() - mc.getRenderManager().viewerPosZ;
@@ -113,14 +114,14 @@ public class PopChams extends Module {
             GlStateManager.translate(x, y, z);
             GlStateManager.rotate(180 + (-(yaw + 90)), 0.0f, 1.0f, 0.0f);
             GlStateManager.translate(-x, -y, -z);
-            Color boxColor = differDeaths.getValue() && entry.getValue().isDeath ? deathSolidColor.getValue() : solidColor.getValue();
-            Color outlineColor = differDeaths.getValue() && entry.getValue().isDeath ? deathOutlineColor.getValue() : this.outlineColor.getValue();
+            Color boxColor = differDeaths.GetSwitch() && entry.getValue().isDeath ? deathSolidColor.GetColor() : solidColor.GetColor();
+            Color outlineColor = differDeaths.GetSwitch() && entry.getValue().isDeath ? deathOutlineColor.GetColor() : this.outlineColor.GetColor();
             float maxBoxAlpha = boxColor.getAlpha();
             float maxOutlineAlpha = outlineColor.getAlpha();
-            float alphaBoxAmount = maxBoxAlpha / fadeTime.getValue();
-            float alphaOutlineAmount = maxOutlineAlpha / fadeTime.getValue();
-            int fadeBoxAlpha = MathHelper.clamp((int) (alphaBoxAmount * (data.getTime() + fadeTime.getValue() - System.currentTimeMillis())), 0, (int) maxBoxAlpha);
-            int fadeOutlineAlpha = MathHelper.clamp((int) (alphaOutlineAmount * (data.getTime() + fadeTime.getValue() - System.currentTimeMillis())), 0, (int) maxOutlineAlpha);
+            float alphaBoxAmount = maxBoxAlpha / fadeTime.GetSlider();
+            float alphaOutlineAmount = maxOutlineAlpha / fadeTime.GetSlider();
+            int fadeBoxAlpha = MathHelper.clamp((int) (alphaBoxAmount * (data.getTime() + fadeTime.GetSlider() - System.currentTimeMillis())), 0, (int) maxBoxAlpha);
+            int fadeOutlineAlpha = MathHelper.clamp((int) (alphaOutlineAmount * (data.getTime() + fadeTime.GetSlider() - System.currentTimeMillis())), 0, (int) maxOutlineAlpha);
             Color box = new Color(boxColor.getRed(), boxColor.getGreen(), boxColor.getBlue(), fadeBoxAlpha);
             Color out = new Color(outlineColor.getRed(), outlineColor.getGreen(), outlineColor.getBlue(), fadeOutlineAlpha);
             renderAxis(chest, box, out, entry.getValue().isDeath);
@@ -135,11 +136,11 @@ public class PopChams extends Module {
             GlStateManager.popMatrix();
         }
 
-        popDataHashMap.entrySet().removeIf(e -> e.getValue().getTime() + fadeTime.getValue() < System.currentTimeMillis());
+        popDataHashMap.entrySet().removeIf(e -> e.getValue().getTime() + fadeTime.GetSlider() < System.currentTimeMillis());
     }
 
     private void renderAxis(AxisAlignedBB bb, Color color, Color outline, boolean isDeath) {
-        RenderUtil.renderBox(bb, color, outline, differDeaths.getValue() && isDeath ? deathOutlineWidth.getValue() :  outlineWidth.getValue());
+        RenderUtil.renderBox(bb, color, outline, differDeaths.GetSwitch() && isDeath ? deathOutlineWidth.GetSlider() : outlineWidth.GetSlider());
     }
 
     public static class PopData {

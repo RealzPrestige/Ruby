@@ -68,7 +68,9 @@ public class GuiCategory {
                 newModule.y = newModule.module.scrollY + deltaY;
                 if (newModule.isOpened) {
                     for (NewSetting newSetting : newModule.settings) {
-                        deltaY += height + 1;
+                        if (newSetting.getSetting().openedParent()) {
+                            deltaY += height + 1;
+                        }
                     }
                 } else {
                     deltaY += (newModule.animDeltaY - (height + 1));

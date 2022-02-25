@@ -2,8 +2,8 @@ package dev.zprestige.ruby.ui.config;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 import dev.zprestige.ruby.Ruby;
-import dev.zprestige.ruby.module.client.Configs;
 import dev.zprestige.ruby.module.client.ClickGui;
+import dev.zprestige.ruby.module.client.Configs;
 import dev.zprestige.ruby.util.AnimationUtil;
 import dev.zprestige.ruby.util.RenderUtil;
 import net.minecraft.client.gui.GuiScreen;
@@ -31,7 +31,7 @@ public class ConfigGuiButton {
 
     public void render(int mouseX, int mouseY) {
         {
-            if (isInside(mouseX, mouseY)){
+            if (isInside(mouseX, mouseY)) {
                 animX = AnimationUtil.increaseNumber(animX, 45, 1);
             } else {
                 animX = AnimationUtil.decreaseNumber(animX, 0, 1);
@@ -75,6 +75,12 @@ public class ConfigGuiButton {
 
     public boolean isInside(int mouseX, int mouseY) {
         return mouseX > x && mouseX < x + width && mouseY > y && mouseY < y + height;
+    }
+
+    public enum iconType {
+        Save,
+        Load,
+        Delete
     }
 
     public class icon {
@@ -130,11 +136,5 @@ public class ConfigGuiButton {
         public boolean isInside(int mouseX, int mouseY) {
             return mouseX > x && mouseX < x + 15 && mouseY > y && mouseY < y + height;
         }
-    }
-
-    public enum iconType {
-        Save,
-        Load,
-        Delete
     }
 }

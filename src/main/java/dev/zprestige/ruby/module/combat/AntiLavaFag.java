@@ -1,8 +1,8 @@
 package dev.zprestige.ruby.module.combat;
 
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.newsettings.impl.Slider;
-import dev.zprestige.ruby.newsettings.impl.Switch;
+import dev.zprestige.ruby.settings.impl.Slider;
+import dev.zprestige.ruby.settings.impl.Switch;
 import dev.zprestige.ruby.util.BlockUtil;
 import dev.zprestige.ruby.util.InventoryUtil;
 import dev.zprestige.ruby.util.Timer;
@@ -26,13 +26,13 @@ public class AntiLavaFag extends Module {
     public final Switch packet = Menu.Switch("Packet");
     public final Switch rotate = Menu.Switch("Rotate");
     public final Timer timer = new Timer();
-    public BlockPos targetPos = null;
     public final Vec3i[] vec3is = new Vec3i[]{
             new Vec3i(0, 0, -1),
             new Vec3i(0, 0, 1),
             new Vec3i(-1, 0, 0),
             new Vec3i(1, 0, 0),
     };
+    public BlockPos targetPos = null;
 
     @Override
     public void onEnable() {

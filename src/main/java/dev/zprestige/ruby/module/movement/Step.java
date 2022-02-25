@@ -3,9 +3,9 @@ package dev.zprestige.ruby.module.movement;
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.MoveEvent;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.newsettings.impl.ComboBox;
-import dev.zprestige.ruby.newsettings.impl.Slider;
-import dev.zprestige.ruby.newsettings.impl.Switch;
+import dev.zprestige.ruby.settings.impl.ComboBox;
+import dev.zprestige.ruby.settings.impl.Slider;
+import dev.zprestige.ruby.settings.impl.Switch;
 import dev.zprestige.ruby.util.EntityUtil;
 import net.minecraft.network.play.client.CPacketPlayer;
 

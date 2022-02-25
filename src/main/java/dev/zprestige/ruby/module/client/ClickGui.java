@@ -2,9 +2,9 @@ package dev.zprestige.ruby.module.client;
 
 import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.newsettings.impl.ColorBox;
-import dev.zprestige.ruby.newsettings.impl.Slider;
-import dev.zprestige.ruby.newsettings.impl.Switch;
+import dev.zprestige.ruby.settings.impl.ColorBox;
+import dev.zprestige.ruby.settings.impl.Slider;
+import dev.zprestige.ruby.settings.impl.Switch;
 import dev.zprestige.ruby.ui.click.MainScreen;
 import dev.zprestige.ruby.ui.config.ConfigGuiScreen;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;

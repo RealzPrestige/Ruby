@@ -4,7 +4,10 @@ import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.RenderLivingEntityEvent;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.setting.impl.*;
+import dev.zprestige.ruby.settings.impl.ColorBox;
+import dev.zprestige.ruby.settings.impl.Parent;
+import dev.zprestige.ruby.settings.impl.Slider;
+import dev.zprestige.ruby.settings.impl.Switch;
 import dev.zprestige.ruby.util.RenderUtil;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.culling.Frustum;
@@ -22,21 +25,20 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Predicate;
 
 import static org.lwjgl.opengl.GL11.*;
 
 public class ESP extends Module {
     public static ESP Instance;
 
-    public final Parent items = Menu.Switch("Items");
+    public final Parent items = Menu.Parent("Items");
     public final Switch itemNames = Menu.Switch("Item Names").parent(items);
 
-    public final Parent player = Menu.Switch("Player");
+    public final Parent player = Menu.Parent("Player");
     public final Switch players = Menu.Switch("Players").parent(player);
-    public final Switch playerMoveCancel = Menu.Switch("Move Cancel", v -> players.getValue()).parent(player);
-    public final ColorBox playerColor = Menu.Switch("Player Color", new Color(-1), v -> players.getValue()).parent(player);
-    public final Slider playerLineWidth = Menu.Switch("Player Line Width", 1.0f, 0.1f, 5.0f, (Predicate<Float>) v -> players.getValue()).parent(player);
+    public final Switch playerMoveCancel = Menu.Switch("Move Cancel").parent(player);
+    public final ColorBox playerColor = Menu.Color("Player Color").parent(player);
+    public final Slider playerLineWidth = Menu.Slider("Player Line Width", 0.1f, 5.0f).parent(player);
 
     public ArrayList<Entity> entityList = new ArrayList<>();
     public List<EntityPlayer> playerList = new ArrayList<>();
@@ -56,59 +58,6 @@ public class ESP extends Module {
 
     public ESP() {
         Instance = this;
-    }
-
-    @Override
-    public void onGlobalRenderTick() {
-        Ruby.threadManager.run(() -> playerList = mc.world.playerEntities);
-        camera.setPosition(Objects.requireNonNull(mc.getRenderViewEntity()).posX, mc.getRenderViewEntity().posY, mc.getRenderViewEntity().posZ);
-        if (players.getValue() && playerMoveCancel.getValue()) {
-            mc.world.playerEntities.stream().filter(entityPlayer -> !entityPlayer.equals(mc.player)).forEach(entityPlayer -> {
-                entityPlayer.limbSwing = 0;
-                entityPlayer.limbSwingAmount = 0;
-                entityPlayer.prevLimbSwingAmount = 0;
-                entityPlayer.rotationYawHead = 0;
-                entityPlayer.rotationPitch = 0;
-                entityPlayer.rotationYaw = 0;
-            });
-        }
-        if (itemNames.getValue()) {
-            boolean fancyGraphics = mc.gameSettings.fancyGraphics;
-            mc.gameSettings.fancyGraphics = false;
-            float gammaSetting = mc.gameSettings.gammaSetting;
-            mc.gameSettings.gammaSetting = 100.0f;
-            entityList.clear();
-            mc.world.loadedEntityList.stream().filter(Objects::nonNull).forEach(entity -> entityList.add(entity));
-            entityList.stream().filter(entity -> entity instanceof EntityItem && !((EntityItem) entity).getItem().equals(mc.player.getHeldItemMainhand()) && camera.isBoundingBoxInFrustum(entity.getEntityBoundingBox().grow(2))).filter(entity -> mc.player.getDistanceSq(entity.getPosition()) < 1000 && !entity.isDead).forEach(entity -> {
-                glPushMatrix();
-                Vec3d i = RenderUtil.interpolateEntity(entity);
-                RenderUtil.drawNametag(((EntityItem) entity).getItem().getDisplayName() + " x" + ((EntityItem) entity).getItem().getCount(), i.x, i.y, i.z, 0.005, -1);
-                glColor4f(1f, 1f, 1f, 1f);
-                glPopMatrix();
-            });
-            mc.gameSettings.gammaSetting = gammaSetting;
-            mc.gameSettings.fancyGraphics = fancyGraphics;
-        }
-    }
-
-    @RegisterListener
-    public void onRenderLivingEntity(RenderLivingEntityEvent event) {
-        if (nullCheck() || !isEnabled() || !(event.getEntityLivingBase() instanceof EntityPlayer) || !players.getValue() || !camera.isBoundingBoxInFrustum(event.getEntityLivingBase().getEntityBoundingBox().grow(2)))
-            return;
-        if (!thread3.isAlive() || thread3.isInterrupted())
-            thread3.start();
-        event.getEntityLivingBase().hurtTime = 0;
-        event.getModelBase().render(event.getEntityLivingBase(), event.getLimbSwing(), event.getLimbSwingAmount(), event.getAgeInTicks(), event.getNetHeadYaw(), event.getHeadPitch(), event.getScaleFactor());
-        renderOne(playerLineWidth.getValue());
-        event.getModelBase().render(event.getEntityLivingBase(), event.getLimbSwing(), event.getLimbSwingAmount(), event.getAgeInTicks(), event.getNetHeadYaw(), event.getHeadPitch(), event.getScaleFactor());
-        renderTwo();
-        event.getModelBase().render(event.getEntityLivingBase(), event.getLimbSwing(), event.getLimbSwingAmount(), event.getAgeInTicks(), event.getNetHeadYaw(), event.getHeadPitch(), event.getScaleFactor());
-        renderThree();
-        renderFour();
-        setColor(playerColor.getValue());
-        event.getModelBase().render(event.getEntityLivingBase(), event.getLimbSwing(), event.getLimbSwingAmount(), event.getAgeInTicks(), event.getNetHeadYaw(), event.getHeadPitch(), event.getScaleFactor());
-        renderFive();
-        setColor(Color.WHITE);
     }
 
     public static void renderOne(float width) {
@@ -184,5 +133,58 @@ public class ESP extends Module {
 
     public static void setColor(Color c) {
         glColor4d(c.getRed() / 255f, c.getGreen() / 255f, c.getBlue() / 255f, c.getAlpha() / 255f);
+    }
+
+    @Override
+    public void onGlobalRenderTick() {
+        Ruby.threadManager.run(() -> playerList = mc.world.playerEntities);
+        camera.setPosition(Objects.requireNonNull(mc.getRenderViewEntity()).posX, mc.getRenderViewEntity().posY, mc.getRenderViewEntity().posZ);
+        if (players.GetSwitch() && playerMoveCancel.GetSwitch()) {
+            mc.world.playerEntities.stream().filter(entityPlayer -> !entityPlayer.equals(mc.player)).forEach(entityPlayer -> {
+                entityPlayer.limbSwing = 0;
+                entityPlayer.limbSwingAmount = 0;
+                entityPlayer.prevLimbSwingAmount = 0;
+                entityPlayer.rotationYawHead = 0;
+                entityPlayer.rotationPitch = 0;
+                entityPlayer.rotationYaw = 0;
+            });
+        }
+        if (itemNames.GetSwitch()) {
+            boolean fancyGraphics = mc.gameSettings.fancyGraphics;
+            mc.gameSettings.fancyGraphics = false;
+            float gammaSetting = mc.gameSettings.gammaSetting;
+            mc.gameSettings.gammaSetting = 100.0f;
+            entityList.clear();
+            mc.world.loadedEntityList.stream().filter(Objects::nonNull).forEach(entity -> entityList.add(entity));
+            entityList.stream().filter(entity -> entity instanceof EntityItem && !((EntityItem) entity).getItem().equals(mc.player.getHeldItemMainhand()) && camera.isBoundingBoxInFrustum(entity.getEntityBoundingBox().grow(2))).filter(entity -> mc.player.getDistanceSq(entity.getPosition()) < 1000 && !entity.isDead).forEach(entity -> {
+                glPushMatrix();
+                Vec3d i = RenderUtil.interpolateEntity(entity);
+                RenderUtil.drawNametag(((EntityItem) entity).getItem().getDisplayName() + " x" + ((EntityItem) entity).getItem().getCount(), i.x, i.y, i.z, 0.005, -1);
+                glColor4f(1f, 1f, 1f, 1f);
+                glPopMatrix();
+            });
+            mc.gameSettings.gammaSetting = gammaSetting;
+            mc.gameSettings.fancyGraphics = fancyGraphics;
+        }
+    }
+
+    @RegisterListener
+    public void onRenderLivingEntity(RenderLivingEntityEvent event) {
+        if (nullCheck() || !isEnabled() || !(event.getEntityLivingBase() instanceof EntityPlayer) || !players.GetSwitch() || !camera.isBoundingBoxInFrustum(event.getEntityLivingBase().getEntityBoundingBox().grow(2)))
+            return;
+        if (!thread3.isAlive() || thread3.isInterrupted())
+            thread3.start();
+        event.getEntityLivingBase().hurtTime = 0;
+        event.getModelBase().render(event.getEntityLivingBase(), event.getLimbSwing(), event.getLimbSwingAmount(), event.getAgeInTicks(), event.getNetHeadYaw(), event.getHeadPitch(), event.getScaleFactor());
+        renderOne(playerLineWidth.GetSlider());
+        event.getModelBase().render(event.getEntityLivingBase(), event.getLimbSwing(), event.getLimbSwingAmount(), event.getAgeInTicks(), event.getNetHeadYaw(), event.getHeadPitch(), event.getScaleFactor());
+        renderTwo();
+        event.getModelBase().render(event.getEntityLivingBase(), event.getLimbSwing(), event.getLimbSwingAmount(), event.getAgeInTicks(), event.getNetHeadYaw(), event.getHeadPitch(), event.getScaleFactor());
+        renderThree();
+        renderFour();
+        setColor(playerColor.GetColor());
+        event.getModelBase().render(event.getEntityLivingBase(), event.getLimbSwing(), event.getLimbSwingAmount(), event.getAgeInTicks(), event.getNetHeadYaw(), event.getHeadPitch(), event.getScaleFactor());
+        renderFive();
+        setColor(Color.WHITE);
     }
 }

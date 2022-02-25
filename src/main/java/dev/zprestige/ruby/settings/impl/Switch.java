@@ -1,6 +1,6 @@
-package dev.zprestige.ruby.newsettings.impl;
+package dev.zprestige.ruby.settings.impl;
 
-import dev.zprestige.ruby.newsettings.Setting;
+import dev.zprestige.ruby.settings.Setting;
 
 public class Switch extends Setting {
     protected boolean value;
@@ -18,11 +18,11 @@ public class Switch extends Setting {
         this.value = value;
     }
 
-    public boolean GetSwitch(){
+    public boolean GetSwitch() {
         return value;
     }
 
-    public Switch parent(Parent parent){
+    public Switch parent(Parent parent) {
         setHasParent(true);
         setParent(parent);
         return this;

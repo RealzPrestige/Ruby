@@ -3,19 +3,14 @@ package dev.zprestige.ruby.module.movement;
 import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.manager.HoleManager;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.newsettings.impl.ComboBox;
-import dev.zprestige.ruby.newsettings.impl.Slider;
-import dev.zprestige.ruby.newsettings.impl.Switch;
-import dev.zprestige.ruby.setting.impl.BooleanSetting;
-import dev.zprestige.ruby.setting.impl.FloatSetting;
-import dev.zprestige.ruby.setting.impl.ModeSetting;
+import dev.zprestige.ruby.settings.impl.ComboBox;
+import dev.zprestige.ruby.settings.impl.Slider;
+import dev.zprestige.ruby.settings.impl.Switch;
 import dev.zprestige.ruby.util.BlockUtil;
 import dev.zprestige.ruby.util.Timer;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class HoleDrag extends Module {

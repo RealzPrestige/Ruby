@@ -3,8 +3,7 @@ package dev.zprestige.ruby.module.misc;
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.TurnEvent;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.newsettings.impl.Key;
-import dev.zprestige.ruby.setting.impl.KeySetting;
+import dev.zprestige.ruby.settings.impl.Key;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -19,7 +18,7 @@ public class FreeLook extends Module {
     public void onTick() {
         if (holdBind.GetKey() != -1 && Keyboard.isKeyDown(holdBind.GetKey())) {
             mc.gameSettings.thirdPersonView = 1;
-        } else if (mc.gameSettings.thirdPersonView == 1){
+        } else if (mc.gameSettings.thirdPersonView == 1) {
             mc.gameSettings.thirdPersonView = 0;
             yaw = 0.0f;
             pitch = 0.0f;

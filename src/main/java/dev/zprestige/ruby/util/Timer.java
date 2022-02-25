@@ -1,10 +1,10 @@
 package dev.zprestige.ruby.util;
 
 public class Timer {
-    private long time = -1L;
     long startTime;
     boolean paused;
     long delay;
+    private long time = -1L;
 
     public Timer() {
         this.startTime = System.currentTimeMillis();
@@ -16,9 +16,10 @@ public class Timer {
         return getMs(System.nanoTime() - time) >= ms;
     }
 
-    public long getCurrentTime(){
+    public long getCurrentTime() {
         return System.nanoTime() - time;
     }
+
     public boolean getTimeSub(long ms) {
         return getMs(System.nanoTime() - time) <= ms;
     }
@@ -39,11 +40,11 @@ public class Timer {
         this.delay = delay;
     }
 
-    public void setPaused(final boolean paused) {
-        this.paused = paused;
-    }
-
     public boolean isPaused() {
         return this.paused;
+    }
+
+    public void setPaused(final boolean paused) {
+        this.paused = paused;
     }
 }

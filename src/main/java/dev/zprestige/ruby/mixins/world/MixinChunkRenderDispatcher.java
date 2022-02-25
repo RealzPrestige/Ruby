@@ -13,7 +13,7 @@ public class MixinChunkRenderDispatcher {
     @Inject(method = "getNextChunkUpdate", at = @At("HEAD"))
     protected void limitChunkUpdates(final CallbackInfoReturnable<ChunkCompileTaskGenerator> cir) throws InterruptedException {
         if (WorldTweaks.Instance.isEnabled()) {
-            Thread.sleep(WorldTweaks.Instance.chunkLoadDelay.getValue());
+            Thread.sleep((long) WorldTweaks.Instance.chunkLoadDelay.GetSlider());
         }
     }
 }

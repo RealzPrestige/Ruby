@@ -1,8 +1,7 @@
 package dev.zprestige.ruby.module.misc;
 
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.newsettings.impl.Slider;
-import dev.zprestige.ruby.setting.impl.FloatSetting;
+import dev.zprestige.ruby.settings.impl.Slider;
 import dev.zprestige.ruby.util.BlockUtil;
 import dev.zprestige.ruby.util.EntityUtil;
 import dev.zprestige.ruby.util.RenderUtil;

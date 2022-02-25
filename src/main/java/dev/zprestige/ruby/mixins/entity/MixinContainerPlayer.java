@@ -4,7 +4,6 @@ import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.events.CloseInventoryEvent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ContainerPlayer;
-import net.minecraftforge.common.MinecraftForge;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

@@ -7,10 +7,10 @@ import net.minecraft.entity.MoverType;
 @IsCancellable
 public class MoveEvent extends Event {
 
-    private MoverType type;
     public double motionX;
     public double motionY;
     public double motionZ;
+    private MoverType type;
 
     public MoveEvent(MoverType type, double x, double y, double z) {
         this.type = type;
@@ -51,7 +51,7 @@ public class MoveEvent extends Event {
         this.motionZ = motionZ;
     }
 
-    public void setMotion(double x, double y, double z){
+    public void setMotion(double x, double y, double z) {
         motionX = x;
         motionY = y;
         motionZ = z;

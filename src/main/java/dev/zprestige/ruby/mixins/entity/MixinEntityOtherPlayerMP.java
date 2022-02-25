@@ -55,11 +55,11 @@ public class MixinEntityOtherPlayerMP extends AbstractClientPlayer {
             double d3;
 
             d3 = otherPlayerMPYaw - (double) rotationYaw;
-            while (d3 < -180.0D) 
+            while (d3 < -180.0D)
                 d3 += 360.0D;
-            
 
-            while (d3 >= 180.0D) 
+
+            while (d3 >= 180.0D)
                 d3 -= 360.0D;
 
             rotationYaw = (float) ((double) rotationYaw + d3 / (double) otherPlayerMPPosRotationIncrements);

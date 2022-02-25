@@ -9,8 +9,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class TickManager {
 
-    public long prevTime;
     public final float[] TPS = new float[20];
+    public long prevTime;
     public int currentTick;
 
     public TickManager() {

@@ -4,9 +4,9 @@ import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.PacketEvent;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.newsettings.impl.ColorBox;
-import dev.zprestige.ruby.newsettings.impl.Slider;
-import dev.zprestige.ruby.newsettings.impl.Switch;
+import dev.zprestige.ruby.settings.impl.ColorBox;
+import dev.zprestige.ruby.settings.impl.Slider;
+import dev.zprestige.ruby.settings.impl.Switch;
 import dev.zprestige.ruby.util.GraphUtil;
 import dev.zprestige.ruby.util.RenderUtil;
 import net.minecraft.client.Minecraft;
@@ -50,6 +50,14 @@ public class Hud extends Module {
 
     public Hud() {
         Instance = this;
+    }
+
+    public static float roundNumber(double value, int places) {
+        if (places < 0)
+            throw new IllegalArgumentException();
+        BigDecimal decimal = BigDecimal.valueOf(value);
+        decimal = decimal.setScale(places, RoundingMode.FLOOR);
+        return decimal.floatValue();
     }
 
     @RegisterListener
@@ -190,14 +198,6 @@ public class Hud extends Module {
             renderArmorHUD();
         if (totems.GetSwitch())
             renderTotemHUD();
-    }
-
-    public static float roundNumber(double value, int places) {
-        if (places < 0)
-            throw new IllegalArgumentException();
-        BigDecimal decimal = BigDecimal.valueOf(value);
-        decimal = decimal.setScale(places, RoundingMode.FLOOR);
-        return decimal.floatValue();
     }
 
     public void renderArmorHUD() {

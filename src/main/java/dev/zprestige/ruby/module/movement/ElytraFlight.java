@@ -4,8 +4,8 @@ import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.MoveEvent;
 import dev.zprestige.ruby.events.PacketEvent;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.newsettings.impl.Slider;
-import dev.zprestige.ruby.newsettings.impl.Switch;
+import dev.zprestige.ruby.settings.impl.Slider;
+import dev.zprestige.ruby.settings.impl.Switch;
 import dev.zprestige.ruby.util.EntityUtil;
 import dev.zprestige.ruby.util.InventoryUtil;
 import dev.zprestige.ruby.util.Timer;
@@ -28,7 +28,7 @@ public class ElytraFlight extends Module {
     public void onMove(MoveEvent event) {
         if (nullCheck() || !isEnabled() || !mc.player.isElytraFlying() || mc.player.movementInput.jump)
             return;
-        if (needsCorrection2 && pitchLength.getTime(lengthOfPitch.GetSlider())) {
+        if (needsCorrection2 && pitchLength.getTime((long) lengthOfPitch.GetSlider())) {
             needsCorrection = false;
             needsCorrection2 = false;
         }

@@ -1,8 +1,7 @@
 package dev.zprestige.ruby.module.player;
 
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.newsettings.impl.Slider;
-import dev.zprestige.ruby.setting.impl.IntegerSetting;
+import dev.zprestige.ruby.settings.impl.Slider;
 import dev.zprestige.ruby.util.Timer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.ClickType;
@@ -17,7 +16,7 @@ public class HotbarFiller extends Module {
 
     @Override
     public void onTick() {
-        if (mc.currentScreen != null || !timer.getTime(delay.GetSlider()))
+        if (mc.currentScreen != null || !timer.getTime((long) delay.GetSlider()))
             return;
         if (IntStream.range(0, 9).anyMatch(this::refillSlot))
             timer.setTime(0);

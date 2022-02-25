@@ -1,8 +1,8 @@
-package dev.zprestige.ruby.newsettings.impl;
+package dev.zprestige.ruby.settings.impl;
 
-import dev.zprestige.ruby.newsettings.Setting;
+import dev.zprestige.ruby.settings.Setting;
 
-import java.awt.Color;
+import java.awt.*;
 
 public class ColorSwitch extends Setting {
     protected boolean booleanValue;
@@ -42,7 +42,7 @@ public class ColorSwitch extends Setting {
         this.colorValue = colorValue;
     }
 
-    public ColorSwitch parent(Parent parent){
+    public ColorSwitch parent(Parent parent) {
         setHasParent(true);
         setParent(parent);
         return this;

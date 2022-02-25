@@ -2,10 +2,10 @@ package dev.zprestige.ruby.module.combat;
 
 import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.newsettings.impl.ComboBox;
-import dev.zprestige.ruby.newsettings.impl.Parent;
-import dev.zprestige.ruby.newsettings.impl.Slider;
-import dev.zprestige.ruby.newsettings.impl.Switch;
+import dev.zprestige.ruby.settings.impl.ComboBox;
+import dev.zprestige.ruby.settings.impl.Parent;
+import dev.zprestige.ruby.settings.impl.Slider;
+import dev.zprestige.ruby.settings.impl.Switch;
 import dev.zprestige.ruby.util.EntityUtil;
 import dev.zprestige.ruby.util.InventoryUtil;
 import dev.zprestige.ruby.util.Timer;

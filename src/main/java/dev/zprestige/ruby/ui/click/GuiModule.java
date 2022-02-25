@@ -4,7 +4,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.module.Module;
 import dev.zprestige.ruby.module.client.ClickGui;
-import dev.zprestige.ruby.newsettings.impl.*;
+import dev.zprestige.ruby.settings.impl.*;
 import dev.zprestige.ruby.ui.click.setting.NewSetting;
 import dev.zprestige.ruby.ui.click.setting.newsettings.*;
 import dev.zprestige.ruby.util.AnimationUtil;
@@ -30,7 +30,7 @@ public class GuiModule {
         this.height = height;
         this.animWidth = module.isEnabled() ? width : 0.0f;
         this.hoverAnimWidth = 0.0f;
-        module.getNewSettings().stream().filter(setting -> !setting.getName().equals("Enabled")).forEach(setting -> {
+        module.getSettings().stream().filter(setting -> !setting.getName().equals("Enabled")).forEach(setting -> {
             if (setting instanceof Switch) {
                 settings.add(new SwitchButton((Switch) setting));
             }
@@ -49,7 +49,7 @@ public class GuiModule {
             if (setting instanceof ColorSwitch) {
                 settings.add(new ColorSwitchButton((ColorSwitch) setting));
             }
-            if (setting instanceof Parent){
+            if (setting instanceof Parent) {
                 settings.add(new ParentButton((Parent) setting));
             }
         });
@@ -76,7 +76,7 @@ public class GuiModule {
         {
             deltaY = 0;
             if (isOpened) {
-                settings.forEach(setting -> {
+                settings.stream().filter(setting -> setting.getSetting().openedParent()).forEach(setting -> {
                     setting.setX(x + (setting.getSetting().hasParent() ? 3 : 2));
                     setting.setY(y + (deltaY += height + 1));
                     setting.setWidth(width - (setting.getSetting().hasParent() ? 6 : 4));
@@ -100,7 +100,7 @@ public class GuiModule {
                     glEnable(GL_SCISSOR_TEST);
                 }
                 RenderUtil.drawRect(x, y + height + 1, x + 1, y + animDeltaY, ClickGui.Instance.color.GetColor().getRGB());
-                settings.forEach(setting -> setting.render(mouseX, mouseY));
+                settings.stream().filter(setting -> setting.getSetting().openedParent()).forEach(setting -> setting.render(mouseX, mouseY));
                 glDisable(GL_SCISSOR_TEST);
                 glPopAttrib();
                 glPopMatrix();
@@ -110,7 +110,7 @@ public class GuiModule {
 
     public void keyTyped(char typedChar, int keyCode) {
         if (isOpened) {
-            settings.forEach(setting -> setting.type(typedChar, keyCode));
+            settings.stream().filter(setting -> setting.getSetting().openedParent()).forEach(setting -> setting.type(typedChar, keyCode));
         }
     }
 
@@ -133,13 +133,13 @@ public class GuiModule {
             }
         }
         if (isOpened) {
-            settings.forEach(setting -> setting.click(mouseX, mouseY, mouseButton));
+            settings.stream().filter(setting -> setting.getSetting().openedParent()).forEach(setting -> setting.click(mouseX, mouseY, mouseButton));
         }
     }
 
     public void mouseReleased(int mouseX, int mouseY, int state) {
         if (isOpened) {
-            settings.forEach(setting -> setting.release(mouseX, mouseY, state));
+            settings.stream().filter(setting -> setting.getSetting().openedParent()).forEach(setting -> setting.release(mouseX, mouseY, state));
         }
     }
 

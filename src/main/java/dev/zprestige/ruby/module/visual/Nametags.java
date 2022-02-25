@@ -4,8 +4,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.events.Render3DEvent;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.misc.FakePlayer;
-import dev.zprestige.ruby.setting.impl.BooleanSetting;
+import dev.zprestige.ruby.settings.impl.Switch;
 import dev.zprestige.ruby.util.EntityUtil;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
@@ -28,33 +27,42 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class Nametags extends Module {
     public static Nametags Instance;
-    public final Switch multiThreaded = Menu.Switch("Multi Threaded", false);
-    public final Switch health = Menu.Switch("Health", false);
-    public final Switch ping = Menu.Switch("Ping", false);
-    public final Switch totemPops = Menu.Switch("Totem Pops", false);
-    public final Switch inFrustum = Menu.Switch("In Frustum", false);
+    public final Switch multiThreaded = Menu.Switch("Multi Threaded");
+    public final Switch health = Menu.Switch("Health");
+    public final Switch ping = Menu.Switch("Ping");
+    public final Switch totemPops = Menu.Switch("Totem Pops");
+    public final Switch inFrustum = Menu.Switch("In Frustum");
     public List<EntityPlayer> entityPlayers = new ArrayList<>();
     public ICamera camera = new Frustum();
 
     public Nametags() {
         Instance = this;
     }
+
+    public static float roundNumber(double value, int places) {
+        if (places < 0)
+            throw new IllegalArgumentException();
+        BigDecimal decimal = BigDecimal.valueOf(value);
+        decimal = decimal.setScale(places, RoundingMode.FLOOR);
+        return decimal.floatValue();
+    }
+
     @Override
     public void onGlobalRenderTick(Render3DEvent event) {
-        if (!multiThreaded.getValue())
+        if (!multiThreaded.GetSwitch())
             entityPlayers = mc.world.playerEntities;
         else {
             Ruby.threadManager.run(() -> entityPlayers = mc.world.playerEntities);
         }
         if (!entityPlayers.isEmpty()) {
-            if (inFrustum.getValue())
+            if (inFrustum.GetSwitch())
                 camera.setPosition(Objects.requireNonNull(mc.getRenderViewEntity()).posX, mc.getRenderViewEntity().posY, mc.getRenderViewEntity().posZ);
             for (EntityPlayer entity : entityPlayers) {
                 if (entity.isSpectator())
                     continue;
-                if (inFrustum.getValue() && !camera.isBoundingBoxInFrustum(entity.getEntityBoundingBox().grow(2)))
+                if (inFrustum.GetSwitch() && !camera.isBoundingBoxInFrustum(entity.getEntityBoundingBox().grow(2)))
                     continue;
-                if (FakePlayer.Instance.isEnabled() && entity.getName().equals(FakePlayer.Instance.name.getValue()))
+                if (entity.getName().equals("FakePlayer"))
                     continue;
                 if (entity.equals(mc.player))
                     continue;
@@ -97,7 +105,6 @@ public class Nametags extends Module {
             return ChatFormatting.DARK_RED;
         return null;
     }
-
 
     public ChatFormatting getPingColor(EntityPlayer entityPlayer) {
         try {
@@ -175,7 +182,7 @@ public class Nametags extends Module {
         renderItemStack(renderMainHand, xOffset);
         GlStateManager.popMatrix();
         int pops = Ruby.totemPopManager.getPopsByPlayer(entityPlayer.getName());
-        Ruby.mc.fontRenderer.drawStringWithShadow((Ruby.friendManager.isFriend(entityPlayer.getName()) ? ChatFormatting.AQUA : Ruby.enemyManager.isEnemy(entityPlayer.getName()) ? ChatFormatting.RED : "") + entityPlayer.getName() + (health.getValue() ? " " + getHealthColor(entityPlayer) + roundNumber(entityPlayer.getHealth() + entityPlayer.getAbsorptionAmount(), 1) : "") + (ping.getValue() ? getPingColor(entityPlayer) + " " + Objects.requireNonNull(mc.getConnection()).getPlayerInfo(entityPlayer.getGameProfile().getId()).getResponseTime() + "ms" : "") + (totemPops.getValue() ? " " + getPopsColor(pops) + pops : ""), -Ruby.rubyFont.getStringWidth(entityPlayer.getName() + (health.getValue() ? " " + getHealthColor(entityPlayer) + roundNumber(entityPlayer.getHealth() + entityPlayer.getAbsorptionAmount(), 1) : "") + (ping.getValue() ? getPingColor(entityPlayer) + " " + roundNumber(Objects.requireNonNull(mc.getConnection()).getPlayerInfo(entityPlayer.getGameProfile().getId()).getResponseTime(), 0) + "ms" : "") + (totemPops.getValue() ? " " + getPopsColor(pops) + pops : "")) / 2, -8, -1);
+        Ruby.mc.fontRenderer.drawStringWithShadow((Ruby.friendManager.isFriend(entityPlayer.getName()) ? ChatFormatting.AQUA : Ruby.enemyManager.isEnemy(entityPlayer.getName()) ? ChatFormatting.RED : "") + entityPlayer.getName() + (health.GetSwitch() ? " " + getHealthColor(entityPlayer) + roundNumber(entityPlayer.getHealth() + entityPlayer.getAbsorptionAmount(), 1) : "") + (ping.GetSwitch() ? getPingColor(entityPlayer) + " " + Objects.requireNonNull(mc.getConnection()).getPlayerInfo(entityPlayer.getGameProfile().getId()).getResponseTime() + "ms" : "") + (totemPops.GetSwitch() ? " " + getPopsColor(pops) + pops : ""), -Ruby.rubyFont.getStringWidth(entityPlayer.getName() + (health.GetSwitch() ? " " + getHealthColor(entityPlayer) + roundNumber(entityPlayer.getHealth() + entityPlayer.getAbsorptionAmount(), 1) : "") + (ping.GetSwitch() ? getPingColor(entityPlayer) + " " + roundNumber(Objects.requireNonNull(mc.getConnection()).getPlayerInfo(entityPlayer.getGameProfile().getId()).getResponseTime(), 0) + "ms" : "") + (totemPops.GetSwitch() ? " " + getPopsColor(pops) + pops : "")) / 2, -8, -1);
         camera.posX = originalPositionX;
         camera.posY = originalPositionY;
         camera.posZ = originalPositionZ;
@@ -215,14 +222,6 @@ public class Nametags extends Module {
             String color = percent >= 60 ? "\u00a7a" : (percent >= 25 ? "\u00a7e" : "\u00a7c");
             mc.fontRenderer.drawStringWithShadow(color + percent + "%", x * 2, -26, -1);
         }
-    }
-
-    public static float roundNumber(double value, int places) {
-        if (places < 0)
-            throw new IllegalArgumentException();
-        BigDecimal decimal = BigDecimal.valueOf(value);
-        decimal = decimal.setScale(places, RoundingMode.FLOOR);
-        return decimal.floatValue();
     }
 
     private double interpolate(double previous, double current, float delta) {

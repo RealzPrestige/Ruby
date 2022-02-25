@@ -8,7 +8,7 @@ import net.minecraft.network.play.server.SPacketPlayerPosLook;
 public class NoRotations extends Module {
 
     @RegisterListener
-    public void onPacketReceive(PacketEvent.PacketReceiveEvent event){
+    public void onPacketReceive(PacketEvent.PacketReceiveEvent event) {
         if (nullCheck() || !isEnabled() || !(event.getPacket() instanceof SPacketPlayerPosLook) || mc.currentScreen != null)
             return;
         ((SPacketPlayerPosLook) event.getPacket()).yaw = mc.player.rotationYaw;

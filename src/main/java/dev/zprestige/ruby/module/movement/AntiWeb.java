@@ -1,13 +1,8 @@
 package dev.zprestige.ruby.module.movement;
 
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.newsettings.impl.ComboBox;
-import dev.zprestige.ruby.newsettings.impl.Slider;
-import dev.zprestige.ruby.setting.impl.FloatSetting;
-import dev.zprestige.ruby.setting.impl.ModeSetting;
-
-import java.util.Arrays;
-import java.util.function.Predicate;
+import dev.zprestige.ruby.settings.impl.ComboBox;
+import dev.zprestige.ruby.settings.impl.Slider;
 
 public class AntiWeb extends Module {
     public final ComboBox mode = Menu.ComboBox("Mode", new String[]{"Vanilla", "Motion", "Timer"});
@@ -17,7 +12,7 @@ public class AntiWeb extends Module {
     public boolean isTimering;
 
     @Override
-    public void onTick(){
+    public void onTick() {
         if (!mc.player.isInWeb) {
             if (isTimering) {
                 mc.timer.tickLength = 50.0f;
@@ -25,7 +20,7 @@ public class AntiWeb extends Module {
             }
             return;
         }
-        switch (mode.GetCombo()){
+        switch (mode.GetCombo()) {
             case "Vanilla":
                 mc.player.isInWeb = false;
                 break;

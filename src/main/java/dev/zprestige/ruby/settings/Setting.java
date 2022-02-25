@@ -1,7 +1,7 @@
-package dev.zprestige.ruby.newsettings;
+package dev.zprestige.ruby.settings;
 
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.newsettings.impl.Parent;
+import dev.zprestige.ruby.settings.impl.Parent;
 
 public class Setting {
     protected Module module;
@@ -25,15 +25,20 @@ public class Setting {
         return hasParent;
     }
 
-    public void setParent(Parent parent) {
-        this.parent = parent;
-    }
-
     public Parent getParent() {
         return parent;
     }
 
+    public void setParent(Parent parent) {
+        parent.getChildren().add(this);
+        this.parent = parent;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public boolean openedParent(){
+        return !hasParent || parent.GetParent();
     }
 }

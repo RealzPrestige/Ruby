@@ -3,27 +3,25 @@ package dev.zprestige.ruby.module;
 import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.events.ModuleToggleEvent;
 import dev.zprestige.ruby.events.Render3DEvent;
-import dev.zprestige.ruby.setting.Setting;
-import dev.zprestige.ruby.setting.impl.*;
+import dev.zprestige.ruby.settings.Setting;
+import dev.zprestige.ruby.settings.impl.Key;
+import dev.zprestige.ruby.settings.impl.Switch;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.input.Keyboard;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 
 public class Module {
-    public boolean open, drawn = true;
+    public final Menu Menu = new Menu(this);
+    protected final List<Setting> newSettings = new ArrayList<>();
+    protected final Minecraft mc = Minecraft.getMinecraft();
+    protected final Key keybind = Menu.Key("Keybind", Keyboard.KEY_NONE);
+    protected final Switch enabled = Menu.Switch("Enabled");
+    public boolean drawn = true;
+    public int scrollY;
     protected String name;
     protected Category category;
-    protected final List<Setting<?>> settingList = new ArrayList<>();
-    protected final List<dev.zprestige.ruby.newsettings.Setting> newSettings = new ArrayList<>();
-    protected final  KeySetting keybind = Menu.Switch("Keybind", Keyboard.KEY_NONE);
-    protected final BooleanSetting enabled = Menu.Switch("Enabled");
-    protected final Minecraft mc = Minecraft.getMinecraft();
-    public final Menu Menu = new Menu(this);
-    public int scrollY;
 
     public void onEnable() {
     }
@@ -63,17 +61,8 @@ public class Module {
         Ruby.chatManager.sendMessage(message);
     }
 
-
-    public boolean isOpen() {
-        return open;
-    }
-
-    public void setOpen(boolean open) {
-        this.open = open;
-    }
-
     public boolean isEnabled() {
-        return enabled.getValue();
+        return enabled.GetSwitch();
     }
 
     public void setEnabled(boolean enabled) {
@@ -89,7 +78,7 @@ public class Module {
     }
 
     public Integer getKeybind() {
-        return keybind.getKey();
+        return keybind.GetKey();
     }
 
     public void setKeybind(Integer keybind) {
@@ -100,143 +89,13 @@ public class Module {
         return mc.world == null || mc.player == null;
     }
 
-    public List<dev.zprestige.ruby.newsettings.Setting> getNewSettings() {
+    public List<Setting> getSettings() {
         return newSettings;
     }
 
-    public Module withSuper(String name, Category category){
+    public Module withSuper(String name, Category category) {
         this.name = name;
         this.category = category;
         return this;
-    }
-
-    public final Switch Menu.Switch(String name, boolean value) {
-        BooleanSetting setting = new BooleanSetting(name, value);
-        setting.setModule(this);
-        settingList.add(setting);
-        return setting;
-    }
-
-    public final Switch Menu.Switch(String name, boolean value, Predicate<Boolean> shown) {
-        BooleanSetting setting = new BooleanSetting(name, value, shown);
-        setting.setModule(this);
-        settingList.add(setting);
-        return setting;
-    }
-
-    public final ColorBox Menu.Switch(String name, Color value) {
-        ColorSetting setting = new ColorSetting(name, value);
-        setting.setModule(this);
-        settingList.add(setting);
-        return setting;
-    }
-
-    public final ColorBox Menu.Switch(String name, Color value, Predicate<Color> shown) {
-        ColorSetting setting = new ColorSetting(name, value, shown);
-        setting.setModule(this);
-        settingList.add(setting);
-        return setting;
-    }
-
-    public final Slider Menu.Switch(String name, double value, double minimum, double maximum) {
-        DoubleSetting setting = new DoubleSetting(name, value, minimum, maximum);
-        setting.setModule(this);
-        settingList.add(setting);
-        return setting;
-    }
-
-    public final Slider Menu.Switch(String name, double value, double minimum, double maximum, Predicate<Double> shown) {
-        DoubleSetting setting = new DoubleSetting(name, value, minimum, maximum, shown);
-        setting.setModule(this);
-        settingList.add(setting);
-        return setting;
-    }
-
-    public final ComboBox Menu.Switch(String name, String value, java.util.List<String> modeList) {
-        ModeSetting setting = new ModeSetting(name, value, modeList);
-        setting.setModule(this);
-        settingList.add(setting);
-        return setting;
-    }
-
-    public final ComboBox Menu.Switch(String name, String value, List<String> modeList, Predicate<String> shown) {
-        ModeSetting setting = new ModeSetting(name, value, modeList, shown);
-        setting.setModule(this);
-        settingList.add(setting);
-        return setting;
-    }
-
-    public final Slider Menu.Switch(String name, float value, float minimum, float maximum) {
-        FloatSetting setting = new FloatSetting(name, value, minimum, maximum);
-        setting.setModule(this);
-        settingList.add(setting);
-        return setting;
-    }
-
-    public final Slider Menu.Switch(String name, float value, float minimum, float maximum, Predicate<Float> shown) {
-        FloatSetting setting = new FloatSetting(name, value, minimum, maximum, shown);
-        setting.setModule(this);
-        settingList.add(setting);
-        return setting;
-    }
-
-    public final Slider Menu.Switch(String name, int value, int minimum, int maximum) {
-        IntegerSetting setting = new IntegerSetting(name, value, minimum, maximum);
-        setting.setModule(this);
-        settingList.add(setting);
-        return setting;
-    }
-
-    public final Slider Menu.Switch(String name, int value, int minimum, int maximum, Predicate<Integer> shown) {
-        IntegerSetting setting = new IntegerSetting(name, value, minimum, maximum, shown);
-        setting.setModule(this);
-        settingList.add(setting);
-        return setting;
-    }
-
-    public final Key Menu.Switch(String name, int value) {
-        KeySetting setting = new KeySetting(name, value);
-        setting.setModule(this);
-        settingList.add(setting);
-        return setting;
-    }
-
-    public final Key Menu.Switch(String name, int value, Predicate<Integer> shown) {
-        KeySetting setting = new KeySetting(name, value, shown);
-        setting.setModule(this);
-        settingList.add(setting);
-        return setting;
-    }
-
-    public StringSetting Menu.Switch(String name, String value) {
-        StringSetting setting = new StringSetting(name, value);
-        setting.setModule(this);
-        settingList.add(setting);
-        return setting;
-    }
-
-    public StringSetting Menu.Switch(String name, String value, Predicate<String> shown) {
-        StringSetting setting = new StringSetting(name, value, shown);
-        setting.setModule(this);
-        settingList.add(setting);
-        return setting;
-    }
-
-    public final Parent Menu.Switch(String name) {
-        ParentSetting setting = new ParentSetting(name);
-        setting.setModule(this);
-        settingList.add(setting);
-        return setting;
-    }
-
-    public final Parent Menu.Switch(String name, Predicate<Boolean> shown) {
-        ParentSetting setting = new ParentSetting(name, shown);
-        setting.setModule(this);
-        settingList.add(setting);
-        return setting;
-    }
-
-    public List<Setting<?>> getSettingList() {
-        return settingList;
     }
 }

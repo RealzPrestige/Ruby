@@ -46,12 +46,12 @@ public class Robot extends Module {
     public int prevGapples = 0, packets = 1, targetObsidian = 11, targetExpPercent, prevChorus = 0, xt = 0, zt = 0, st = 0, bowTicks = 0;
     public boolean isEating = false, isSafe = false, isExping, enabledFastExp = false, handOnly = false, hasMined = false, enabledPacketMine = false, enabledAura = false, isMoving = false, enabledStep = false, enabledTrap = false, value = false, didChorus = false, switchedToSword = false, switchedPickaxe = false, preGappled = false, needsUnSneak = false, needsOnGround = false, dropped = false, landed = false, forcedHole = false, cantStep = false;
     public String mode = "", triggerMode = "";
-    HashMap<Long, Double> damagePerSecond = new HashMap<>();
     public HoleOperation holeOperation = null;
     public Timer mineTimer = new Timer();
     public Timer announceTimer = new Timer();
     public Timer holeTimer = new Timer();
     public BlockPos minedPos = null, lastHole = null, nextHole = null;
+    HashMap<Long, Double> damagePerSecond = new HashMap<>();
 
     @Override
     public void onEnable() {
@@ -905,17 +905,6 @@ public class Robot extends Module {
         return mc.world.getBlockState(pos).getBlock().equals(Blocks.OBSIDIAN);
     }
 
-    public enum HoleOperation {
-        Sword,
-        Exp,
-        Await,
-        MineEchest,
-        RunOut,
-        Quiver,
-        CounterTower,
-        City
-    }
-
     @RegisterListener
     public void onPacketSend(PacketEvent.PacketSendEvent event) {
         if (nullCheck() || !isEnabled())
@@ -931,11 +920,23 @@ public class Robot extends Module {
         } catch (Exception ignored) {
         }
     }
+
     @RegisterListener
     public void onPacketReceive(PacketEvent.PacketReceiveEvent event) {
         if (nullCheck() || !isEnabled() || !(event.getPacket() instanceof SPacketPlayerPosLook))
             return;
         mc.gameSettings.keyBindSneak.pressed = true;
         needsUnSneak = true;
+    }
+
+    public enum HoleOperation {
+        Sword,
+        Exp,
+        Await,
+        MineEchest,
+        RunOut,
+        Quiver,
+        CounterTower,
+        City
     }
 }

@@ -35,7 +35,7 @@ public class MiddleClickInterface extends GuiScreen {
         GL11.glPushMatrix();
         GuiScreen.drawScaledCustomSizeModalRect((resolution.getScaledWidth() / 2) - 64, (resolution.getScaledHeight() / 2) - 64, 0, 128, 128, 128, 128, 128, 128, 128);
         GL11.glScaled(2.0f, 2.0f, 0.0f);
-        Ruby.rubyFont.drawStringWithShadow(entity.getName(), ((resolution.getScaledWidth() / 2f) - Ruby.rubyFont.getStringWidth(entity.getName())) / 2.0f, (((resolution.getScaledHeight() / 2f) - 64 - Ruby.rubyFont.getHeight(entity.getName()))  / 2.0f) - 10, -1);
+        Ruby.rubyFont.drawStringWithShadow(entity.getName(), ((resolution.getScaledWidth() / 2f) - Ruby.rubyFont.getStringWidth(entity.getName())) / 2.0f, (((resolution.getScaledHeight() / 2f) - 64 - Ruby.rubyFont.getHeight(entity.getName())) / 2.0f) - 10, -1);
         GL11.glPopMatrix();
         GlStateManager.disableAlpha();
         quadrants.forEach(quadrant -> quadrant.drawScreen(mouseX, mouseY, partialTicks));
@@ -46,6 +46,28 @@ public class MiddleClickInterface extends GuiScreen {
         if (releasedButton == 2)
             quadrants.forEach(quadrant -> quadrant.mouseReleased(mouseX, mouseY));
 
+    }
+
+    @Override
+    public boolean doesGuiPauseGame() {
+        return false;
+    }
+
+    public enum QuadrantType {
+        AddFriend("Add Friend"),
+        Whisper("Whisper"),
+        Block("Block"),
+        AddEnemy("Add Enemy");
+
+        String name;
+
+        QuadrantType(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
     }
 
     public static class Quadrant {
@@ -100,11 +122,10 @@ public class MiddleClickInterface extends GuiScreen {
                         }
                         break;
                     case Block:
-                        if (MiddleClick.Instance.blockedList.contains((EntityPlayer)entity)) {
-                            MiddleClick.Instance.blockedList.remove((EntityPlayer)entity);
+                        if (MiddleClick.Instance.blockedList.contains((EntityPlayer) entity)) {
+                            MiddleClick.Instance.blockedList.remove((EntityPlayer) entity);
                             Ruby.mc.player.sendMessage(new TextComponentString(prefix + ChatFormatting.RESET + "Successfully unblocked " + entity.getName() + "."));
-                        }
-                        else {
+                        } else {
                             MiddleClick.Instance.blockedList.add((EntityPlayer) entity);
                             Ruby.mc.player.sendMessage(new TextComponentString(prefix + ChatFormatting.RESET + "Successfully blocked " + entity.getName() + "."));
                         }
@@ -120,27 +141,5 @@ public class MiddleClickInterface extends GuiScreen {
         public boolean isHovering(int mouseX, int mouseY) {
             return mouseX > x && mouseX < x + width && mouseY > y && mouseY < y + height;
         }
-    }
-
-    public enum QuadrantType {
-        AddFriend("Add Friend"),
-        Whisper("Whisper"),
-        Block("Block"),
-        AddEnemy("Add Enemy");
-
-        String name;
-
-        QuadrantType(String name) {
-            this.name = name;
-        }
-
-        public String getName() {
-            return name;
-        }
-    }
-
-    @Override
-    public boolean doesGuiPauseGame() {
-        return false;
     }
 }

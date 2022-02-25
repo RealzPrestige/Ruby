@@ -1,14 +1,10 @@
 package dev.zprestige.ruby.module.player;
 
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.newsettings.impl.ComboBox;
-import dev.zprestige.ruby.newsettings.impl.Key;
-import dev.zprestige.ruby.newsettings.impl.Slider;
-import dev.zprestige.ruby.newsettings.impl.Switch;
-import dev.zprestige.ruby.setting.impl.BooleanSetting;
-import dev.zprestige.ruby.setting.impl.IntegerSetting;
-import dev.zprestige.ruby.setting.impl.KeySetting;
-import dev.zprestige.ruby.setting.impl.ModeSetting;
+import dev.zprestige.ruby.settings.impl.ComboBox;
+import dev.zprestige.ruby.settings.impl.Key;
+import dev.zprestige.ruby.settings.impl.Slider;
+import dev.zprestige.ruby.settings.impl.Switch;
 import dev.zprestige.ruby.util.InventoryUtil;
 import net.minecraft.init.Items;
 import net.minecraft.network.play.client.CPacketHeldItemChange;
@@ -17,8 +13,6 @@ import net.minecraft.util.EnumHand;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import java.util.Arrays;
-import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
 public class FastExp extends Module {
@@ -29,7 +23,7 @@ public class FastExp extends Module {
     public final Slider packets = Menu.Slider("Packets", 1, 10);
     public final Switch handOnly = Menu.Switch("Hand Only");
 
-    public FastExp(){
+    public FastExp() {
         Instance = this;
     }
 

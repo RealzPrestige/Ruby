@@ -13,12 +13,12 @@ import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class RubyFont {
-    private int scaleFactor = new ScaledResolution(Minecraft.getMinecraft()).getScaleFactor();
     private static final Pattern colorPattern = Pattern.compile("\u00c2\u00a7[0123456789abcdefklmnor]");
     public final int height = 9;
-    private UnicodeFont font;
     private final String name;
     private final float size;
+    private int scaleFactor = new ScaledResolution(Minecraft.getMinecraft()).getScaleFactor();
+    private UnicodeFont font;
     private float aAFactor;
 
     public RubyFont(String name, float size) {

@@ -5,7 +5,7 @@ import dev.zprestige.ruby.module.Module;
 public class ShulkerPeek extends Module {
     public static ShulkerPeek Instance;
 
-    public ShulkerPeek(){
+    public ShulkerPeek() {
         Instance = this;
     }
 }

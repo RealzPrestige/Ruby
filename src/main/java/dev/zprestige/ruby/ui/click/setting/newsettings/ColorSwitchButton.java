@@ -22,23 +22,183 @@ import java.io.IOException;
 import static org.lwjgl.opengl.GL11.*;
 
 public class ColorSwitchButton extends NewSetting {
-    protected dev.zprestige.ruby.newsettings.impl.ColorSwitch color;
-    protected java.awt.Color finalColor;
-    protected boolean pickingColor = false, pickingHue = false, pickingAlpha = false, opened = false, dragging = false;
     protected static Tessellator tessellator;
     protected static BufferBuilder builder;
-    protected int hoverAnimWidth, panelX, panelY, dragX, dragY;
 
     static {
         tessellator = Tessellator.getInstance();
         builder = tessellator.getBuffer();
     }
 
-    public ColorSwitchButton(dev.zprestige.ruby.newsettings.impl.ColorSwitch setting) {
+    protected dev.zprestige.ruby.settings.impl.ColorSwitch color;
+    protected java.awt.Color finalColor;
+    protected boolean pickingColor = false, pickingHue = false, pickingAlpha = false, opened = false, dragging = false;
+    protected int hoverAnimWidth, panelX, panelY, dragX, dragY;
+
+    public ColorSwitchButton(dev.zprestige.ruby.settings.impl.ColorSwitch setting) {
         super(setting);
         this.color = setting;
         finalColor = setting.GetColor();
         this.hoverAnimWidth = 0;
+    }
+
+    public static boolean mouseOver(int minX, int minY, int maxX, int maxY, int mX, int mY) {
+        return mX >= minX && mY >= minY && mX <= maxX && mY <= maxY;
+    }
+
+    public static java.awt.Color getColor(java.awt.Color color, float alpha) {
+        final float red = (float) color.getRed() / 255;
+        final float green = (float) color.getGreen() / 255;
+        final float blue = (float) color.getBlue() / 255;
+        return new java.awt.Color(red, green, blue, alpha);
+    }
+
+    public static void drawPickerBase(int pickerX, int pickerY, int pickerWidth, int pickerHeight, float red, float green, float blue) {
+        glEnable(GL_BLEND);
+        glDisable(GL_TEXTURE_2D);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glShadeModel(GL_SMOOTH);
+        glBegin(GL_POLYGON);
+        glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+        glVertex2f(pickerX, pickerY);
+        glVertex2f(pickerX, pickerY + pickerHeight);
+        glColor4f(red, green, blue, 255f);
+        glVertex2f(pickerX + pickerWidth, pickerY + pickerHeight);
+        glVertex2f(pickerX + pickerWidth, pickerY);
+        glEnd();
+        glDisable(GL_ALPHA_TEST);
+        glBegin(GL_POLYGON);
+        glColor4f(0.0f, 0.0f, 0.0f, 0.0f);
+        glVertex2f(pickerX, pickerY);
+        glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
+        glVertex2f(pickerX, pickerY + pickerHeight);
+        glVertex2f(pickerX + pickerWidth, pickerY + pickerHeight);
+        glColor4f(0.0f, 0.0f, 0.0f, 0.0f);
+        glVertex2f(pickerX + pickerWidth, pickerY);
+        glEnd();
+        glEnable(GL_ALPHA_TEST);
+        glShadeModel(GL_FLAT);
+        glEnable(GL_TEXTURE_2D);
+        glDisable(GL_BLEND);
+    }
+
+    public static void drawGradientRect(final double leftpos, final double top, final double right, final double bottom, final int col1, final int col2) {
+        final float f = (col1 >> 24 & 0xFF) / 255.0f;
+        final float f2 = (col1 >> 16 & 0xFF) / 255.0f;
+        final float f3 = (col1 >> 8 & 0xFF) / 255.0f;
+        final float f4 = (col1 & 0xFF) / 255.0f;
+        final float f5 = (col2 >> 24 & 0xFF) / 255.0f;
+        final float f6 = (col2 >> 16 & 0xFF) / 255.0f;
+        final float f7 = (col2 >> 8 & 0xFF) / 255.0f;
+        final float f8 = (col2 & 0xFF) / 255.0f;
+        glEnable(3042);
+        GL11.glDisable(3553);
+        GL11.glBlendFunc(770, 771);
+        glEnable(2848);
+        GL11.glShadeModel(7425);
+        GL11.glPushMatrix();
+        GL11.glBegin(7);
+        GL11.glColor4f(f2, f3, f4, f);
+        GL11.glVertex2d(leftpos, top);
+        GL11.glVertex2d(leftpos, bottom);
+        GL11.glColor4f(f6, f7, f8, f5);
+        GL11.glVertex2d(right, bottom);
+        GL11.glVertex2d(right, top);
+        GL11.glEnd();
+        GL11.glPopMatrix();
+        glEnable(3553);
+        GL11.glDisable(3042);
+        GL11.glDisable(2848);
+        GL11.glShadeModel(7424);
+    }
+
+    public static void drawLeftGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {
+        GlStateManager.disableTexture2D();
+        GlStateManager.enableBlend();
+        GlStateManager.disableAlpha();
+        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        GlStateManager.shadeModel(GL_SMOOTH);
+        builder.begin(GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+        builder.pos(right, top, 0).color((float) (endColor >> 24 & 255) / 255.0F, (float) (endColor >> 16 & 255) / 255.0F, (float) (endColor >> 8 & 255) / 255.0F, (float) (endColor >> 24 & 255) / 255.0F).endVertex();
+        builder.pos(left, top, 0).color((float) (startColor >> 16 & 255) / 255.0F, (float) (startColor >> 8 & 255) / 255.0F, (float) (startColor & 255) / 255.0F, (float) (startColor >> 24 & 255) / 255.0F).endVertex();
+        builder.pos(left, bottom, 0).color((float) (startColor >> 16 & 255) / 255.0F, (float) (startColor >> 8 & 255) / 255.0F, (float) (startColor & 255) / 255.0F, (float) (startColor >> 24 & 255) / 255.0F).endVertex();
+        builder.pos(right, bottom, 0).color((float) (endColor >> 24 & 255) / 255.0F, (float) (endColor >> 16 & 255) / 255.0F, (float) (endColor >> 8 & 255) / 255.0F, (float) (endColor >> 24 & 255) / 255.0F).endVertex();
+        tessellator.draw();
+        GlStateManager.shadeModel(GL_FLAT);
+        GlStateManager.disableBlend();
+        GlStateManager.enableAlpha();
+        GlStateManager.enableTexture2D();
+    }
+
+    public static void gradient(int minX, int minY, int maxX, int maxY, int startColor, int endColor, boolean left) {
+        if (left) {
+            final float startA = (startColor >> 24 & 0xFF) / 255.0f;
+            final float startR = (startColor >> 16 & 0xFF) / 255.0f;
+            final float startG = (startColor >> 8 & 0xFF) / 255.0f;
+            final float startB = (startColor & 0xFF) / 255.0f;
+
+            final float endA = (endColor >> 24 & 0xFF) / 255.0f;
+            final float endR = (endColor >> 16 & 0xFF) / 255.0f;
+            final float endG = (endColor >> 8 & 0xFF) / 255.0f;
+            final float endB = (endColor & 0xFF) / 255.0f;
+
+            glEnable(GL11.GL_BLEND);
+            GL11.glDisable(GL11.GL_TEXTURE_2D);
+            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+            GL11.glShadeModel(GL_SMOOTH);
+            GL11.glBegin(GL11.GL_POLYGON);
+            {
+                GL11.glColor4f(startR, startG, startB, startA);
+                GL11.glVertex2f(minX, minY);
+                GL11.glVertex2f(minX, maxY);
+                GL11.glColor4f(endR, endG, endB, endA);
+                GL11.glVertex2f(maxX, maxY);
+                GL11.glVertex2f(maxX, minY);
+            }
+            GL11.glEnd();
+            GL11.glShadeModel(GL11.GL_FLAT);
+            glEnable(GL11.GL_TEXTURE_2D);
+            GL11.glDisable(GL11.GL_BLEND);
+        } else drawGradientRect(minX, minY, maxX, maxY, startColor, endColor);
+    }
+
+    public static int gradientColor(int color, int percentage) {
+        int r = (((color & 0xFF0000) >> 16) * (100 + percentage) / 100);
+        int g = (((color & 0xFF00) >> 8) * (100 + percentage) / 100);
+        int b = ((color & 0xFF) * (100 + percentage) / 100);
+        return new Color(r, g, b).hashCode();
+    }
+
+    public static void drawGradientRect(float left, float top, float right, float bottom, int startColor, int endColor, boolean hovered) {
+        if (hovered) {
+            startColor = gradientColor(startColor, -20);
+            endColor = gradientColor(endColor, -20);
+        }
+        float c = (float) (startColor >> 24 & 255) / 255.0F;
+        float c1 = (float) (startColor >> 16 & 255) / 255.0F;
+        float c2 = (float) (startColor >> 8 & 255) / 255.0F;
+        float c3 = (float) (startColor & 255) / 255.0F;
+        float c4 = (float) (endColor >> 24 & 255) / 255.0F;
+        float c5 = (float) (endColor >> 16 & 255) / 255.0F;
+        float c6 = (float) (endColor >> 8 & 255) / 255.0F;
+        float c7 = (float) (endColor & 255) / 255.0F;
+        GlStateManager.disableTexture2D();
+        GlStateManager.enableBlend();
+        GlStateManager.disableAlpha();
+        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        GlStateManager.shadeModel(7425);
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder bufferbuilder = tessellator.getBuffer();
+        bufferbuilder.begin(7, DefaultVertexFormats.POSITION_COLOR);
+        bufferbuilder.pos(right, top, 0).color(c1, c2, c3, c).endVertex();
+        bufferbuilder.pos(left, top, 0).color(c1, c2, c3, c).endVertex();
+        bufferbuilder.pos(left, bottom, 0).color(c5, c6, c7, c4).endVertex();
+        bufferbuilder.pos(right, bottom, 0).color(c5, c6, c7, c4).endVertex();
+        tessellator.draw();
+        GlStateManager.shadeModel(7424);
+        GlStateManager.disableBlend();
+        GlStateManager.enableAlpha();
+        GlStateManager.enableTexture2D();
     }
 
     @Override
@@ -172,7 +332,7 @@ public class ColorSwitchButton extends NewSetting {
         pickingColor = pickingHue = pickingAlpha = false;
     }
 
-    public void drawPicker(dev.zprestige.ruby.newsettings.impl.ColorSwitch setting, int pickerX, int pickerY, int hueSliderX, int hueSliderY, int alphaSliderX, int alphaSliderY, int mouseX, int mouseY) {
+    public void drawPicker(dev.zprestige.ruby.settings.impl.ColorSwitch setting, int pickerX, int pickerY, int hueSliderX, int hueSliderY, int alphaSliderX, int alphaSliderY, int mouseX, int mouseY) {
         float[] color = new float[]{
                 0, 0, 0, 0
         };
@@ -254,46 +414,6 @@ public class ColorSwitchButton extends NewSetting {
         finalColor = getColor(new java.awt.Color(java.awt.Color.HSBtoRGB(color[0], color[1], color[2])), color[3]);
     }
 
-    public static boolean mouseOver(int minX, int minY, int maxX, int maxY, int mX, int mY) {
-        return mX >= minX && mY >= minY && mX <= maxX && mY <= maxY;
-    }
-
-    public static java.awt.Color getColor(java.awt.Color color, float alpha) {
-        final float red = (float) color.getRed() / 255;
-        final float green = (float) color.getGreen() / 255;
-        final float blue = (float) color.getBlue() / 255;
-        return new java.awt.Color(red, green, blue, alpha);
-    }
-
-    public static void drawPickerBase(int pickerX, int pickerY, int pickerWidth, int pickerHeight, float red, float green, float blue) {
-        glEnable(GL_BLEND);
-        glDisable(GL_TEXTURE_2D);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glShadeModel(GL_SMOOTH);
-        glBegin(GL_POLYGON);
-        glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-        glVertex2f(pickerX, pickerY);
-        glVertex2f(pickerX, pickerY + pickerHeight);
-        glColor4f(red, green, blue, 255f);
-        glVertex2f(pickerX + pickerWidth, pickerY + pickerHeight);
-        glVertex2f(pickerX + pickerWidth, pickerY);
-        glEnd();
-        glDisable(GL_ALPHA_TEST);
-        glBegin(GL_POLYGON);
-        glColor4f(0.0f, 0.0f, 0.0f, 0.0f);
-        glVertex2f(pickerX, pickerY);
-        glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
-        glVertex2f(pickerX, pickerY + pickerHeight);
-        glVertex2f(pickerX + pickerWidth, pickerY + pickerHeight);
-        glColor4f(0.0f, 0.0f, 0.0f, 0.0f);
-        glVertex2f(pickerX + pickerWidth, pickerY);
-        glEnd();
-        glEnable(GL_ALPHA_TEST);
-        glShadeModel(GL_FLAT);
-        glEnable(GL_TEXTURE_2D);
-        glDisable(GL_BLEND);
-    }
-
     public void drawHueSlider(int x, int y, int width, int height, float hue) {
         int step = 0;
         if (height > width) {
@@ -351,125 +471,6 @@ public class ColorSwitchButton extends NewSetting {
         RenderUtil.drawRect(sliderMinX - 1, y, sliderMinX + 1, y + height, -1);
         RenderUtil.drawOutlineRect(sliderMinX - 1, y, sliderMinX + 1, y + height, java.awt.Color.BLACK, 1);
         RenderUtil.drawOutlineRect(sliderMinX - 1, y, sliderMinX + 1, y + height, ClickGui.Instance.color.GetColor(), 1.0f);
-    }
-
-    public static void drawGradientRect(final double leftpos, final double top, final double right, final double bottom, final int col1, final int col2) {
-        final float f = (col1 >> 24 & 0xFF) / 255.0f;
-        final float f2 = (col1 >> 16 & 0xFF) / 255.0f;
-        final float f3 = (col1 >> 8 & 0xFF) / 255.0f;
-        final float f4 = (col1 & 0xFF) / 255.0f;
-        final float f5 = (col2 >> 24 & 0xFF) / 255.0f;
-        final float f6 = (col2 >> 16 & 0xFF) / 255.0f;
-        final float f7 = (col2 >> 8 & 0xFF) / 255.0f;
-        final float f8 = (col2 & 0xFF) / 255.0f;
-        glEnable(3042);
-        GL11.glDisable(3553);
-        GL11.glBlendFunc(770, 771);
-        glEnable(2848);
-        GL11.glShadeModel(7425);
-        GL11.glPushMatrix();
-        GL11.glBegin(7);
-        GL11.glColor4f(f2, f3, f4, f);
-        GL11.glVertex2d(leftpos, top);
-        GL11.glVertex2d(leftpos, bottom);
-        GL11.glColor4f(f6, f7, f8, f5);
-        GL11.glVertex2d(right, bottom);
-        GL11.glVertex2d(right, top);
-        GL11.glEnd();
-        GL11.glPopMatrix();
-        glEnable(3553);
-        GL11.glDisable(3042);
-        GL11.glDisable(2848);
-        GL11.glShadeModel(7424);
-    }
-
-    public static void drawLeftGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {
-        GlStateManager.disableTexture2D();
-        GlStateManager.enableBlend();
-        GlStateManager.disableAlpha();
-        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-        GlStateManager.shadeModel(GL_SMOOTH);
-        builder.begin(GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
-        builder.pos(right, top, 0).color((float) (endColor >> 24 & 255) / 255.0F, (float) (endColor >> 16 & 255) / 255.0F, (float) (endColor >> 8 & 255) / 255.0F, (float) (endColor >> 24 & 255) / 255.0F).endVertex();
-        builder.pos(left, top, 0).color((float) (startColor >> 16 & 255) / 255.0F, (float) (startColor >> 8 & 255) / 255.0F, (float) (startColor & 255) / 255.0F, (float) (startColor >> 24 & 255) / 255.0F).endVertex();
-        builder.pos(left, bottom, 0).color((float) (startColor >> 16 & 255) / 255.0F, (float) (startColor >> 8 & 255) / 255.0F, (float) (startColor & 255) / 255.0F, (float) (startColor >> 24 & 255) / 255.0F).endVertex();
-        builder.pos(right, bottom, 0).color((float) (endColor >> 24 & 255) / 255.0F, (float) (endColor >> 16 & 255) / 255.0F, (float) (endColor >> 8 & 255) / 255.0F, (float) (endColor >> 24 & 255) / 255.0F).endVertex();
-        tessellator.draw();
-        GlStateManager.shadeModel(GL_FLAT);
-        GlStateManager.disableBlend();
-        GlStateManager.enableAlpha();
-        GlStateManager.enableTexture2D();
-    }
-
-    public static void gradient(int minX, int minY, int maxX, int maxY, int startColor, int endColor, boolean left) {
-        if (left) {
-            final float startA = (startColor >> 24 & 0xFF) / 255.0f;
-            final float startR = (startColor >> 16 & 0xFF) / 255.0f;
-            final float startG = (startColor >> 8 & 0xFF) / 255.0f;
-            final float startB = (startColor & 0xFF) / 255.0f;
-
-            final float endA = (endColor >> 24 & 0xFF) / 255.0f;
-            final float endR = (endColor >> 16 & 0xFF) / 255.0f;
-            final float endG = (endColor >> 8 & 0xFF) / 255.0f;
-            final float endB = (endColor & 0xFF) / 255.0f;
-
-            glEnable(GL11.GL_BLEND);
-            GL11.glDisable(GL11.GL_TEXTURE_2D);
-            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-            GL11.glShadeModel(GL_SMOOTH);
-            GL11.glBegin(GL11.GL_POLYGON);
-            {
-                GL11.glColor4f(startR, startG, startB, startA);
-                GL11.glVertex2f(minX, minY);
-                GL11.glVertex2f(minX, maxY);
-                GL11.glColor4f(endR, endG, endB, endA);
-                GL11.glVertex2f(maxX, maxY);
-                GL11.glVertex2f(maxX, minY);
-            }
-            GL11.glEnd();
-            GL11.glShadeModel(GL11.GL_FLAT);
-            glEnable(GL11.GL_TEXTURE_2D);
-            GL11.glDisable(GL11.GL_BLEND);
-        } else drawGradientRect(minX, minY, maxX, maxY, startColor, endColor);
-    }
-
-    public static int gradientColor(int color, int percentage) {
-        int r = (((color & 0xFF0000) >> 16) * (100 + percentage) / 100);
-        int g = (((color & 0xFF00) >> 8) * (100 + percentage) / 100);
-        int b = ((color & 0xFF) * (100 + percentage) / 100);
-        return new Color(r, g, b).hashCode();
-    }
-
-    public static void drawGradientRect(float left, float top, float right, float bottom, int startColor, int endColor, boolean hovered) {
-        if (hovered) {
-            startColor = gradientColor(startColor, -20);
-            endColor = gradientColor(endColor, -20);
-        }
-        float c = (float) (startColor >> 24 & 255) / 255.0F;
-        float c1 = (float) (startColor >> 16 & 255) / 255.0F;
-        float c2 = (float) (startColor >> 8 & 255) / 255.0F;
-        float c3 = (float) (startColor & 255) / 255.0F;
-        float c4 = (float) (endColor >> 24 & 255) / 255.0F;
-        float c5 = (float) (endColor >> 16 & 255) / 255.0F;
-        float c6 = (float) (endColor >> 8 & 255) / 255.0F;
-        float c7 = (float) (endColor & 255) / 255.0F;
-        GlStateManager.disableTexture2D();
-        GlStateManager.enableBlend();
-        GlStateManager.disableAlpha();
-        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-        GlStateManager.shadeModel(7425);
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferbuilder = tessellator.getBuffer();
-        bufferbuilder.begin(7, DefaultVertexFormats.POSITION_COLOR);
-        bufferbuilder.pos(right, top, 0).color(c1, c2, c3, c).endVertex();
-        bufferbuilder.pos(left, top, 0).color(c1, c2, c3, c).endVertex();
-        bufferbuilder.pos(left, bottom, 0).color(c5, c6, c7, c4).endVertex();
-        bufferbuilder.pos(right, bottom, 0).color(c5, c6, c7, c4).endVertex();
-        tessellator.draw();
-        GlStateManager.shadeModel(7424);
-        GlStateManager.disableBlend();
-        GlStateManager.enableAlpha();
-        GlStateManager.enableTexture2D();
     }
 }
 

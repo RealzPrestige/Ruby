@@ -1,10 +1,10 @@
 package dev.zprestige.ruby.module.combat;
 
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.newsettings.impl.ComboBox;
-import dev.zprestige.ruby.newsettings.impl.Parent;
-import dev.zprestige.ruby.newsettings.impl.Slider;
-import dev.zprestige.ruby.newsettings.impl.Switch;
+import dev.zprestige.ruby.settings.impl.ComboBox;
+import dev.zprestige.ruby.settings.impl.Parent;
+import dev.zprestige.ruby.settings.impl.Slider;
+import dev.zprestige.ruby.settings.impl.Switch;
 import dev.zprestige.ruby.util.BlockUtil;
 import dev.zprestige.ruby.util.EntityUtil;
 import dev.zprestige.ruby.util.InventoryUtil;
@@ -69,13 +69,13 @@ public class CevBreaker extends Module {
             return;
         }
         BlockPos pos = EntityUtil.getPlayerPos(entityPlayer).up().up();
-        if (!needsCrystal && mc.world.getBlockState(pos).getBlock().equals(Blocks.AIR) && isPosSurroundedByBlocks(pos) && timer.getTime(actionDelay.GetSlider())) {
+        if (!needsCrystal && mc.world.getBlockState(pos).getBlock().equals(Blocks.AIR) && isPosSurroundedByBlocks(pos) && timer.getTime((long) actionDelay.GetSlider())) {
             BlockUtil.placeBlockWithSwitch(pos, EnumHand.MAIN_HAND, rotate.GetSwitch(), packet.GetSwitch(), slot);
             timer.setTime(0);
             needsCrystal = true;
         }
 
-        if (mc.world.getBlockState(pos).getBlock().equals(Blocks.OBSIDIAN) && mc.world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(pos.up())).isEmpty() && timer.getTime(actionDelay.GetSlider())) {
+        if (mc.world.getBlockState(pos).getBlock().equals(Blocks.OBSIDIAN) && mc.world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(pos.up())).isEmpty() && timer.getTime((long) actionDelay.GetSlider())) {
             placeCrystal(pos);
             clickBlock(pos);
             isMining = true;
@@ -88,7 +88,7 @@ public class CevBreaker extends Module {
             }
             isMining = false;
         }
-        if (timer.getTime(2000 + actionDelay.GetSlider())) {
+        if (timer.getTime((long) (2000 + actionDelay.GetSlider()))) {
             for (Entity entity : mc.world.loadedEntityList) {
                 if (!(entity instanceof EntityEnderCrystal))
                     continue;

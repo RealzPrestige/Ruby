@@ -2,7 +2,7 @@ package dev.zprestige.ruby.ui.click.setting.newsettings;
 
 import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.module.client.ClickGui;
-import dev.zprestige.ruby.newsettings.impl.Slider;
+import dev.zprestige.ruby.settings.impl.Slider;
 import dev.zprestige.ruby.ui.click.setting.NewSetting;
 import dev.zprestige.ruby.util.RenderUtil;
 import org.lwjgl.input.Mouse;
@@ -27,7 +27,7 @@ public class SliderButton extends NewSetting {
         float sliderWidth = width * sliderWidthValue();
         RenderUtil.drawRect(x, y, x + sliderWidth, y + height, ClickGui.Instance.color.GetColor().getRGB());
         final String name = slider.getName();
-        Ruby.rubyFont.drawStringWithShadow(name, x + 2, getStringMiddle(name),-1);
+        Ruby.rubyFont.drawStringWithShadow(name, x + 2, getStringMiddle(name), -1);
         Ruby.rubyFont.drawStringWithShadow(slider.GetSlider() + "", x + 2 + Ruby.rubyFont.getStringWidth(name + " "), getStringMiddle(name), Color.GRAY.getRGB());
         hover(mouseX, mouseY);
     }

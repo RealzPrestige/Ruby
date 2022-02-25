@@ -13,12 +13,6 @@ import java.util.stream.Collectors;
 public class HoleManager {
     public Minecraft mc = Ruby.mc;
     public ArrayList<HolePos> holes = new ArrayList<>();
-
-    public void onRenderWorldLastEvent(){
-        Ruby.threadManager.run(() -> {
-            holes = getHoles();
-        });
-    }
     public Vec3i[] Hole = {
             new Vec3i(1, 0, 0),
             new Vec3i(-1, 0, 0),
@@ -26,7 +20,6 @@ public class HoleManager {
             new Vec3i(0, 0, 1),
             new Vec3i(0, 0, -1)
     };
-
     public Vec3i[] DoubleHoleNorth = {
             new Vec3i(0, 0, -2),
             new Vec3i(-1, 0, -1),
@@ -37,7 +30,6 @@ public class HoleManager {
             new Vec3i(1, 0, 0),
             new Vec3i(0, 0, 1)
     };
-
     public Vec3i[] DoubleHoleWest = {
             new Vec3i(-2, 0, 0),
             new Vec3i(-1, 0, 1),
@@ -48,6 +40,12 @@ public class HoleManager {
             new Vec3i(0, 0, -1),
             new Vec3i(1, 0, 0)
     };
+
+    public void onRenderWorldLastEvent() {
+        Ruby.threadManager.run(() -> {
+            holes = getHoles();
+        });
+    }
 
     public ArrayList<HolePos> getHoles() {
         ArrayList<HolePos> holes = new ArrayList<>();
@@ -129,16 +127,6 @@ public class HoleManager {
         return !mc.world.getBlockState(pos).getBlock().equals(Blocks.BEDROCK);
     }
 
-    public static class HolePos {
-        public BlockPos pos;
-        public Type holeType;
-
-        public HolePos(BlockPos pos, Type holeType ) {
-            this.pos = pos;
-            this.holeType = holeType;
-        }
-    }
-
     public enum Type {
         Bedrock,
         Obsidian,
@@ -146,5 +134,15 @@ public class HoleManager {
         DoubleBedrockWest,
         DoubleObsidianNorth,
         DoubleObsidianWest
+    }
+
+    public static class HolePos {
+        public BlockPos pos;
+        public Type holeType;
+
+        public HolePos(BlockPos pos, Type holeType) {
+            this.pos = pos;
+            this.holeType = holeType;
+        }
     }
 }

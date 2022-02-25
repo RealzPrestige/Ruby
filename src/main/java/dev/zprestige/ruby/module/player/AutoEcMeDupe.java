@@ -5,8 +5,8 @@ import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.PacketEvent;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.newsettings.impl.Slider;
-import dev.zprestige.ruby.newsettings.impl.Switch;
+import dev.zprestige.ruby.settings.impl.Slider;
+import dev.zprestige.ruby.settings.impl.Switch;
 import dev.zprestige.ruby.util.BlockUtil;
 import dev.zprestige.ruby.util.InventoryUtil;
 import dev.zprestige.ruby.util.Timer;
@@ -65,14 +65,14 @@ public class AutoEcMeDupe extends Module {
             mc.gameSettings.keyBindSneak.pressed = false;
             joe = false;
         }
-        if (autoDismount.GetSwitch() && dismountTimer.getTime(dismountRetryDelay.GetSlider()) && mc.player.isRiding()) {
+        if (autoDismount.GetSwitch() && dismountTimer.getTime((long) dismountRetryDelay.GetSlider()) && mc.player.isRiding()) {
             mc.gameSettings.keyBindSneak.pressed = true;
             dismountTimer.setTime(0);
             joe = true;
         }
         switch (stage) {
             case 0:
-                if (timer.getTime(restart ? (restartTimeout.GetSlider() * 1000) : actionDelay.GetSlider())) {
+                if (timer.getTime((long) (restart ? (restartTimeout.GetSlider() * 1000) : actionDelay.GetSlider()))) {
                     if (restart)
                         restart = false;
                     if (entityDonkey.hasChest()) {
@@ -88,7 +88,7 @@ public class AutoEcMeDupe extends Module {
                 }
                 break;
             case 1:
-                if (timer.getTime(actionDelay.GetSlider())) {
+                if (timer.getTime((long) actionDelay.GetSlider())) {
                     mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_SNEAKING));
                     entityRotate(entityDonkey);
                     mc.playerController.interactWithEntity(mc.player, entityDonkey, EnumHand.MAIN_HAND);
@@ -101,7 +101,7 @@ public class AutoEcMeDupe extends Module {
             case 2:
                 if (shulkers >= 15) {
                     stage = 3;
-                } else if (timer.getTime(actionDelay.GetSlider())) {
+                } else if (timer.getTime((long) actionDelay.GetSlider())) {
                     if (mc.currentScreen instanceof GuiScreenHorseInventory) {
                         Ruby.chatManager.sendMessage("[AutoEcMeDupe]" + ChatFormatting.GRAY + "[Stage][" + ChatFormatting.WHITE + stage + "]" + ChatFormatting.WHITE + " transferring items started.");
                         GuiScreenHorseInventory chest = (GuiScreenHorseInventory) mc.currentScreen;
@@ -118,7 +118,7 @@ public class AutoEcMeDupe extends Module {
                 }
                 break;
             case 3:
-                if (timer.getTime(actionDelay.GetSlider())) {
+                if (timer.getTime((long) actionDelay.GetSlider())) {
                     Ruby.chatManager.sendMessage("[AutoEcMeDupe]" + ChatFormatting.GRAY + "[Stage][" + ChatFormatting.WHITE + stage + "]" + ChatFormatting.WHITE + " closing donkey.");
                     mc.displayGuiScreen(null);
                     stage = 4;
@@ -132,7 +132,7 @@ public class AutoEcMeDupe extends Module {
                     Ruby.chatManager.sendMessage("[AutoEcMeDupe]" + ChatFormatting.GRAY + "[Stage][" + ChatFormatting.WHITE + stage + "]" + ChatFormatting.WHITE + " finishing up, setting stage to 0.");
                     stage = 0;
                 }
-                if (timer.getTime(timeoutTime.GetSlider() * 1000)) {
+                if (timer.getTime((long) (timeoutTime.GetSlider() * 1000))) {
                     Ruby.chatManager.sendMessage("[AutoEcMeDupe]" + ChatFormatting.GRAY + "[Stage][" + ChatFormatting.WHITE + stage + "]" + ChatFormatting.WHITE + " rotating to donkey.");
                     entityRotate(entityDonkey);
                     Ruby.chatManager.sendMessage("[AutoEcMeDupe]" + ChatFormatting.GRAY + "[Stage][" + ChatFormatting.WHITE + stage + "]" + ChatFormatting.WHITE + " setting vanilla use item pressed.");

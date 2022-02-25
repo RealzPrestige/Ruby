@@ -25,7 +25,7 @@ public class MixinTabOverlay extends Gui {
     @Redirect(method = {"renderPlayerlist"}, at = @At(value = "INVOKE", target = "Ljava/util/List;subList(II)Ljava/util/List;", remap = false))
     protected List<NetworkPlayerInfo> subListHook(List<NetworkPlayerInfo> list, int fromIndex, int toIndex) {
         if (TabList.Instance.isEnabled()) {
-            switch (TabList.Instance.order.getValue()) {
+            switch (TabList.Instance.order.GetCombo()) {
                 case "Ping":
                     return list.stream().sorted(Comparator.comparing(NetworkPlayerInfo::getResponseTime)).limit((long) TabList.Instance.maxSize.GetSlider()).collect(Collectors.toList());
                 case "Alphabet":
@@ -49,13 +49,13 @@ public class MixinTabOverlay extends Gui {
             if (Friends.Instance.tabPrefix.GetSwitch())
                 callbackInfoReturnable.setReturnValue(ChatFormatting.AQUA + "[Friend] " + name + (TabList.Instance.isEnabled() && TabList.Instance.showPing.GetSwitch() ? " [" + networkPlayerInfoIn.getResponseTime() + "]" : ""));
             else
-                callbackInfoReturnable.setReturnValue(ChatFormatting.AQUA + "" + name+ (TabList.Instance.isEnabled() && TabList.Instance.showPing.GetSwitch() ? " [" + networkPlayerInfoIn.getResponseTime() + "]" : ""));
+                callbackInfoReturnable.setReturnValue(ChatFormatting.AQUA + "" + name + (TabList.Instance.isEnabled() && TabList.Instance.showPing.GetSwitch() ? " [" + networkPlayerInfoIn.getResponseTime() + "]" : ""));
         }
         if (Enemies.Instance.isEnabled() && Enemies.Instance.tabHighlight.GetSwitch() && Ruby.enemyManager.isEnemy(name)) {
             if (Enemies.Instance.tabPrefix.GetSwitch())
-                callbackInfoReturnable.setReturnValue(ChatFormatting.RED + "[Enemy] " + name+ (TabList.Instance.isEnabled() && TabList.Instance.showPing.GetSwitch() ? " [" + networkPlayerInfoIn.getResponseTime() + "]" : ""));
+                callbackInfoReturnable.setReturnValue(ChatFormatting.RED + "[Enemy] " + name + (TabList.Instance.isEnabled() && TabList.Instance.showPing.GetSwitch() ? " [" + networkPlayerInfoIn.getResponseTime() + "]" : ""));
             else
-                callbackInfoReturnable.setReturnValue(ChatFormatting.RED + "" + name+ (TabList.Instance.isEnabled() && TabList.Instance.showPing.GetSwitch() ? " [" + networkPlayerInfoIn.getResponseTime() + "]" : ""));
+                callbackInfoReturnable.setReturnValue(ChatFormatting.RED + "" + name + (TabList.Instance.isEnabled() && TabList.Instance.showPing.GetSwitch() ? " [" + networkPlayerInfoIn.getResponseTime() + "]" : ""));
         }
     }
 }

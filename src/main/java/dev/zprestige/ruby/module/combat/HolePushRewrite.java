@@ -2,11 +2,10 @@ package dev.zprestige.ruby.module.combat;
 
 import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.newsettings.impl.ComboBox;
-import dev.zprestige.ruby.newsettings.impl.Parent;
-import dev.zprestige.ruby.newsettings.impl.Slider;
-import dev.zprestige.ruby.newsettings.impl.Switch;
-import dev.zprestige.ruby.setting.impl.*;
+import dev.zprestige.ruby.settings.impl.ComboBox;
+import dev.zprestige.ruby.settings.impl.Parent;
+import dev.zprestige.ruby.settings.impl.Slider;
+import dev.zprestige.ruby.settings.impl.Switch;
 import dev.zprestige.ruby.util.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityEnderCrystal;
@@ -23,9 +22,7 @@ import net.minecraft.util.math.BlockPos;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.TreeMap;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class HolePushRewrite extends Module {
@@ -81,7 +78,7 @@ public class HolePushRewrite extends Module {
 
     @Override
     public void onTick() {
-        if (!timer.getTime(placeDelay.GetSlider()))
+        if (!timer.getTime((long) placeDelay.GetSlider()))
             return;
         entityPlayer = getUntrappedClosestEntityPlayer(targetRange.GetSlider(), false);
         if (entityPlayer == null) {

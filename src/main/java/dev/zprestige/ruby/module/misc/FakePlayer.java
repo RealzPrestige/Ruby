@@ -3,7 +3,7 @@ package dev.zprestige.ruby.module.misc;
 import com.google.gson.JsonParser;
 import com.mojang.authlib.GameProfile;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.newsettings.impl.Switch;
+import dev.zprestige.ruby.settings.impl.Switch;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
 
 import java.io.InputStream;
@@ -19,6 +19,17 @@ public class FakePlayer extends Module {
 
     public FakePlayer() {
         Instance = this;
+    }
+
+    public static UUID getUUIDByName(String name) {
+        try {
+            URLConnection request = new URL("https://api.mojang.com/users/profiles/minecraft/" + name).openConnection();
+            request.connect();
+            String id = java.util.UUID.fromString(new JsonParser().parse(new InputStreamReader((InputStream) request.getContent())).getAsJsonObject().get("id").getAsString().replaceFirst("(\\p{XDigit}{8})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}+)", "$1-$2-$3-$4-$5")).toString();
+            return UUID.fromString(id);
+        } catch (Exception ignored) {
+        }
+        return null;
     }
 
     @Override
@@ -44,16 +55,5 @@ public class FakePlayer extends Module {
     public void onDisable() {
         if (fakePlayer != null)
             mc.world.removeEntityFromWorld(-100);
-    }
-
-    public static UUID getUUIDByName(String name) {
-        try {
-            URLConnection request = new URL("https://api.mojang.com/users/profiles/minecraft/" + name).openConnection();
-            request.connect();
-            String id = java.util.UUID.fromString(new JsonParser().parse(new InputStreamReader((InputStream) request.getContent())).getAsJsonObject().get("id").getAsString().replaceFirst("(\\p{XDigit}{8})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}+)", "$1-$2-$3-$4-$5")).toString();
-            return UUID.fromString(id);
-        } catch (Exception ignored) {
-        }
-        return null;
     }
 }

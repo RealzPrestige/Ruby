@@ -16,7 +16,7 @@ public abstract class MixinRenderArmor {
 
     /**
      * @author ea
-     * @reason  joe
+     * @reason joe
      */
 
     @Overwrite
@@ -25,22 +25,22 @@ public abstract class MixinRenderArmor {
         if (NoRender.Instance.isEnabled())
             switch (slotIn) {
                 case HEAD:
-                    p_188359_1_.bipedHead.showModel = !NoRender.Instance.armor.getValue();
-                    p_188359_1_.bipedHeadwear.showModel = !NoRender.Instance.armor.getValue();
+                    p_188359_1_.bipedHead.showModel = !NoRender.Instance.armor.GetSwitch();
+                    p_188359_1_.bipedHeadwear.showModel = !NoRender.Instance.armor.GetSwitch();
                     break;
                 case CHEST:
-                    p_188359_1_.bipedBody.showModel = !NoRender.Instance.armor.getValue();
-                    p_188359_1_.bipedRightArm.showModel = !NoRender.Instance.armor.getValue();
-                    p_188359_1_.bipedLeftArm.showModel = !NoRender.Instance.armor.getValue();
+                    p_188359_1_.bipedBody.showModel = !NoRender.Instance.armor.GetSwitch();
+                    p_188359_1_.bipedRightArm.showModel = !NoRender.Instance.armor.GetSwitch();
+                    p_188359_1_.bipedLeftArm.showModel = !NoRender.Instance.armor.GetSwitch();
                     break;
                 case LEGS:
-                    p_188359_1_.bipedBody.showModel = !NoRender.Instance.armor.getValue();
-                    p_188359_1_.bipedRightLeg.showModel = !NoRender.Instance.armor.getValue();
-                    p_188359_1_.bipedLeftLeg.showModel = !NoRender.Instance.armor.getValue();
+                    p_188359_1_.bipedBody.showModel = !NoRender.Instance.armor.GetSwitch();
+                    p_188359_1_.bipedRightLeg.showModel = !NoRender.Instance.armor.GetSwitch();
+                    p_188359_1_.bipedLeftLeg.showModel = !NoRender.Instance.armor.GetSwitch();
                     break;
                 case FEET:
-                    p_188359_1_.bipedRightLeg.showModel = !NoRender.Instance.armor.getValue();
-                    p_188359_1_.bipedLeftLeg.showModel = !NoRender.Instance.armor.getValue();
+                    p_188359_1_.bipedRightLeg.showModel = !NoRender.Instance.armor.GetSwitch();
+                    p_188359_1_.bipedLeftLeg.showModel = !NoRender.Instance.armor.GetSwitch();
             }
     }
 }

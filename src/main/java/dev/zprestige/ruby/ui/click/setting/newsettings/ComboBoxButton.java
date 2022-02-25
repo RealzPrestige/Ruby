@@ -2,7 +2,7 @@ package dev.zprestige.ruby.ui.click.setting.newsettings;
 
 import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.module.client.ClickGui;
-import dev.zprestige.ruby.newsettings.impl.ComboBox;
+import dev.zprestige.ruby.settings.impl.ComboBox;
 import dev.zprestige.ruby.ui.click.setting.NewSetting;
 import dev.zprestige.ruby.util.RenderUtil;
 
@@ -26,14 +26,14 @@ public class ComboBoxButton extends NewSetting {
         final String value = comboBox.GetCombo();
         Ruby.rubyFont.drawStringWithShadow(value, x + Ruby.rubyFont.getStringWidth(name + "  "), getStringMiddle(value), Color.GRAY.getRGB());
         float start = x + width / 2f;
-        for (String ignored : comboBox.getValues()){
+        for (String ignored : comboBox.getValues()) {
             start -= 3.0f;
         }
         float deltaX = start;
-        for (String string : comboBox.getValues()){
+        for (String string : comboBox.getValues()) {
             RenderUtil.drawRect(deltaX, y + height - 1, deltaX + 5, y + height, ClickGui.Instance.color.GetColor().getRGB());
-            if (comboBox.GetCombo().equals(string)){
-                RenderUtil.drawOutlineRect(deltaX, y + height -1, deltaX + 5, y + height, Color.WHITE, 1.0f);
+            if (comboBox.GetCombo().equals(string)) {
+                RenderUtil.drawOutlineRect(deltaX, y + height - 1, deltaX + 5, y + height, Color.WHITE, 1.0f);
             }
             deltaX += 6.0f;
         }

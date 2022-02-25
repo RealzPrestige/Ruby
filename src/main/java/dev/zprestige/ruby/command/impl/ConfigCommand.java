@@ -1,4 +1,5 @@
 package dev.zprestige.ruby.command.impl;
+
 import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.command.Command;
 
@@ -19,12 +20,12 @@ public class ConfigCommand extends Command {
                 completeMessage("saved config " + split[2]);
             }
             if (split[1].equals("load")) {
-                Ruby.configManager.load(split[2],  split[3].equals("true"));
+                Ruby.configManager.load(split[2], split[3].equals("true"));
                 completeMessage("loaded config " + split[2]);
             }
-            if (split[1].equals("delete")){
+            if (split[1].equals("delete")) {
                 File path = new File(mc.gameDir + File.separator + "ClientRewrite" + File.separator + "Configs" + split[2]);
-                if (path.exists()){
+                if (path.exists()) {
                     //noinspection ResultOfMethodCallIgnored
                     path.delete();
                 }

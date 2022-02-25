@@ -1,12 +1,12 @@
-package dev.zprestige.ruby.newsettings.impl;
+package dev.zprestige.ruby.settings.impl;
 
-import dev.zprestige.ruby.newsettings.Setting;
+import dev.zprestige.ruby.settings.Setting;
 
 public class ComboBox extends Setting {
     protected String value;
     protected String[] values;
 
-    public ComboBox(String name, String[] values){
+    public ComboBox(String name, String[] values) {
         this.name = name;
         this.value = values[0];
         this.values = values;
@@ -20,7 +20,7 @@ public class ComboBox extends Setting {
         this.value = value;
     }
 
-    public String GetCombo(){
+    public String GetCombo() {
         return value;
     }
 
@@ -28,7 +28,7 @@ public class ComboBox extends Setting {
         return values;
     }
 
-    public ComboBox parent(Parent parent){
+    public ComboBox parent(Parent parent) {
         setHasParent(true);
         setParent(parent);
         return this;

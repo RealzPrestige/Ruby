@@ -26,6 +26,7 @@ public class MixinLoader implements IFMLLoadingPlugin {
     public String getSetupClass() {
         return null;
     }
+
     public String getAccessTransformerClass() {
         return null;
     }

@@ -4,10 +4,9 @@ import dev.zprestige.ruby.Ruby;
 import org.lwjgl.opengl.GL20;
 
 public class ItemShader extends FramebufferShader {
+    public static ItemShader Instance = new ItemShader();
     public float mix = 0.0f;
     public float alpha = 1.0f;
-
-    public static ItemShader Instance = new ItemShader();
 
     public ItemShader() {
         super("itemglow.frag");

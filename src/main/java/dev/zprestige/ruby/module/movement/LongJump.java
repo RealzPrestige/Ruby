@@ -6,11 +6,8 @@ import dev.zprestige.ruby.events.MotionUpdateEvent;
 import dev.zprestige.ruby.events.MoveEvent;
 import dev.zprestige.ruby.events.PacketEvent;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.newsettings.impl.Slider;
-import dev.zprestige.ruby.newsettings.impl.Switch;
-import dev.zprestige.ruby.setting.impl.BooleanSetting;
-import dev.zprestige.ruby.setting.impl.DoubleSetting;
-import dev.zprestige.ruby.setting.impl.FloatSetting;
+import dev.zprestige.ruby.settings.impl.Slider;
+import dev.zprestige.ruby.settings.impl.Switch;
 import dev.zprestige.ruby.util.EntityUtil;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.network.play.server.SPacketPlayerPosLook;
@@ -30,6 +27,14 @@ public class LongJump extends Module {
     public int ticks;
     public float prevTickDamage;
     public float damage;
+
+    public static float roundNumber(double value, int places) {
+        if (places < 0)
+            throw new IllegalArgumentException();
+        BigDecimal decimal = BigDecimal.valueOf(value);
+        decimal = decimal.setScale(places, RoundingMode.FLOOR);
+        return decimal.floatValue();
+    }
 
     @Override
     public void onEnable() {
@@ -111,13 +116,5 @@ public class LongJump extends Module {
         int screenHeight = new ScaledResolution(mc).getScaledHeight();
         String string = "LongJump: [" + "Stage: " + stage + " | PrevDistance: " + roundNumber(prevDistance, 1) + " | Ticks: " + ticks + " | MoveSpeed: " + roundNumber(moveSpeed, 1) + " | DamageCheck: " + roundNumber(damage, 1) + " - " + (damage > minDamage.GetSlider()) + "]";
         Ruby.rubyFont.drawStringWithShadow(string, (screenWidth / 2f) - (Ruby.rubyFont.getStringWidth(string) / 2f), screenHeight - 100, -1);
-    }
-
-    public static float roundNumber(double value, int places) {
-        if (places < 0)
-            throw new IllegalArgumentException();
-        BigDecimal decimal = BigDecimal.valueOf(value);
-        decimal = decimal.setScale(places, RoundingMode.FLOOR);
-        return decimal.floatValue();
     }
 }

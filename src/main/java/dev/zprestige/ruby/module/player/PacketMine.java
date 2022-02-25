@@ -3,7 +3,7 @@ package dev.zprestige.ruby.module.player;
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.BlockInteractEvent;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.newsettings.impl.*;
+import dev.zprestige.ruby.settings.impl.*;
 import dev.zprestige.ruby.util.InventoryUtil;
 import dev.zprestige.ruby.util.RenderUtil;
 import dev.zprestige.ruby.util.Timer;
@@ -19,7 +19,6 @@ import java.util.Objects;
 
 public class PacketMine extends Module {
     public static PacketMine Instance;
-    public Timer timer = new Timer();
     public final Parent misc = Menu.Parent("Misc");
     public final Switch lmbBreak = Menu.Switch("LMB Break").parent(misc);
     public final Switch posFix = Menu.Switch("Pos Fix").parent(misc);
@@ -35,6 +34,7 @@ public class PacketMine extends Module {
     public final Slider outlineWidth = Menu.Slider("Outline Width", 0.1f, 5.0f).parent(rendering);
     public final Slider maxAlpha = Menu.Slider("Max Alpha", 0.0f, 255.0f).parent(rendering);
     public final Slider minAlpha = Menu.Slider("Min Alpha", 0.0f, 255.0f).parent(rendering);
+    public Timer timer = new Timer();
     public BlockPos currentPos;
     public float currState;
     public float boxRed;

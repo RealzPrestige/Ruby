@@ -3,19 +3,14 @@ package dev.zprestige.ruby.module.movement;
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.MoveEvent;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.newsettings.impl.ComboBox;
-import dev.zprestige.ruby.newsettings.impl.Slider;
-import dev.zprestige.ruby.newsettings.impl.Switch;
-import dev.zprestige.ruby.setting.impl.BooleanSetting;
-import dev.zprestige.ruby.setting.impl.FloatSetting;
-import dev.zprestige.ruby.setting.impl.ModeSetting;
+import dev.zprestige.ruby.settings.impl.ComboBox;
+import dev.zprestige.ruby.settings.impl.Slider;
+import dev.zprestige.ruby.settings.impl.Switch;
 import dev.zprestige.ruby.util.BlockUtil;
 import dev.zprestige.ruby.util.EntityUtil;
 import net.minecraft.init.Blocks;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.function.Predicate;
 
 public class LiquidSpeed extends Module {
     public final ComboBox mode = Menu.ComboBox("Mode", new String[]{"Vanilla", "Factor", "Teleport"});
@@ -40,7 +35,7 @@ public class LiquidSpeed extends Module {
         double[] motion = EntityUtil.getSpeed(horizontalSpeed.GetSlider() / 10f);
         switch (mode.GetCombo()) {
             case "Vanilla":
-                double value = horizontalSpeed.GetSlider() + (boost.GetSwitch() && (!onlyBoostOnHoldSprint.GetSwitch() ||  mc.gameSettings.keyBindSprint.isKeyDown()) ? boostAmount / (boostReduction.GetSlider() * 10) : 0);
+                double value = horizontalSpeed.GetSlider() + (boost.GetSwitch() && (!onlyBoostOnHoldSprint.GetSwitch() || mc.gameSettings.keyBindSprint.isKeyDown()) ? boostAmount / (boostReduction.GetSlider() * 10) : 0);
                 mc.player.motionX *= value;
                 mc.player.motionZ *= value;
                 break;

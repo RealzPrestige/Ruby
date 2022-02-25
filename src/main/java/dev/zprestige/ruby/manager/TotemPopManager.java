@@ -14,12 +14,14 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.HashMap;
 import java.util.Map;
+
 public class TotemPopManager {
     public HashMap<String, Integer> popMap = new HashMap<>();
 
-    public TotemPopManager(){
+    public TotemPopManager() {
         Ruby.eventBus.register(this);
     }
+
     @SubscribeEvent
     public void onLivingUpdateEvent(LivingEvent.LivingUpdateEvent event) {
         if (Ruby.mc.player != null && Ruby.mc.world != null) {

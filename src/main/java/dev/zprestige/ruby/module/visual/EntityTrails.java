@@ -1,10 +1,9 @@
 package dev.zprestige.ruby.module.visual;
 
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.setting.impl.BooleanSetting;
-import dev.zprestige.ruby.setting.impl.ColorSetting;
-import dev.zprestige.ruby.setting.impl.FloatSetting;
-import dev.zprestige.ruby.setting.impl.IntegerSetting;
+import dev.zprestige.ruby.settings.impl.ColorBox;
+import dev.zprestige.ruby.settings.impl.Slider;
+import dev.zprestige.ruby.settings.impl.Switch;
 import dev.zprestige.ruby.util.RenderUtil;
 import dev.zprestige.ruby.util.Timer;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -19,7 +18,6 @@ import org.lwjgl.opengl.GL11;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -28,17 +26,17 @@ import static org.lwjgl.opengl.GL11.glEnable;
 public class EntityTrails extends Module {
 
     public final Switch self = Menu.Switch("Self");
-    public final Slider lineWidth = Menu.Switch("LineWidth", 2.0f, 0.1f, 5.0f, (Predicate<Float>) v -> self.getValue());
-    public final Switch fade = Menu.Switch("Fade", v -> self.getValue());
-    public final Slider removeDelay = Menu.Switch("RemoveDelay", 1000, 0, 2000, (Predicate<Integer>) v -> self.getValue());
-    public final ColorBox startColor = Menu.Switch("StartColor", new Color(-1), v -> self.getValue());
-    public final ColorBox endColor = Menu.Switch("EndColor", new Color(-1), v -> self.getValue());
+    public final Slider lineWidth = Menu.Slider("LineWidth", 0.1f, 5.0f);
+    public final Switch fade = Menu.Switch("Fade");
+    public final Slider removeDelay = Menu.Slider("RemoveDelay", 0, 2000);
+    public final ColorBox startColor = Menu.Color("StartColor");
+    public final ColorBox endColor = Menu.Color("EndColor");
 
     public final Switch entities = Menu.Switch("Entities");
-    public final Switch pearls = Menu.Switch("Pearls", false, v -> entities.getValue());
-    public final Switch exp = Menu.Switch("Exp", false, v -> entities.getValue());
-    public final ColorBox pearlColor = Menu.Switch("EntityColor", new Color(-1), v -> entities.getValue());
-    public final Slider pearlLineWidth = Menu.Switch("PearlLineWidth", 3.0f, 0.0f, 10.0f, (Predicate<Float>) v -> entities.getValue());
+    public final Switch pearls = Menu.Switch("Pearls");
+    public final Switch exp = Menu.Switch("Exp");
+    public final ColorBox pearlColor = Menu.Color("EntityColor");
+    public final Slider pearlLineWidth = Menu.Slider("PearlLineWidth", 0.0f, 10.0f);
 
     public HashMap<UUID, List<Vec3d>> pearlPos = new HashMap<>();
     public HashMap<UUID, Double> removeWait = new HashMap<>();
@@ -46,7 +44,7 @@ public class EntityTrails extends Module {
 
     @Override
     public void onTick() {
-        if (entities.getValue()) {
+        if (entities.GetSwitch()) {
             UUID pearlPos = null;
             for (UUID uuid : removeWait.keySet())
                 if (removeWait.get(uuid) <= 0) {
@@ -57,7 +55,7 @@ public class EntityTrails extends Module {
             if (pearlPos != null)
                 removeWait.remove(pearlPos);
             for (Entity entity : mc.world.getLoadedEntityList()) {
-                if ((entity instanceof EntityEnderPearl && pearls.getValue()) || (entity instanceof EntityExpBottle && exp.getValue())) {
+                if ((entity instanceof EntityEnderPearl && pearls.GetSwitch()) || (entity instanceof EntityExpBottle && exp.GetSwitch())) {
                     if (!this.pearlPos.containsKey(entity.getUniqueID())) {
                         this.pearlPos.put(entity.getUniqueID(), new ArrayList<>(Collections.singletonList(entity.getPositionVector())));
                         this.removeWait.put(entity.getUniqueID(), 0.1);
@@ -69,11 +67,11 @@ public class EntityTrails extends Module {
                 }
             }
         }
-        if (self.getValue()) {
+        if (self.GetSwitch()) {
             if (trails.containsKey(mc.player.getUniqueID())) {
                 ItemTrail playerTrail = trails.get(mc.player.getUniqueID());
                 playerTrail.timer.setTime(0);
-                List<Position> toRemove = playerTrail.positions.stream().filter(position -> System.currentTimeMillis() - position.time > removeDelay.getValue().longValue()).collect(Collectors.toList());
+                List<Position> toRemove = playerTrail.positions.stream().filter(position -> System.currentTimeMillis() - position.time > removeDelay.GetSlider()).collect(Collectors.toList());
                 playerTrail.positions.removeAll(toRemove);
                 playerTrail.positions.add(new Position(mc.player.getPositionVector()));
             } else
@@ -84,7 +82,7 @@ public class EntityTrails extends Module {
 
     @Override
     public void onGlobalRenderTick() {
-        if (self.getValue()) {
+        if (self.GetSwitch()) {
             trails.forEach((key, value) -> {
                 if (value.entity.isDead || mc.world.getEntityByID(value.entity.getEntityId()) == null) {
                     if (value.timer.isPaused())
@@ -97,7 +95,7 @@ public class EntityTrails extends Module {
 
             });
         }
-        if (pearlPos.isEmpty() || !entities.getValue())
+        if (pearlPos.isEmpty() || !entities.GetSwitch())
             return;
         GL11.glPushMatrix();
         GL11.glBlendFunc(770, 771);
@@ -105,11 +103,11 @@ public class EntityTrails extends Module {
         GL11.glDisable(3553);
         GL11.glDisable(2929);
         GL11.glDepthMask(false);
-        GL11.glLineWidth(pearlLineWidth.getValue());
+        GL11.glLineWidth(pearlLineWidth.GetSlider());
         pearlPos.keySet().stream().filter(uuid -> pearlPos.get(uuid).size() > 2).forEach(uuid -> {
             GL11.glBegin(1);
             IntStream.range(1, pearlPos.get(uuid).size()).forEach(i -> {
-                Color color = pearlColor.getValue();
+                Color color = pearlColor.GetColor();
                 GL11.glColor3d(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f);
                 List<Vec3d> pos = pearlPos.get(uuid);
                 GL11.glVertex3d(pos.get(i).x - mc.getRenderManager().viewerPosX, pos.get(i).y - mc.getRenderManager().viewerPosY, pos.get(i).z - mc.getRenderManager().viewerPosZ);
@@ -125,7 +123,7 @@ public class EntityTrails extends Module {
     }
 
     void drawTrail(ItemTrail trail) {
-        Color fadeColor = endColor.getValue();
+        Color fadeColor = endColor.GetColor();
         GlStateManager.pushMatrix();
         GlStateManager.disableDepth();
         GlStateManager.disableLighting();
@@ -136,10 +134,10 @@ public class EntityTrails extends Module {
         GL11.glDisable(3553);
         glEnable(2848);
         GL11.glBlendFunc(770, 771);
-        GL11.glLineWidth(lineWidth.getValue());
+        GL11.glLineWidth(lineWidth.GetSlider());
         GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
         (RenderUtil.builder = RenderUtil.tessellator.getBuffer()).begin(3, DefaultVertexFormats.POSITION_COLOR);
-        buildBuffer(RenderUtil.builder, trail, startColor.getValue(), fade.getValue() ? fadeColor : startColor.getValue());
+        buildBuffer(RenderUtil.builder, trail, startColor.GetColor(), fade.GetSwitch() ? fadeColor : startColor.GetColor());
         RenderUtil.tessellator.draw();
         GlStateManager.depthMask(true);
         GlStateManager.enableLighting();

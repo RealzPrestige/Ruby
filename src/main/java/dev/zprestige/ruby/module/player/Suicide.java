@@ -1,10 +1,10 @@
 package dev.zprestige.ruby.module.player;
 
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.newsettings.impl.ComboBox;
-import dev.zprestige.ruby.newsettings.impl.Parent;
-import dev.zprestige.ruby.newsettings.impl.Slider;
-import dev.zprestige.ruby.newsettings.impl.Switch;
+import dev.zprestige.ruby.settings.impl.ComboBox;
+import dev.zprestige.ruby.settings.impl.Parent;
+import dev.zprestige.ruby.settings.impl.Slider;
+import dev.zprestige.ruby.settings.impl.Switch;
 import dev.zprestige.ruby.util.BlockUtil;
 import dev.zprestige.ruby.util.EntityUtil;
 import dev.zprestige.ruby.util.InventoryUtil;
@@ -54,7 +54,7 @@ public class Suicide extends Module {
     @Override
     public void onTick() {
         currentTakeoff = getCurrentTakeOff();
-        if (currentTakeoff != -1 && throwTimer.getTime(throwDelay.GetSlider())) {
+        if (currentTakeoff != -1 && throwTimer.getTime((long) throwDelay.GetSlider())) {
             takeOff(currentTakeoff);
             return;
         }
@@ -63,18 +63,18 @@ public class Suicide extends Module {
             return;
         }
         int totemSlot = InventoryUtil.getItemSlot(Items.TOTEM_OF_UNDYING);
-        if (totemSlot != -1 && throwTimer.getTime(throwDelay.GetSlider())) {
+        if (totemSlot != -1 && throwTimer.getTime((long) throwDelay.GetSlider())) {
             takeOff(totemSlot);
             return;
         }
-        if (placeTimer.getTime(placeDelay.GetSlider())) {
+        if (placeTimer.getTime((long) placeDelay.GetSlider())) {
             BlockPos pos = getPosition();
             if (pos == null)
                 return;
             placeCrystal(pos);
             return;
         }
-        if (breakTimer.getTime(breakDelay.GetSlider())) {
+        if (breakTimer.getTime((long) breakDelay.GetSlider())) {
             for (Entity entity : mc.world.loadedEntityList) {
                 if (!(entity instanceof EntityEnderCrystal) || mc.player.getDistance(entity) > breakRange.GetSlider())
                     continue;

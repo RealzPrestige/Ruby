@@ -3,9 +3,9 @@ package dev.zprestige.ruby.ui.click;
 import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.module.Module;
 import dev.zprestige.ruby.module.client.ClickGui;
-import dev.zprestige.ruby.newsettings.impl.ColorBox;
-import dev.zprestige.ruby.newsettings.impl.Key;
-import dev.zprestige.ruby.newsettings.impl.Slider;
+import dev.zprestige.ruby.settings.impl.ColorBox;
+import dev.zprestige.ruby.settings.impl.Key;
+import dev.zprestige.ruby.settings.impl.Slider;
 import dev.zprestige.ruby.ui.buttons.BlurButton;
 import dev.zprestige.ruby.ui.buttons.ConfigButton;
 import dev.zprestige.ruby.util.RenderUtil;
@@ -27,12 +27,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MainScreen extends GuiScreen {
+    public static Timer timer = new Timer();
     public ArrayList<GuiCategory> guiCategories = new ArrayList<>();
     public BlurButton blurButton;
     public ConfigButton configButton;
     public int deltaX;
     public boolean isBlurred;
     public HashMap<Float, String> copyPasteMap = new HashMap<>();
+    protected float scaled = 0.0f;
 
     public MainScreen() {
         deltaX = 26;
@@ -41,8 +43,18 @@ public class MainScreen extends GuiScreen {
         Ruby.moduleManager.getCategories().forEach(category -> guiCategories.add(new GuiCategory(category, deltaX += 101, 2, 100, 13)));
     }
 
+    public static String idleSign() {
+        if (timer.getTime(1000))
+            timer.setTime(0);
+        if (timer.getTime(500))
+            return "_";
+        return "";
+    }
+
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        scaled += (1.0f - scaled) / 25.0f;
+        GlStateManager.scale(scaled, scaled, scaled);
         {
             RenderUtil.drawOutlineRect(-1, 507, 1000, 600, ClickGui.Instance.color.GetColor(), 2f);
             RenderUtil.drawRect(-1, 507, 1000, 600, ClickGui.Instance.backgroundColor.GetColor().getRGB());
@@ -131,15 +143,5 @@ public class MainScreen extends GuiScreen {
     @Override
     public boolean doesGuiPauseGame() {
         return false;
-    }
-
-    public static Timer timer = new Timer();
-
-    public static String idleSign() {
-        if (timer.getTime(1000))
-            timer.setTime(0);
-        if (timer.getTime(500))
-            return "_";
-        return "";
     }
 }

@@ -1,8 +1,7 @@
 package dev.zprestige.ruby.module.combat;
 
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.newsettings.impl.*;
-import dev.zprestige.ruby.setting.impl.*;
+import dev.zprestige.ruby.settings.impl.*;
 import dev.zprestige.ruby.util.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -10,10 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.function.Predicate;
 
 public class Trap extends Module {
     public static Trap Instance;
@@ -38,7 +34,7 @@ public class Trap extends Module {
     public ArrayList<BlockPos> firstLayerPosses = new ArrayList<>();
     public BlockPos postFirstLayerPos = null;
 
-    public Trap(){
+    public Trap() {
         Instance = this;
     }
 
@@ -58,7 +54,7 @@ public class Trap extends Module {
         switch (placeMode.GetCombo()) {
             case "Gradually":
                 setPlacePos(entityPlayerPos);
-                if (placePos != null && mc.player.getDistanceSq(placePos) < (placeRange.GetSlider() * placeRange.GetSlider()) && timer.getTime(placeDelay.GetSlider()))
+                if (placePos != null && mc.player.getDistanceSq(placePos) < (placeRange.GetSlider() * placeRange.GetSlider()) && timer.getTime((long) placeDelay.GetSlider()))
                     BlockUtil.placeBlockWithSwitch(placePos, EnumHand.MAIN_HAND, rotate.GetSwitch(), packet.GetSwitch(), slot, timer);
                 break;
             case "Linear":
@@ -66,12 +62,11 @@ public class Trap extends Module {
                 if (!firstLayerPosses.isEmpty())
                     firstLayerPosses.stream().filter(pos -> mc.player.getDistanceSq(pos) < (placeRange.GetSlider() * placeRange.GetSlider())).forEach(pos -> BlockUtil.placeBlockWithSwitch(pos, EnumHand.MAIN_HAND, rotate.GetSwitch(), packet.GetSwitch(), slot));
                 else if (canPlace(entityPlayerPos.up().up().north()) && canPlace(entityPlayerPos.up().up().east()) && canPlace(entityPlayerPos.up().up().south()) && canPlace(entityPlayerPos.up().up().west())) {
-                   if (mc.player.getDistanceSq(entityPlayerPos.up().up().north()) < (placeRange.GetSlider() * placeRange.GetSlider())) {
+                    if (mc.player.getDistanceSq(entityPlayerPos.up().up().north()) < (placeRange.GetSlider() * placeRange.GetSlider())) {
                         BlockUtil.placeBlockWithSwitch(entityPlayerPos.up().up().north(), EnumHand.MAIN_HAND, rotate.GetSwitch(), packet.GetSwitch(), slot);
                         postFirstLayerPos = entityPlayerPos.up().up().north();
                     }
-                }
-                else if (canPlace(entityPlayerPos.up().up())) {
+                } else if (canPlace(entityPlayerPos.up().up())) {
                     if (mc.player.getDistanceSq(entityPlayerPos.up().up()) < (placeRange.GetSlider() * placeRange.GetSlider())) {
                         BlockUtil.placeBlockWithSwitch(entityPlayerPos.up().up(), EnumHand.MAIN_HAND, rotate.GetSwitch(), packet.GetSwitch(), slot);
                         postFirstLayerPos = entityPlayerPos.up().up();
@@ -120,8 +115,8 @@ public class Trap extends Module {
             placePos = null;
     }
 
-    public boolean canPlace(BlockPos pos){
-        return mc.world.getBlockState(pos).getBlock().equals(Blocks.AIR) || (inLiquids.GetSwitch() && ((mc.world.getBlockState(pos).getBlock().equals(Blocks.WATER) || mc.world.getBlockState(pos).getBlock().equals(Blocks.FLOWING_WATER))|| (mc.world.getBlockState(pos).getBlock().equals(Blocks.LAVA) || mc.world.getBlockState(pos).getBlock().equals(Blocks.FLOWING_LAVA))));
+    public boolean canPlace(BlockPos pos) {
+        return mc.world.getBlockState(pos).getBlock().equals(Blocks.AIR) || (inLiquids.GetSwitch() && ((mc.world.getBlockState(pos).getBlock().equals(Blocks.WATER) || mc.world.getBlockState(pos).getBlock().equals(Blocks.FLOWING_WATER)) || (mc.world.getBlockState(pos).getBlock().equals(Blocks.LAVA) || mc.world.getBlockState(pos).getBlock().equals(Blocks.FLOWING_LAVA))));
     }
 
     @Override
@@ -135,7 +130,7 @@ public class Trap extends Module {
             case "Linear":
                 if (!firstLayerPosses.isEmpty())
                     firstLayerPosses.forEach(pos -> RenderUtil.drawBoxESP(pos, box.GetColor(), true, outline.GetColor(), outlineWidth.GetSlider(), outline.GetSwitch(), box.GetSwitch(), box.GetColor().getAlpha(), true));
-                else if (postFirstLayerPos != null){
+                else if (postFirstLayerPos != null) {
                     RenderUtil.drawBoxESP(postFirstLayerPos, box.GetColor(), true, outline.GetColor(), outlineWidth.GetSlider(), outline.GetSwitch(), box.GetSwitch(), box.GetColor().getAlpha(), true);
                 }
                 break;

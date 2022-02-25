@@ -1,8 +1,8 @@
 package dev.zprestige.ruby.module.misc;
 
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.newsettings.impl.Slider;
-import dev.zprestige.ruby.newsettings.impl.Switch;
+import dev.zprestige.ruby.settings.impl.Slider;
+import dev.zprestige.ruby.settings.impl.Switch;
 import dev.zprestige.ruby.util.BlockUtil;
 import dev.zprestige.ruby.util.InventoryUtil;
 import dev.zprestige.ruby.util.RenderUtil;
@@ -46,7 +46,7 @@ public class AutoWither extends Module {
             }
             if (!treeMap.isEmpty())
                 trolleyPos = treeMap.firstEntry().getValue();
-        } else if (timer.getTime(placeDelay.GetSlider())) {
+        } else if (timer.getTime((long) placeDelay.GetSlider())) {
             if (trolleyPos != null && mc.player.getDistanceSq(trolleyPos.pos) > (placeRange.GetSlider() * placeRange.GetSlider())) {
                 trolleyPos = null;
                 restartTimer.setTime(0);
@@ -159,6 +159,12 @@ public class AutoWither extends Module {
         return new trolleyBus(0, currSide, pos);
     }
 
+    @Override
+    public void onGlobalRenderTick() {
+        if (trolleyPos != null)
+            RenderUtil.drawBox(trolleyPos.pos, new Color(-1));
+    }
+
     public enum Side {
         NorthSouth,
         EastWest
@@ -174,11 +180,5 @@ public class AutoWither extends Module {
             this.side = side;
             this.pos = pos;
         }
-    }
-
-    @Override
-    public void onGlobalRenderTick() {
-        if (trolleyPos != null)
-            RenderUtil.drawBox(trolleyPos.pos, new Color(-1));
     }
 }

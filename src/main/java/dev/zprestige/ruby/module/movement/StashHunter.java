@@ -4,7 +4,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.module.Module;
 import dev.zprestige.ruby.module.client.Hud;
-import dev.zprestige.ruby.newsettings.impl.Slider;
+import dev.zprestige.ruby.settings.impl.Slider;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.tileentity.TileEntityChest;
 
@@ -77,6 +77,14 @@ public class StashHunter extends Module {
         Ruby.rubyFont.drawStringWithShadow(string, new ScaledResolution(mc).getScaledWidth() / 2f - (Ruby.rubyFont.getStringWidth(string) / 2f), Hud.Instance.welcomer.GetSwitch() ? 10 : 0, -1);
     }
 
+    public float roundNumber(double value, int places) {
+        if (places < 0)
+            throw new IllegalArgumentException();
+        BigDecimal decimal = BigDecimal.valueOf(value);
+        decimal = decimal.setScale(places, RoundingMode.FLOOR);
+        return decimal.floatValue();
+    }
+
     public enum LeftRightStage {
         Left,
         Right
@@ -85,13 +93,5 @@ public class StashHunter extends Module {
     public enum Stage {
         LeftRight,
         Forwards
-    }
-
-    public float roundNumber(double value, int places) {
-        if (places < 0)
-            throw new IllegalArgumentException();
-        BigDecimal decimal = BigDecimal.valueOf(value);
-        decimal = decimal.setScale(places, RoundingMode.FLOOR);
-        return decimal.floatValue();
     }
 }

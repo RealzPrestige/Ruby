@@ -1,8 +1,8 @@
 package dev.zprestige.ruby.module;
 
 
-import dev.zprestige.ruby.newsettings.Setting;
-import dev.zprestige.ruby.newsettings.impl.*;
+import dev.zprestige.ruby.settings.Setting;
+import dev.zprestige.ruby.settings.impl.*;
 
 public class Menu {
     protected Module module;
@@ -11,7 +11,7 @@ public class Menu {
         this.module = module;
     }
 
-    protected void addSetting(Setting setting){
+    protected void addSetting(Setting setting) {
         module.newSettings.add(setting);
     }
 
@@ -40,14 +40,14 @@ public class Menu {
         return setting;
     }
 
-    public Key Key(String name, int key){
+    public Key Key(String name, int key) {
         Key setting = new Key(name, key);
         setModule(setting);
         addSetting(setting);
         return setting;
     }
 
-    public Parent Parent(String name){
+    public Parent Parent(String name) {
         Parent setting = new Parent(name);
         setModule(setting);
         addSetting(setting);

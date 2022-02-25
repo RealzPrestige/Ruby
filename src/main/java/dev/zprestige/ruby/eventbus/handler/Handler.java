@@ -1,7 +1,7 @@
 package dev.zprestige.ruby.eventbus.handler;
 
-import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.eventbus.annotation.Priority;
+import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.eventbus.event.Event;
 
 import java.lang.reflect.Method;

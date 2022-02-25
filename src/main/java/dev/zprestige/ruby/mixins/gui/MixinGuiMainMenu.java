@@ -1,11 +1,9 @@
 package dev.zprestige.ruby.mixins.gui;
 
 import dev.zprestige.ruby.ui.altening.AlteningGuiScreen;
-import dev.zprestige.ruby.util.RenderUtil;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.resources.I18n;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

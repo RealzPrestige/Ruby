@@ -5,10 +5,10 @@ import dev.zprestige.ruby.events.Render3DEvent;
 import dev.zprestige.ruby.events.RenderItemInFirstPersonEvent;
 import dev.zprestige.ruby.mixins.render.IEntityRenderer;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.setting.impl.BooleanSetting;
-import dev.zprestige.ruby.setting.impl.ColorSetting;
-import dev.zprestige.ruby.setting.impl.FloatSetting;
-import dev.zprestige.ruby.setting.impl.ParentSetting;
+import dev.zprestige.ruby.settings.impl.ColorBox;
+import dev.zprestige.ruby.settings.impl.Parent;
+import dev.zprestige.ruby.settings.impl.Slider;
+import dev.zprestige.ruby.settings.impl.Switch;
 import dev.zprestige.ruby.util.shader.ItemShader;
 import net.minecraft.client.gui.GuiDownloadTerrain;
 import net.minecraft.client.renderer.GlStateManager;
@@ -20,24 +20,22 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.Display;
 
-import java.awt.*;
-
 public class Shaders extends Module {
-    public final Parent targets = Menu.Switch("Targets");
-    public final Switch players = Menu.Switch("Players", false).parent(targets);
-    public final Switch crystals = Menu.Switch("Crystals", false).parent(targets);
-    public final Switch experienceBottles = Menu.Switch("Experience Bottles", false).parent(targets);
-    public final Switch items = Menu.Switch("Items", false).parent(targets);
+    public final Parent targets = Menu.Parent("Targets");
+    public final Switch players = Menu.Switch("Players").parent(targets);
+    public final Switch crystals = Menu.Switch("Crystals").parent(targets);
+    public final Switch experienceBottles = Menu.Switch("Experience Bottles").parent(targets);
+    public final Switch items = Menu.Switch("Items").parent(targets);
 
-    public final Parent shader = Menu.Switch("Shader");
-    public final ColorBox color = Menu.Switch("Color", new Color(-1)).parent(shader);
-    public final Slider radius = Menu.Switch("Radius", 2.0f, 0.1f, 10.0f).parent(shader);
-    public final Slider opacity = Menu.Switch("Opacity", 255.0f, 0.0f, 255.0f).parent(shader);
+    public final Parent shader = Menu.Parent("Shader");
+    public final ColorBox color = Menu.Color("Color").parent(shader);
+    public final Slider radius = Menu.Slider("Radius", 0.1f, 10.0f).parent(shader);
+    public final Slider opacity = Menu.Slider("Opacity", 0.0f, 255.0f).parent(shader);
     public boolean forceRender = false;
 
     @RegisterListener
     public void renderItemInFirstPerson(RenderItemInFirstPersonEvent event) {
-        if (nullCheck() || !isEnabled() || !event.isPre || forceRender || !items.getValue())
+        if (nullCheck() || !isEnabled() || !event.isPre || forceRender || !items.GetSwitch())
             return;
         event.setCancelled(true);
     }
@@ -55,11 +53,11 @@ public class Shaders extends Module {
             GlStateManager.depthMask(true);
             GlStateManager.enableAlpha();
             ItemShader shader = ItemShader.Instance;
-            shader.mix = opacity.getValue() / 255.0f;
-            shader.alpha = color.getValue().getAlpha() / 255.0f;
+            shader.mix = opacity.GetSlider() / 255.0f;
+            shader.alpha = color.GetColor().getAlpha() / 255.0f;
             shader.startDraw(mc.getRenderPartialTicks());
             forceRender = true;
-            mc.world.loadedEntityList.stream().filter(entity -> entity != null && ((entity != mc.player || entity != mc.getRenderViewEntity()) && mc.getRenderManager().getEntityRenderObject(entity) != null) && (entity instanceof EntityPlayer && players.getValue() && !((EntityPlayer) entity).isSpectator() || entity instanceof EntityEnderCrystal && crystals.getValue() || entity instanceof EntityExpBottle && experienceBottles.getValue())).forEach(entity -> {
+            mc.world.loadedEntityList.stream().filter(entity -> entity != null && ((entity != mc.player || entity != mc.getRenderViewEntity()) && mc.getRenderManager().getEntityRenderObject(entity) != null) && (entity instanceof EntityPlayer && players.GetSwitch() && !((EntityPlayer) entity).isSpectator() || entity instanceof EntityEnderCrystal && crystals.GetSwitch() || entity instanceof EntityExpBottle && experienceBottles.GetSwitch())).forEach(entity -> {
                 Vec3d vector = getInterpolatedRenderPos(entity, event.partialTicks);
                 if (entity instanceof EntityPlayer)
                     ((EntityPlayer) entity).hurtTime = 0;
@@ -67,14 +65,14 @@ public class Shaders extends Module {
                 if (render != null) {
                     try {
                         render.doRender(entity, vector.x, vector.y, vector.z, entity.rotationYaw, event.partialTicks);
-                    } catch (Exception ignored){
+                    } catch (Exception ignored) {
                     }
                 }
             });
-            if (items.getValue())
+            if (items.GetSwitch())
                 ((IEntityRenderer) mc.entityRenderer).invokeRenderHand(mc.getRenderPartialTicks(), 2);
             forceRender = false;
-            shader.stopDraw(color.getValue(), radius.getValue(), 1.0f);
+            shader.stopDraw(color.GetColor(), radius.GetSlider(), 1.0f);
             GlStateManager.disableBlend();
             GlStateManager.disableAlpha();
             GlStateManager.disableDepth();

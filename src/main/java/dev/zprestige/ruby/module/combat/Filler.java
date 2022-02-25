@@ -2,7 +2,7 @@ package dev.zprestige.ruby.module.combat;
 
 import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.newsettings.impl.*;
+import dev.zprestige.ruby.settings.impl.*;
 import dev.zprestige.ruby.util.BlockUtil;
 import dev.zprestige.ruby.util.EntityUtil;
 import dev.zprestige.ruby.util.InventoryUtil;

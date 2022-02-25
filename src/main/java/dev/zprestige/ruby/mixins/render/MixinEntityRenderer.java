@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = EntityRenderer.class)
-public abstract class MixinEntityRenderer implements IEntityRenderer{
+public abstract class MixinEntityRenderer implements IEntityRenderer {
     @Shadow
     protected abstract void renderHand(float partialTicks, int pass);
 
@@ -41,14 +41,14 @@ public abstract class MixinEntityRenderer implements IEntityRenderer{
 
     @Inject(method = {"hurtCameraEffect"}, at = {@At(value = "HEAD")}, cancellable = true)
     protected void hurtCameraEffectHook(float ticks, CallbackInfo info) {
-        if (!NoRender.Instance.nullCheck() && NoRender.Instance.isEnabled() && NoRender.Instance.hurtCam.getValue())
+        if (!NoRender.Instance.nullCheck() && NoRender.Instance.isEnabled() && NoRender.Instance.hurtCam.GetSwitch())
             info.cancel();
     }
 
     @ModifyVariable(method = "updateLightmap", at = @At(value = "STORE"), index = 20)
     protected int red(int red) {
         if (Ambience.Instance.isEnabled()) {
-            red = Ambience.Instance.color.getValue().getRed();
+            red = Ambience.Instance.color.GetColor().getRed();
         }
         return red;
     }
@@ -56,7 +56,7 @@ public abstract class MixinEntityRenderer implements IEntityRenderer{
     @ModifyVariable(method = "updateLightmap", at = @At(value = "STORE"), index = 21)
     protected int green(int green) {
         if (Ambience.Instance.isEnabled()) {
-            green = Ambience.Instance.color.getValue().getGreen();
+            green = Ambience.Instance.color.GetColor().getGreen();
         }
         return green;
     }
@@ -64,7 +64,7 @@ public abstract class MixinEntityRenderer implements IEntityRenderer{
     @ModifyVariable(method = "updateLightmap", at = @At(value = "STORE"), index = 22)
     protected int blue(int blue) {
         if (Ambience.Instance.isEnabled()) {
-            blue = Ambience.Instance.color.getValue().getBlue();
+            blue = Ambience.Instance.color.GetColor().getBlue();
         }
         return blue;
     }

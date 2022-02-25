@@ -198,22 +198,6 @@ public class BlockUtil {
         return null;
     }
 
-    public static class Hole {
-        public BlockPos pos;
-        public double range;
-
-        public Hole(BlockPos pos, double range) {
-            this.pos = pos;
-            this.range = range;
-        }
-    }
-
-    public enum AirType {
-        OnlyAir,
-        IgnoreAir,
-        None
-    }
-
     public static List<BlockPos> nearbyAirPosses(final double radius) {
         ArrayList<BlockPos> posses = new ArrayList<>();
         BlockPos pos = new BlockPos(mc.player.getPositionVector());
@@ -269,7 +253,6 @@ public class BlockUtil {
         mc.player.inventory.currentItem = currentItem;
         mc.playerController.updateController();
     }
-
 
     public static void placeBlockWithSwitch(BlockPos pos, EnumHand hand, boolean rotate, boolean packet, int slot, Timer timer) {
         int currentItem = mc.player.inventory.currentItem;
@@ -355,6 +338,22 @@ public class BlockUtil {
 
     public static BlockPos getPlayerPos() {
         return new BlockPos(Math.floor(mc.player.posX), Math.floor(mc.player.posY), Math.floor(mc.player.posZ));
+    }
+
+    public enum AirType {
+        OnlyAir,
+        IgnoreAir,
+        None
+    }
+
+    public static class Hole {
+        public BlockPos pos;
+        public double range;
+
+        public Hole(BlockPos pos, double range) {
+            this.pos = pos;
+            this.range = range;
+        }
     }
 
 }

@@ -3,8 +3,8 @@ package dev.zprestige.ruby.manager;
 import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.setting.Setting;
-import dev.zprestige.ruby.setting.impl.*;
+import dev.zprestige.ruby.settings.Setting;
+import dev.zprestige.ruby.settings.impl.*;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.input.Keyboard;
 
@@ -60,7 +60,7 @@ public class ConfigManager {
         }
     }
 
-    public ConfigManager readAndSetSocials(){
+    public ConfigManager readAndSetSocials() {
         final File file = registerPathAndCreate(mc.gameDir + separator + "Ruby" + separator + "Socials");
         final File friends = registerPathAndCreate(file + separator + "Friends.txt");
         final File enemies = registerPathAndCreate(file + separator + "Enemies.txt");
@@ -107,7 +107,7 @@ public class ConfigManager {
                 final BufferedReader bufferReader = new BufferedReader(new InputStreamReader(new DataInputStream(new FileInputStream(file))));
                 bufferReader.lines().forEach(line -> {
                     final String[] split = line.replace("\"", "").replace(" ", "").split(":");
-                    setValueFromSetting(getSettingByNameAndModule(module, split[0]), split[1], split[0].equals("Enabled"));
+                    setValueFromSetting(getSettingByNameAndModule(module, split[0]), split[1], split[0].equals("Enabled"), split[2]);
                 });
                 bufferReader.close();
             } catch (IOException ignored) {
@@ -116,7 +116,7 @@ public class ConfigManager {
     }
 
     @SuppressWarnings("ALL")
-    protected void setValueFromSetting(Setting setting, String line, boolean enabled) {
+    protected void setValueFromSetting(Setting setting, String line, boolean enabled, String colorSwitch) {
         if (enabled) {
             final Module module = setting.getModule();
             if (line.equals("true") && !module.isEnabled()) {
@@ -125,31 +125,30 @@ public class ConfigManager {
                 module.disableModule();
             }
         }
-        if (setting instanceof StringSetting || setting instanceof ModeSetting) {
-            setting.setValue(line);
+        if (setting instanceof ColorBox) {
+            ((ColorBox) setting).setValue(new Color(Integer.parseInt(line), true));
         }
-        if (setting instanceof IntegerSetting) {
-            setting.setValue(Integer.parseInt(line));
+        if (setting instanceof ColorSwitch) {
+            ((ColorSwitch) setting).setSwitchValue(Boolean.parseBoolean(line));
+            ((ColorSwitch) setting).setColor(new Color(Integer.parseInt(line), true));
         }
-        if (setting instanceof FloatSetting) {
-            setting.setValue(Float.parseFloat(line));
+        if (setting instanceof ComboBox) {
+            ((ComboBox) setting).setValue(line);
         }
-        if (setting instanceof DoubleSetting) {
-            setting.setValue(Double.parseDouble(line));
+        if (setting instanceof Slider) {
+            ((Slider) setting).setValue(Float.parseFloat(line));
         }
-        if (setting instanceof BooleanSetting) {
-            setting.setValue(Boolean.parseBoolean(line));
+        if (setting instanceof Key) {
+            ((Key) setting).setValue(Keyboard.getKeyIndex(line));
         }
-        if (setting instanceof KeySetting) {
-            setting.setValue(Keyboard.getKeyIndex(line));
-        }
-        if (setting instanceof ColorSetting) {
-            ((ColorSetting) setting).setColor(new Color(Integer.parseInt(line), true));
+
+        if (setting instanceof Switch) {
+            ((Switch) setting).setValue(Boolean.parseBoolean(line));
         }
     }
 
-    protected Setting<?> getSettingByNameAndModule(Module module, String name) {
-        return module.getSettingList().stream().filter(setting -> setting.getName().equals(name)).findFirst().orElse(null);
+    protected Setting getSettingByNameAndModule(Module module, String name) {
+        return module.getSettings().stream().filter(setting -> setting.getName().equals(name)).findFirst().orElse(null);
     }
 
     protected void saveModules(boolean onlyVisuals) {
@@ -159,7 +158,27 @@ public class ConfigManager {
             final File file = registerFileAndCreate(path + separator + module.getName() + ".txt");
             try {
                 final BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
-                module.getSettingList().stream().filter(setting -> !(setting instanceof ParentSetting)).forEach(setting -> writeLine(bufferedWriter, "\"" + setting.getName() + "\": \"" + (setting instanceof ColorSetting ? ((ColorSetting) setting).getValue().getRGB() : setting instanceof KeySetting ? Keyboard.getKeyName(((KeySetting) setting).getKey()) : setting.getValue()) + "\""));
+                module.getSettings().stream().filter(setting -> !(setting instanceof Parent)).forEach(setting -> {
+                    if (setting instanceof ColorBox) {
+                        ColorBox colorBox = (ColorBox) setting;
+                        writeLine(bufferedWriter, "\"" + colorBox.getName() + "\": \"" + colorBox.GetColor().getRGB() + "\"");
+                    } else if (setting instanceof ColorSwitch) {
+                        ColorSwitch colorSwitch = (ColorSwitch) setting;
+                        writeLine(bufferedWriter, "\"" + colorSwitch.getName() + "\": \"" + colorSwitch.GetSwitch() + "\":\"" + colorSwitch.GetColor().getRGB() + "\"");
+                    } else if (setting instanceof ComboBox) {
+                        ComboBox comboBox = (ComboBox) setting;
+                        writeLine(bufferedWriter, "\"" + comboBox.getName() + "\": \"" + comboBox.GetCombo() + "\"");
+                    } else if (setting instanceof Key) {
+                        Key key = (Key) setting;
+                        writeLine(bufferedWriter, "\"" + key.getName() + "\": \"" + Keyboard.getKeyName((key.GetKey())) + "\"");
+                    } else if (setting instanceof Slider) {
+                        Slider slider = (Slider) setting;
+                        writeLine(bufferedWriter, "\"" + slider.getName() + "\": \"" + slider.GetSlider() + "\"");
+                    } else if (setting instanceof Switch) {
+                        Switch aSwitch = (Switch) setting;
+                        writeLine(bufferedWriter, "\"" + aSwitch.getName() + "\": \"" + aSwitch.GetSwitch() + "\"");
+                    }
+                });
                 bufferedWriter.close();
             } catch (IOException ignored) {
             }

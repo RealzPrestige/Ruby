@@ -17,7 +17,10 @@ import net.minecraft.potion.Potion;
 import net.minecraft.util.CombatRules;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Explosion;
 
 import java.util.List;
@@ -25,10 +28,6 @@ import java.util.Objects;
 
 public class EntityUtil {
     public static Minecraft mc = Minecraft.getMinecraft();
-
-    public enum SwingType {
-        MainHand, OffHand, Packet
-    }
 
     public static void swingArm(SwingType swingType) {
         if (swingType.equals(SwingType.MainHand))
@@ -38,6 +37,7 @@ public class EntityUtil {
         else if (swingType.equals(SwingType.Packet))
             mc.player.connection.sendPacket(new CPacketAnimation(mc.player.getHeldItemMainhand().getItem().equals(Items.END_CRYSTAL) ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND));
     }
+
     public static void setSpeed(final EntityLivingBase entity, final double speed) {
         double[] dir = getSpeed(speed);
         entity.motionX = dir[0];
@@ -76,7 +76,6 @@ public class EntityUtil {
         }
     }
 
-
     public static double getDefaultSpeed() {
         double defaultSpeed = 0.2873;
         if (mc.player.isPotionActive(MobEffects.SPEED)) {
@@ -89,7 +88,6 @@ public class EntityUtil {
         }
         return defaultSpeed;
     }
-
 
     public static Entity getPredictedPosition(Entity entity, double x) {
         if (x == 0) return entity;
@@ -219,7 +217,6 @@ public class EntityUtil {
         return offsetZ;
     }
 
-
     public static double yawDist(Entity e) {
         if (e != null) {
             Vec3d difference = e.getPositionVector().add(0.0, e.getEyeHeight() / 2.0f, 0.0).subtract(mc.player.getPositionEyes(mc.getRenderPartialTicks()));
@@ -228,7 +225,6 @@ public class EntityUtil {
         }
         return 0.0;
     }
-
 
     public static int getRoundedDamage(ItemStack stack) {
         return (int) getDamageInPercent(stack);
@@ -244,7 +240,6 @@ public class EntityUtil {
         final float red = 1.0f - green;
         return (float) (100 - (int) (red * 100.0f));
     }
-
 
     public static float getHealth(Entity entity) {
         if (EntityUtil.isLiving(entity)) {
@@ -388,5 +383,9 @@ public class EntityUtil {
         double posX = (double) moveForward * speed * -Math.sin(Math.toRadians(rotationYaw)) + (double) moveStrafe * speed * Math.cos(Math.toRadians(rotationYaw));
         double posZ = (double) moveForward * speed * Math.cos(Math.toRadians(rotationYaw)) - (double) moveStrafe * speed * -Math.sin(Math.toRadians(rotationYaw));
         return new double[]{posX, posZ};
+    }
+
+    public enum SwingType {
+        MainHand, OffHand, Packet
     }
 }
