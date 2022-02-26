@@ -13,8 +13,8 @@ maxFps:260
 fboEnable:true
 difficulty:3
 fancyGraphics:false
-ao:2
-renderClouds:true
+ao:0
+renderClouds:false
 resourcePacks:[]
 incompatibleResourcePacks:[]
 lastServer:
@@ -26,8 +26,8 @@ chatLinksPrompt:true
 chatOpacity:1.0
 snooperEnabled:true
 fullscreen:false
-enableVsync:true
-useVbo:true
+enableVsync:false
+useVbo:false
 hideServerAddress:false
 advancedItemTooltips:false
 pauseOnLostFocus:true
@@ -43,7 +43,7 @@ mipmapLevels:4
 forceUnicodeFont:false
 reducedDebugInfo:false
 useNativeTransport:true
-entityShadows:true
+entityShadows:false
 mainHand:right
 attackIndicator:1
 showSubtitles:false
@@ -85,8 +85,8 @@ key_key.hotbar.6:7
 key_key.hotbar.7:8
 key_key.hotbar.8:9
 key_key.hotbar.9:10
-soundCategory_master:1.0
-soundCategory_music:1.0
+soundCategory_master:0.026490066
+soundCategory_music:0.0
 soundCategory_record:1.0
 soundCategory_weather:1.0
 soundCategory_block:1.0

@@ -16,11 +16,11 @@ public class ConfigCommand extends Command {
         try {
             String[] split = string.split(" ");
             if (split[1].equals("save")) {
-                Ruby.configManager.save(split[2], split[3].equals("true"));
+                Ruby.configManager.save(split[2]);
                 completeMessage("saved config " + split[2]);
             }
             if (split[1].equals("load")) {
-                Ruby.configManager.load(split[2], split[3].equals("true"));
+                Ruby.configManager.load(split[2]);
                 completeMessage("loaded config " + split[2]);
             }
             if (split[1].equals("delete")) {

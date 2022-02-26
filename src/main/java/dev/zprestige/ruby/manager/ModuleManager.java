@@ -50,6 +50,7 @@ public class ModuleManager {
         moduleList.add(new ChorusManipulator().withSuper("ChorusManipulator", Category.Exploit));
         moduleList.add(new ChorusPredict().withSuper("ChorusPredict", Category.Exploit));
         moduleList.add(new HandMine().withSuper("HandMine", Category.Exploit));
+        moduleList.add(new LavaFlight().withSuper("LavaFlight", Category.Exploit));
         moduleList.add(new McPvp().withSuper("McPvp", Category.Exploit));
         moduleList.add(new Phase().withSuper("Phase", Category.Exploit));
         moduleList.add(new SupplyDrop().withSuper("SupplyDrop", Category.Exploit));

@@ -71,7 +71,9 @@ public class AutoCrystal extends Module {
             "HighestEnemyDamage",
             "LowestSelfDamage",
             "HighestSelfDistance",
-            "LowestEnemyDistance"
+            "LowestEnemyDistance",
+            "New-TargetBased",
+            "New-SelfBased"
     }).parent(placing);
     public final ComboBox placeSyncCalc = Menu.ComboBox("Place Sync Calc", new String[]{"Autonomic", "Target"}).parent(placing);
     public final Switch placeFastCalc = Menu.Switch("Place Fast Calc").parent(placing);
@@ -359,6 +361,8 @@ public class AutoCrystal extends Module {
                         }
                         break;
                     case "HighestEnemyDamage":
+                    case "New-TargetBased":
+                    case "New-SelfBased":
                         posList.put(targetDamage, new PlacePosition(pos, targetDamage));
                         break;
                     case "LowestSelfDamage":
@@ -375,6 +379,10 @@ public class AutoCrystal extends Module {
         }
         if (!posList.isEmpty()) {
             switch (placeCalculations.GetCombo()) {
+                case "New-TargetBased":
+                    return posList.entrySet().stream().collect(Collectors.toMap(entry -> target.getDistanceSq(entry.getValue().blockPos), Map.Entry::getValue, (a, b) -> b, TreeMap::new)).firstEntry().getValue();
+                case "New-SelfBased":
+                    return posList.entrySet().stream().collect(Collectors.toMap(entry -> mc.player.getDistanceSq(entry.getValue().blockPos), Map.Entry::getValue, (a, b) -> b, TreeMap::new)).lastEntry().getValue();
                 case "Sync":
                     syncPossesDamage = posList;
                     syncPossesDistance = posListDistance;

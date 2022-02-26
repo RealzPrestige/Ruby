@@ -1,8 +1,8 @@
 package dev.zprestige.ruby.manager;
 
 import dev.zprestige.ruby.Ruby;
-import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
+import dev.zprestige.ruby.module.misc.PacketLogger;
 import dev.zprestige.ruby.settings.Setting;
 import dev.zprestige.ruby.settings.impl.*;
 import net.minecraft.client.Minecraft;
@@ -11,7 +11,7 @@ import org.lwjgl.input.Keyboard;
 import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
+import java.util.concurrent.atomic.AtomicReference;
 
 @SuppressWarnings("ResultOfMethodCallIgnored")
 public class ConfigManager {
@@ -20,40 +20,37 @@ public class ConfigManager {
     protected final ArrayList<Module> moduleList = Ruby.moduleManager.moduleList;
     protected File configPath = new File(mc.gameDir + separator + "Ruby" + separator + "Configs");
 
-    public ConfigManager(){
+    public ConfigManager() {
         if (!configPath.exists())
             configPath.mkdirs();
     }
 
     public ConfigManager loadFromActiveConfig() {
         String activeConfig = readActiveConfig();
-        if (!activeConfig.equals("NONE")) {
-            configPath = new File(configPath + separator + activeConfig);
-            loadModules(false);
+        if (!activeConfig.equals("NONE") && !activeConfig.equals("")) {
+            configPath = new File(mc.gameDir + separator + "Ruby" + separator + "Configs" + separator + activeConfig);
+            loadModules();
         }
         return this;
     }
 
-    public void load(String folder, boolean onlyVisuals) {
-        configPath = new File(configPath + separator + folder);
-        loadModules(onlyVisuals);
-        if (!onlyVisuals) {
+    public void load(String folder) {
+        configPath = new File(mc.gameDir + separator + "Ruby" + separator + "Configs" + separator + folder);
+        if (configPath.exists()) {
+            loadModules();
             saveActiveConfig(folder);
         }
     }
 
-    public void save(String folder, boolean onlyVisuals) {
-        configPath = new File(configPath + separator + folder);
-        saveModules(onlyVisuals);
-        if (!onlyVisuals) {
-            saveActiveConfig(folder);
-        }
+    public void save(String folder) {
+        configPath = new File(mc.gameDir + separator + "Ruby" + separator + "Configs" + separator + folder);
+        saveModules();
     }
 
     public void saveSocials() {
         final File file = registerPathAndCreate(mc.gameDir + separator + "Ruby" + separator + "Socials");
-        final File friends = registerPathAndCreate(file + separator + "Friends.txt");
-        final File enemies = registerPathAndCreate(file + separator + "Enemies.txt");
+        final File friends = registerFileAndCreate(file + separator + "Friends.txt");
+        final File enemies = registerFileAndCreate(file + separator + "Enemies.txt");
         try {
             final BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(friends));
             Ruby.friendManager.getFriendList().forEach(friendPlayer -> writeLine(bufferedWriter, friendPlayer.getName()));
@@ -82,22 +79,23 @@ public class ConfigManager {
     }
 
     protected String readActiveConfig() {
-        final File file = registerFileAndCreate(mc.gameDir + separator + "Ruby");
-        if (file.exists()){
+        final File file = registerFileAndCreate(mc.gameDir + separator + "Ruby" + separator + "ActiveConfig.txt");
+        if (!file.exists()) {
             return "NONE";
         }
         try {
             final BufferedReader bufferReader = new BufferedReader(new InputStreamReader(new DataInputStream(new FileInputStream(file))));
-            String activeConfig = bufferReader.readLine().replace("\"", "");
+            AtomicReference<String> activeConfig = new AtomicReference<>("");
+            bufferReader.lines().forEach(line -> activeConfig.set(line.replace("\"", "")));
             bufferReader.close();
-            return activeConfig;
+            return activeConfig.get();
         } catch (IOException ignored) {
         }
         return "NONE";
     }
 
     protected void saveActiveConfig(String folder) {
-        final File file = registerFileAndCreate(mc.gameDir + separator + "Ruby");
+        final File file = registerFileAndCreate(mc.gameDir + separator + "Ruby" + separator + "ActiveConfig.txt");
         try {
             final BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
             writeLine(bufferedWriter, "\"" + folder + "\"");
@@ -106,16 +104,22 @@ public class ConfigManager {
         }
     }
 
-    protected void loadModules(boolean onlyVisuals) {
-        ArrayList<Module> modules = onlyVisuals ? moduleList.stream().filter(module -> module.getCategory().equals(Category.Visual)).collect(Collectors.toCollection(ArrayList::new)) : moduleList;
-        modules.forEach(module -> {
+    protected void loadModules() {
+        moduleList.forEach(module -> {
             final File path = new File(configPath + separator + module.getCategory().toString());
             final File file = new File(path + separator + module.getName() + ".txt");
             try {
                 final BufferedReader bufferReader = new BufferedReader(new InputStreamReader(new DataInputStream(new FileInputStream(file))));
                 bufferReader.lines().forEach(line -> {
-                    final String[] split = line.replace("\"", "").replace(" ", "").split(":");
-                    setValueFromSetting(getSettingByNameAndModule(module, split[0]), split[1], split[0].equals("Enabled"), split[2]);
+                    final String[] s = line.replace("\"", "").replace(" ", "").split(":");
+                    final String split = s[0].replace(":", "").replace("]", "").replace("[", "");
+                    final String split1 = s[1].replace(":", "").replace("]", "").replace("[", "");
+                    Setting setting = getSettingByNameAndModule(module, split);
+                    String split2 = "null";
+                    if (setting instanceof ColorSwitch) {
+                        split2 = s[2].replace(":", "").replace("]", "").replace("[", "");
+                    }
+                    setValueFromSetting(setting, split1, split.equals("Enabled"), split2);
                 });
                 bufferReader.close();
             } catch (IOException ignored) {
@@ -129,7 +133,7 @@ public class ConfigManager {
             final Module module = setting.getModule();
             if (line.equals("true") && !module.isEnabled()) {
                 module.enableModule();
-            } else if (module.isEnabled()) {
+            } else if (line.equals("false") && module.isEnabled()) {
                 module.disableModule();
             }
         }
@@ -138,7 +142,7 @@ public class ConfigManager {
         }
         if (setting instanceof ColorSwitch) {
             ((ColorSwitch) setting).setSwitchValue(Boolean.parseBoolean(line));
-            ((ColorSwitch) setting).setColor(new Color(Integer.parseInt(line), true));
+            ((ColorSwitch) setting).setColor(new Color(Integer.parseInt(colorSwitch), true));
         }
         if (setting instanceof ComboBox) {
             ((ComboBox) setting).setValue(line);
@@ -156,12 +160,16 @@ public class ConfigManager {
     }
 
     protected Setting getSettingByNameAndModule(Module module, String name) {
-        return module.getSettings().stream().filter(setting -> setting.getName().equals(name)).findFirst().orElse(null);
+        for (Setting setting : module.getSettings()) {
+            if (setting.getName().equals(name)) {
+                return setting;
+            }
+        }
+        return null;
     }
 
-    protected void saveModules(boolean onlyVisuals) {
-        ArrayList<Module> modules = onlyVisuals ? moduleList.stream().filter(module -> module.getCategory().equals(Category.Visual)).collect(Collectors.toCollection(ArrayList::new)) : moduleList;
-        modules.forEach(module -> {
+    protected void saveModules() {
+        moduleList.forEach(module -> {
             final File path = registerPathAndCreate(configPath + separator + module.getCategory().toString());
             final File file = registerFileAndCreate(path + separator + module.getName() + ".txt");
             try {
