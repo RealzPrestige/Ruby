@@ -7,6 +7,7 @@ import dev.zprestige.ruby.settings.Setting;
 import dev.zprestige.ruby.settings.impl.Key;
 import dev.zprestige.ruby.settings.impl.Switch;
 import net.minecraft.client.Minecraft;
+import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;
@@ -46,6 +47,7 @@ public class Module {
         setEnabled(true);
         onEnable();
         Ruby.eventBus.post(new ModuleToggleEvent.Enable(this));
+        MinecraftForge.EVENT_BUS.register(this);
         Ruby.eventBus.register(this);
     }
 
@@ -53,6 +55,7 @@ public class Module {
         setEnabled(false);
         onDisable();
         Ruby.eventBus.post(new ModuleToggleEvent.Disable(this));
+        MinecraftForge.EVENT_BUS.unregister(this);
         Ruby.eventBus.unregister(this);
     }
 

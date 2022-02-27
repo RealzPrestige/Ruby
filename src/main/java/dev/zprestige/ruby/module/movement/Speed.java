@@ -59,18 +59,11 @@ public class Speed extends Module {
         Instance = this;
     }
 
-    @Override
-    public void onEnable(){
-        MinecraftForge.EVENT_BUS.register(this);
-    }
-
 
     @Override
     public void onDisable() {
         mc.timer.tickLength = 50.0f;
-        MinecraftForge.EVENT_BUS.unregister(this);
     }
-
     @SubscribeEvent
     public void onKeyInput(InputEvent.KeyInputEvent event) {
         if (Ruby.mc.player == null || Ruby.mc.world == null || !mode.GetCombo().equals("Switch") || mc.currentScreen != null || !isEnabled())
