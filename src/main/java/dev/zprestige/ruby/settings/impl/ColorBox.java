@@ -2,6 +2,8 @@ package dev.zprestige.ruby.settings.impl;
 
 import dev.zprestige.ruby.settings.Setting;
 
+import java.awt.*;
+
 public class ColorBox extends Setting {
     protected java.awt.Color value;
 
@@ -25,6 +27,11 @@ public class ColorBox extends Setting {
     public ColorBox parent(Parent parent) {
         setHasParent(true);
         setParent(parent);
+        return this;
+    }
+
+    public ColorBox defaultValue(Color value){
+        this.value = value;
         return this;
     }
 }

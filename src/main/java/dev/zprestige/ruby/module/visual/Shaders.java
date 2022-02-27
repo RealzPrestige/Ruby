@@ -41,7 +41,7 @@ public class Shaders extends Module {
     }
 
     @Override
-    public void onGlobalRenderTick(Render3DEvent event) {
+    public void onFrame(float partialTicks) {
         if (nullCheck())
             return;
         if (((Display.isActive() || Display.isVisible()) && mc.gameSettings.thirdPersonView == 0) && !(mc.currentScreen instanceof GuiDownloadTerrain)) {
@@ -58,13 +58,13 @@ public class Shaders extends Module {
             shader.startDraw(mc.getRenderPartialTicks());
             forceRender = true;
             mc.world.loadedEntityList.stream().filter(entity -> entity != null && ((entity != mc.player || entity != mc.getRenderViewEntity()) && mc.getRenderManager().getEntityRenderObject(entity) != null) && (entity instanceof EntityPlayer && players.GetSwitch() && !((EntityPlayer) entity).isSpectator() || entity instanceof EntityEnderCrystal && crystals.GetSwitch() || entity instanceof EntityExpBottle && experienceBottles.GetSwitch())).forEach(entity -> {
-                Vec3d vector = getInterpolatedRenderPos(entity, event.partialTicks);
+                Vec3d vector = getInterpolatedRenderPos(entity, partialTicks);
                 if (entity instanceof EntityPlayer)
                     ((EntityPlayer) entity).hurtTime = 0;
                 Render<Entity> render = mc.getRenderManager().getEntityRenderObject(entity);
                 if (render != null) {
                     try {
-                        render.doRender(entity, vector.x, vector.y, vector.z, entity.rotationYaw, event.partialTicks);
+                        render.doRender(entity, vector.x, vector.y, vector.z, entity.rotationYaw, partialTicks);
                     } catch (Exception ignored) {
                     }
                 }

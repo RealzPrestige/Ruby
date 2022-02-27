@@ -35,7 +35,7 @@ public class RunDetect extends Module {
     }
 
     @Override
-    public void onGlobalRenderTick() {
+    public void onFrame(float partialTicks) {
         for (EntityPlayer entityPlayer : gappledPreviouslySwordedPotentialRunnerList) {
             glPushMatrix();
             Vec3d i = RenderUtil.interpolateEntity(entityPlayer);

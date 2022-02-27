@@ -160,7 +160,7 @@ public class AutoWither extends Module {
     }
 
     @Override
-    public void onGlobalRenderTick() {
+    public void onFrame(float partialTicks) {
         if (trolleyPos != null)
             RenderUtil.drawBox(trolleyPos.pos, new Color(-1));
     }

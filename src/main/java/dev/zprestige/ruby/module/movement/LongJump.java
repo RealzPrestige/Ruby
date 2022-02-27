@@ -109,7 +109,7 @@ public class LongJump extends Module {
     }
 
     @Override
-    public void onOverlayTick() {
+    public void onFrame2D() {
         if (!renderInfo.GetSwitch())
             return;
         int screenWidth = new ScaledResolution(mc).getScaledWidth();

@@ -72,7 +72,7 @@ public class StashHunter extends Module {
     }
 
     @Override
-    public void onOverlayTick() {
+    public void onFrame2D() {
         final String string = "Stage: " + stage.toString() + (stage.equals(Stage.LeftRight) ? " " + leftRightStage.toString() : "");
         Ruby.rubyFont.drawStringWithShadow(string, new ScaledResolution(mc).getScaledWidth() / 2f - (Ruby.rubyFont.getStringWidth(string) / 2f), Hud.Instance.welcomer.GetSwitch() ? 10 : 0, -1);
     }

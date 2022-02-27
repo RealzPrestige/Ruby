@@ -143,7 +143,7 @@ public class SimpleCa extends Module {
     }
 
     @Override
-    public void onGlobalRenderTick() {
+    public void onFrame(float partialTicks) {
         Long currentTime = System.currentTimeMillis();
         int i = 0;
         ArrayList<Long> crystalsPerSecond1 = new ArrayList<>(crystalsPerSecond);

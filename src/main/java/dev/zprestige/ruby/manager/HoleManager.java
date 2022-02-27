@@ -1,6 +1,8 @@
 package dev.zprestige.ruby.manager;
 
 import dev.zprestige.ruby.Ruby;
+import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
+import dev.zprestige.ruby.events.Render3DEvent;
 import dev.zprestige.ruby.util.BlockUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
@@ -41,10 +43,13 @@ public class HoleManager {
             new Vec3i(1, 0, 0)
     };
 
-    public void onRenderWorldLastEvent() {
-        Ruby.threadManager.run(() -> {
-            holes = getHoles();
-        });
+    public HoleManager(){
+        Ruby.eventBus.register(this);
+    }
+
+    @RegisterListener
+    public void onFrame(Render3DEvent ignored) {
+        Ruby.threadManager.run(() -> holes = getHoles());
     }
 
     public ArrayList<HolePos> getHoles() {

@@ -50,7 +50,7 @@ public class Nametags extends Module {
     }
 
     @Override
-    public void onGlobalRenderTick(Render3DEvent event) {
+    public void onFrame(float partialTicks) {
         if (!multiThreaded.GetSwitch())
             entityPlayers = mc.world.playerEntities;
         else {
@@ -70,7 +70,7 @@ public class Nametags extends Module {
                     continue;
                 glPushMatrix();
                 try {
-                    renderFullNametag(entity, interpolate(entity.lastTickPosX, entity.posX, event.partialTicks) - mc.getRenderManager().renderPosX, interpolate(entity.lastTickPosY, entity.posY, event.partialTicks) - mc.getRenderManager().renderPosY, interpolate(entity.lastTickPosZ, entity.posZ, event.partialTicks) - mc.getRenderManager().renderPosZ, event.partialTicks);
+                    renderFullNametag(entity, interpolate(entity.lastTickPosX, entity.posX, partialTicks) - mc.getRenderManager().renderPosX, interpolate(entity.lastTickPosY, entity.posY, partialTicks) - mc.getRenderManager().renderPosY, interpolate(entity.lastTickPosZ, entity.posZ, partialTicks) - mc.getRenderManager().renderPosZ, partialTicks);
                 } catch (Exception ignored) {
                 }
                 glColor4f(1f, 1f, 1f, 1f);

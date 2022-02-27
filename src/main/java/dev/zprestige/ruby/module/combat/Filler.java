@@ -96,7 +96,7 @@ public class Filler extends Module {
     }
 
     @Override
-    public void onGlobalRenderTick() {
+    public void onFrame(float partialTicks) {
         if (render.GetSwitch()) {
             for (Map.Entry<BlockPos, Integer> entry : filledBlocks.entrySet()) {
                 filledBlocks.put(entry.getKey(), (int) (entry.getValue() - (fadeSpeed.GetSlider() / 200)));

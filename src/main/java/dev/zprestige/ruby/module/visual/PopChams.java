@@ -93,7 +93,7 @@ public class PopChams extends Module {
 
 
     @Override
-    public void onGlobalRenderTick() {
+    public void onFrame(float partialTicks) {
         HashMap<String, PopChams.PopData> save = new HashMap<>(popDataHashMap);
         for (Map.Entry<String, PopChams.PopData> entry : save.entrySet()) {
             PopChams.PopData data = entry.getValue();

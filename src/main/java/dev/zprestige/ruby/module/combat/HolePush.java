@@ -184,7 +184,7 @@ public class HolePush extends Module {
     }
 
     @Override
-    public void onGlobalRenderTick() {
+    public void onFrame(float partialTicks) {
         if (render.GetSwitch()) {
             if (placedPistonPos != null)
                 RenderUtil.drawBlockOutlineBB(new AxisAlignedBB(placedPistonPos), new Color(0xFFFFFF), lineWidth.GetSlider());

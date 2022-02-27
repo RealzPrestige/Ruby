@@ -36,7 +36,7 @@ public class HoleESP extends Module {
     protected final ICamera camera = new Frustum();
 
     @Override
-    public void onGlobalRenderTick() {
+    public void onFrame(float partialTicks) {
         camera.setPosition(Objects.requireNonNull(mc.getRenderViewEntity()).posX, mc.getRenderViewEntity().posY, mc.getRenderViewEntity().posZ);
         final List<HoleManager.HolePos> holes = Ruby.holeManager.holes.stream().filter(holePos -> (mc.player.getDistanceSq(holePos.pos) < radius.GetSlider() * radius.GetSlider()) && (doubles.GetSwitch() || (holePos.holeType.equals(HoleManager.Type.Bedrock) || holePos.holeType.equals(HoleManager.Type.Obsidian)))).collect(Collectors.toList());
         new HashMap<>(holePosLongHashMap).entrySet().stream().filter(entry -> holes.stream().noneMatch(holePos -> holePos.pos.equals(entry.getKey()))).forEach(entry -> holePosLongHashMap.remove(entry.getKey()));

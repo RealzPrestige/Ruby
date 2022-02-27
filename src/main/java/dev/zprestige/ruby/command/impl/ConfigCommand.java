@@ -8,7 +8,7 @@ import java.io.File;
 public class ConfigCommand extends Command {
 
     public ConfigCommand() {
-        super("config", "Config <Save/Load/Delete> <Folder> (OnlyVisuals) <True/False>");
+        super("config", "Config <Save/Load/Delete> <Folder>");
     }
 
     @Override

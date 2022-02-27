@@ -9,10 +9,12 @@ import dev.zprestige.ruby.ui.click.MainScreen;
 import dev.zprestige.ruby.ui.config.ConfigGuiScreen;
 import org.lwjgl.input.Keyboard;
 
+import java.awt.*;
+
 public class ClickGui extends Module {
     public static ClickGui Instance;
     public final ColorBox color = Menu.Color("Color");
-    public final ColorBox backgroundColor = Menu.Color("Background Color");
+    public final ColorBox backgroundColor = Menu.Color("Background Color").defaultValue(new Color(0, 0, 0, 50));
     public final Switch icons = Menu.Switch("Icons");
     public final Slider scrollSpeed = Menu.Slider("Scroll Speed", 1, 20);
     public final Slider animationSpeed = Menu.Slider("Animation Speed", 1, 20);

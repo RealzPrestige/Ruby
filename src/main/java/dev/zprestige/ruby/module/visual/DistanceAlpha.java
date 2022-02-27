@@ -13,7 +13,7 @@ public class DistanceAlpha extends Module {
     public Frustum camera = new Frustum();
 
     @Override
-    public void onGlobalRenderTick() {
+    public void onFrame(float partialTicks) {
         camera.setPosition(Objects.requireNonNull(mc.getRenderViewEntity()).posX, mc.getRenderViewEntity().posY, mc.getRenderViewEntity().posZ);
     }
 

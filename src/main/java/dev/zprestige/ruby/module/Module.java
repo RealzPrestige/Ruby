@@ -2,7 +2,6 @@ package dev.zprestige.ruby.module;
 
 import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.events.ModuleToggleEvent;
-import dev.zprestige.ruby.events.Render3DEvent;
 import dev.zprestige.ruby.settings.Setting;
 import dev.zprestige.ruby.settings.impl.Key;
 import dev.zprestige.ruby.settings.impl.Switch;
@@ -33,14 +32,11 @@ public class Module {
     public void onTick() {
     }
 
-    public void onOverlayTick() {
+    public void onFrame2D() {
     }
 
 
-    public void onGlobalRenderTick() {
-    }
-
-    public void onGlobalRenderTick(Render3DEvent event) {
+    public void onFrame(float partialTicks) {
     }
 
     public void enableModule() {

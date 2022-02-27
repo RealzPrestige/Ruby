@@ -72,7 +72,7 @@ public class AutoMine extends Module {
     }
 
     @Override
-    public void onGlobalRenderTick() {
+    public void onFrame(float partialTicks) {
         if (currentMinePos != null && !mc.world.getBlockState(currentMinePos).getBlock().equals(Blocks.AIR) && renderPacket.GetSwitch() && mineMode.GetCombo().equals("Packet")) {
             RenderUtil.drawFullBox(true, true, renderPacket.GetColor(), renderPacket.GetColor(), 1f, currentMinePos);
         }

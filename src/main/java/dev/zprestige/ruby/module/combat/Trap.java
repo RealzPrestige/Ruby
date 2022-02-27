@@ -120,7 +120,7 @@ public class Trap extends Module {
     }
 
     @Override
-    public void onGlobalRenderTick() {
+    public void onFrame(float partialTicks) {
         switch (placeMode.GetCombo()) {
             case "Gradually":
                 if (placePos == null || !render.GetSwitch())

@@ -14,7 +14,7 @@ public class AutoRespawn extends Module {
     public AxisAlignedBB bb;
 
     @Override
-    public void onGlobalRenderTick() {
+    public void onFrame(float partialTicks) {
         if (bb != null) {
             RenderUtil.drawBBBoxWithHeightDepth(bb, color.GetColor(), color.GetColor().getAlpha(), (float) (256 - bb.minY));
         }

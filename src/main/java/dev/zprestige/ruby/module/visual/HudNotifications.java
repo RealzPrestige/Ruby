@@ -58,7 +58,7 @@ public class HudNotifications extends Module {
     }
 
     @Override
-    public void onOverlayTick() {
+    public void onFrame2D() {
         int screenWidth = new ScaledResolution(mc).getScaledWidth();
         int i = (int) (y.GetSlider() - 17);
         if (!Display.isActive() || !Display.isVisible()) {

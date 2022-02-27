@@ -81,7 +81,7 @@ public class EntityTrails extends Module {
 
 
     @Override
-    public void onGlobalRenderTick() {
+    public void onFrame(float partialTicks) {
         if (self.GetSwitch()) {
             trails.forEach((key, value) -> {
                 if (value.entity.isDead || mc.world.getEntityByID(value.entity.getEntityId()) == null) {

@@ -116,7 +116,7 @@ public class Hud extends Module {
     }
 
     @Override
-    public void onOverlayTick() {
+    public void onFrame2D() {
         if (packetGraph.GetSwitch()) {
             RenderUtil.drawRect(graphX.GetSlider(), graphY.GetSlider(), graphX.GetSlider() + 100, graphY.GetSlider() + 35, new Color(0, 0, 0, 100).getRGB());
             RenderUtil.drawOutlineRect(graphX.GetSlider(), graphY.GetSlider(), graphX.GetSlider() + 100, graphY.GetSlider() + 35, color.GetColor(), 1.0f);

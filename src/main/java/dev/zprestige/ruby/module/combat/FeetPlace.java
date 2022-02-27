@@ -37,7 +37,7 @@ public class FeetPlace extends Module {
     public final Switch support = Menu.Switch("Support").parent(misc);
     public final Switch reCalcOnMove = Menu.Switch("Re-Calc On Move").parent(misc);
     public final Switch smartExtend = Menu.Switch("Smart Extend").parent(misc);
-    public final Slider smartExtendSize = Menu.Slider("Smart Extend Size", 0.0f, 2.0f);
+    public final Slider smartExtendSize = Menu.Slider("Smart Extend Size", 0.0f, 10.0f).parent(misc);
     public final Switch hitboxCheck = Menu.Switch("Hitbox Check").parent(misc);
     public final Switch retry = Menu.Switch("Retry").parent(misc);
     public final Slider retries = Menu.Slider("Retries", 1, 10).parent(misc);
@@ -157,7 +157,7 @@ public class FeetPlace extends Module {
 
     public void addExtendedPosses() {
         for (BlockPos pos : blockPosList) {
-            final AxisAlignedBB bb = new AxisAlignedBB(pos).grow(smartExtendSize.GetSlider() / 10.0f);
+            final AxisAlignedBB bb = new AxisAlignedBB(pos).grow(smartExtendSize.GetSlider() / 20.0f);
             final AxisAlignedBB playerBox = mc.player.getEntityBoundingBox();
             if (playerBox.intersects(bb)) {
                 if (!playerBox.intersects(new AxisAlignedBB(pos.north()))) {

@@ -94,7 +94,7 @@ public class PacketMine extends Module {
     }
 
     @Override
-    public void onGlobalRenderTick() {
+    public void onFrame(float partialTicks) {
         if (currentPos != null) {
             AxisAlignedBB bb = new AxisAlignedBB(currentPos);
             switch (renderMode.GetCombo()) {

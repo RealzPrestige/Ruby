@@ -21,7 +21,7 @@ public class Interactions extends Module {
     public final ColorBox outlineColor = Menu.Color("Outline Color");
 
     @Override
-    public void onGlobalRenderTick() {
+    public void onFrame(float partialTicks) {
         mc.renderGlobal.damagedBlocks.forEach(((integer, destroyBlockProgress) -> renderDestroyProgress(destroyBlockProgress)));
     }
 

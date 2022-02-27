@@ -165,7 +165,7 @@ public class ConfigManager {
 
     protected Setting getSettingByNameAndModule(Module module, String name) {
         for (Setting setting : module.getSettings()) {
-            if (setting.getName().equals(name)) {
+            if (setting.getName().replace(" ", "").equals(name.replace(" ", ""))) {
                 return setting;
             }
         }

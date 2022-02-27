@@ -56,7 +56,7 @@ public class ItemModification extends Module {
     }
 
     @Override
-    public void onGlobalRenderTick() {
+    public void onFrame(float partialTicks) {
         if (swung) {
             switch (direction.GetCombo()) {
                 case "Forwards":

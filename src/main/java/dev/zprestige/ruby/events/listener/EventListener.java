@@ -43,7 +43,7 @@ public class EventListener {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onRenderGameOverlayTextEvent(RenderGameOverlayEvent.Text event) {
         if (checkNull())
-            moduleList.stream().filter(Module::isEnabled).forEach(Module::onOverlayTick);
+            moduleList.stream().filter(Module::isEnabled).forEach(Module::onFrame2D);
     }
 
     @SubscribeEvent
@@ -56,11 +56,10 @@ public class EventListener {
         mc.profiler.startSection("ruby");
         if (checkNull()) {
             Render3DEvent render3DEvent = new Render3DEvent(event.getPartialTicks());
-            Ruby.holeManager.onRenderWorldLastEvent();
+            Ruby.eventBus.post(render3DEvent);
             if (Nametags.Instance.isEnabled())
-                Nametags.Instance.onGlobalRenderTick(render3DEvent);
-            moduleList.stream().filter(Module::isEnabled).forEach(Module::onGlobalRenderTick);
-            moduleList.stream().filter(module -> module.isEnabled() && !(module instanceof Nametags)).forEach(module -> module.onGlobalRenderTick(render3DEvent));
+                Nametags.Instance.onFrame(event.getPartialTicks());
+            moduleList.stream().filter(module -> module.isEnabled() && !(module instanceof Nametags)).forEach(module -> module.onFrame(event.getPartialTicks()));
         }
         mc.profiler.endSection();
     }

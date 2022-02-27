@@ -272,10 +272,10 @@ public class AutoCrystal extends Module {
     }
 
     protected final Vec3i[] offsets = new Vec3i[]{
-      new Vec3i(0, 1, 1),
-      new Vec3i(0, 1, -1),
-      new Vec3i(1, 1, 0),
-      new Vec3i(-1, 1, 0)
+            new Vec3i(0, 1, 1),
+            new Vec3i(0, 1, -1),
+            new Vec3i(1, 1, 0),
+            new Vec3i(-1, 1, 0)
     };
 
     protected boolean canPlace(BlockPos pos) {
@@ -287,13 +287,13 @@ public class AutoCrystal extends Module {
         TreeMap<Float, PlacePosition> posList = new TreeMap<>();
         TreeMap<Float, PlacePosition> posListDistance = new TreeMap<>();
         BlockPos selfPos = BlockUtil.getPlayerPos();
-        if (antiSelfHolePush.GetSwitch()){
-            for (Vec3i vec3i : offsets){
+        if (antiSelfHolePush.GetSwitch()) {
+            for (Vec3i vec3i : offsets) {
                 BlockPos pos = selfPos.add(vec3i);
-                if (mc.world.getBlockState(pos).getBlock().equals(Blocks.PISTON)){
-                    for (Vec3i vec3i1 : offsets){
+                if (mc.world.getBlockState(pos).getBlock().equals(Blocks.PISTON)) {
+                    for (Vec3i vec3i1 : offsets) {
                         BlockPos pos1 = pos.add(vec3i1);
-                        if (canPlace(pos1)){
+                        if (canPlace(pos1)) {
                             return new PlacePosition(pos1, 1000);
                         }
                     }
@@ -519,7 +519,7 @@ public class AutoCrystal extends Module {
     }
 
     @Override
-    public void onGlobalRenderTick() {
+    public void onFrame(float partialTicks) {
         if (target == null)
             return;
         switch (renderMode.GetCombo()) {
