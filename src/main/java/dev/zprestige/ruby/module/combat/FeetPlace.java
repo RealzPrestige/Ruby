@@ -37,6 +37,7 @@ public class FeetPlace extends Module {
     public final Switch support = Menu.Switch("Support").parent(misc);
     public final Switch reCalcOnMove = Menu.Switch("Re-Calc On Move").parent(misc);
     public final Switch smartExtend = Menu.Switch("Smart Extend").parent(misc);
+    public final Slider smartExtendSize = Menu.Slider("Smart Extend Size", 0.0f, 2.0f);
     public final Switch hitboxCheck = Menu.Switch("Hitbox Check").parent(misc);
     public final Switch retry = Menu.Switch("Retry").parent(misc);
     public final Slider retries = Menu.Slider("Retries", 1, 10).parent(misc);
@@ -156,27 +157,28 @@ public class FeetPlace extends Module {
 
     public void addExtendedPosses() {
         for (BlockPos pos : blockPosList) {
-            AxisAlignedBB bb = new AxisAlignedBB(pos);
-            if (mc.player.getEntityBoundingBox().intersects(bb)) {
-                if (!mc.player.getEntityBoundingBox().intersects(new AxisAlignedBB(pos.north()))) {
+            final AxisAlignedBB bb = new AxisAlignedBB(pos).grow(smartExtendSize.GetSlider() / 10.0f);
+            final AxisAlignedBB playerBox = mc.player.getEntityBoundingBox();
+            if (playerBox.intersects(bb)) {
+                if (!playerBox.intersects(new AxisAlignedBB(pos.north()))) {
                     if (isPosSurroundedByBlocks(pos.down().north()) && canPlace(pos.down().north()))
                         extendBlocks.add(pos.down().north());
                     if (isPosSurroundedByBlocks(pos.north()) && canPlace(pos.north()))
                         extendBlocks.add(pos.north());
                 }
-                if (!mc.player.getEntityBoundingBox().intersects(new AxisAlignedBB(pos.east()))) {
+                if (!playerBox.intersects(new AxisAlignedBB(pos.east()))) {
                     if (isPosSurroundedByBlocks(pos.down().east()) && canPlace(pos.down().east()))
                         extendBlocks.add(pos.down().east());
                     if (isPosSurroundedByBlocks(pos.east()) && canPlace(pos.east()))
                         extendBlocks.add(pos.east());
                 }
-                if (!mc.player.getEntityBoundingBox().intersects(new AxisAlignedBB(pos.south()))) {
+                if (!playerBox.intersects(new AxisAlignedBB(pos.south()))) {
                     if (isPosSurroundedByBlocks(pos.down().south()) && canPlace(pos.down().south()))
                         extendBlocks.add(pos.down().south());
                     if (isPosSurroundedByBlocks(pos.south()) && canPlace(pos.south()))
                         extendBlocks.add(pos.south());
                 }
-                if (!mc.player.getEntityBoundingBox().intersects(new AxisAlignedBB(pos.west()))) {
+                if (!playerBox.intersects(new AxisAlignedBB(pos.west()))) {
                     if (isPosSurroundedByBlocks(pos.down().west()) && canPlace(pos.down().west()))
                         extendBlocks.add(pos.down().west());
                     if (isPosSurroundedByBlocks(pos.west()) && canPlace(pos.west()))
