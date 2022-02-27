@@ -2,7 +2,6 @@ package dev.zprestige.ruby.manager;
 
 import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.module.Module;
-import dev.zprestige.ruby.module.misc.PacketLogger;
 import dev.zprestige.ruby.settings.Setting;
 import dev.zprestige.ruby.settings.impl.*;
 import net.minecraft.client.Minecraft;
@@ -112,14 +111,13 @@ public class ConfigManager {
                 final BufferedReader bufferReader = new BufferedReader(new InputStreamReader(new DataInputStream(new FileInputStream(file))));
                 bufferReader.lines().forEach(line -> {
                     final String[] s = line.replace("\"", "").replace(" ", "").split(":");
-                    final String split = s[0].replace(":", "").replace("]", "").replace("[", "");
-                    final String split1 = s[1].replace(":", "").replace("]", "").replace("[", "");
-                    Setting setting = getSettingByNameAndModule(module, split);
+                    final String split = s[0];
+                    final Setting setting = getSettingByNameAndModule(module, split);
                     String split2 = "null";
                     if (setting instanceof ColorSwitch) {
-                        split2 = s[2].replace(":", "").replace("]", "").replace("[", "");
+                        split2 = s[2];
                     }
-                    setValueFromSetting(setting, split1, split.equals("Enabled"), split2);
+                    setValueFromSetting(setting, s[1], split.equals("Enabled"), split2);
                 });
                 bufferReader.close();
             } catch (IOException ignored) {
@@ -136,22 +134,28 @@ public class ConfigManager {
             } else if (line.equals("false") && module.isEnabled()) {
                 module.disableModule();
             }
+            return;
         }
         if (setting instanceof ColorBox) {
             ((ColorBox) setting).setValue(new Color(Integer.parseInt(line), true));
+            return;
         }
         if (setting instanceof ColorSwitch) {
             ((ColorSwitch) setting).setSwitchValue(Boolean.parseBoolean(line));
             ((ColorSwitch) setting).setColor(new Color(Integer.parseInt(colorSwitch), true));
+            return;
         }
         if (setting instanceof ComboBox) {
             ((ComboBox) setting).setValue(line);
+            return;
         }
         if (setting instanceof Slider) {
             ((Slider) setting).setValue(Float.parseFloat(line));
+            return;
         }
         if (setting instanceof Key) {
             ((Key) setting).setValue(Keyboard.getKeyIndex(line));
+            return;
         }
 
         if (setting instanceof Switch) {

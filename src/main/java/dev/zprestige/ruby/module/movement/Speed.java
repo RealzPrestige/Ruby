@@ -15,6 +15,7 @@ import net.minecraft.network.play.server.SPacketPlayerPosLook;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import org.lwjgl.input.Keyboard;
@@ -58,10 +59,16 @@ public class Speed extends Module {
         Instance = this;
     }
 
+    @Override
+    public void onEnable(){
+        MinecraftForge.EVENT_BUS.register(this);
+    }
+
 
     @Override
     public void onDisable() {
         mc.timer.tickLength = 50.0f;
+        MinecraftForge.EVENT_BUS.unregister(this);
     }
 
     @SubscribeEvent
