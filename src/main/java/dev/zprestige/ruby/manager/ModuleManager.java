@@ -63,7 +63,8 @@ public class ModuleManager {
         moduleList.add(new AutoWither().withSuper("AutoWither", Category.Misc));
         moduleList.add(new FakePlayer().withSuper("FakePlayer", Category.Misc));
         moduleList.add(new FreeLook().withSuper("FreeLook", Category.Misc));
-        moduleList.add(new InventoryCleaner().withSuper("MiddleClick", Category.Misc));
+        moduleList.add(new InventoryCleaner().withSuper("InventoryCleaner", Category.Misc));
+        moduleList.add(new MiddleClick().withSuper("MiddleClick", Category.Misc));
         moduleList.add(new NoInterpolation().withSuper("NoInterpolation", Category.Misc));
         moduleList.add(new PacketLogger().withSuper("PacketLogger", Category.Misc));
         moduleList.add(new RunDetect().withSuper("RunDetect", Category.Misc));

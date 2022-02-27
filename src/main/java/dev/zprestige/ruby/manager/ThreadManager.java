@@ -4,9 +4,16 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ThreadManager {
-    ExecutorService executorService = Executors.newFixedThreadPool(2);
+    protected ExecutorService executorService = Executors.newFixedThreadPool(2);
 
     public void run(Runnable command) {
-        executorService.execute(command);
+        try {
+            executorService.execute(command);
+        } catch (Exception ignored){
+        }
+    }
+
+    public void setExecutorService(ExecutorService executorService) {
+        this.executorService = executorService;
     }
 }

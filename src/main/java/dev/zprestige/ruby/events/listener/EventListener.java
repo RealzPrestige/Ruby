@@ -15,6 +15,7 @@ import net.minecraft.network.play.server.SPacketSoundEffect;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -23,6 +24,7 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
 
 public class EventListener {
     protected final Minecraft mc = Ruby.mc;
@@ -82,6 +84,18 @@ public class EventListener {
                     module.enableModule();
                 }
             });
+        }
+    }
+
+    @SubscribeEvent
+    public void onDisconnect(FMLNetworkEvent.ClientDisconnectionFromServerEvent event){
+        Ruby.threadManager.setExecutorService(Executors.newFixedThreadPool(2));
+    }
+
+    @SubscribeEvent
+    public void onDeath(LivingDeathEvent event){
+        if (event.getEntity().equals(mc.player)){
+            Ruby.threadManager.setExecutorService(Executors.newFixedThreadPool(2));
         }
     }
 

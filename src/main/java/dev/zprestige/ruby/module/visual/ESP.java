@@ -137,7 +137,8 @@ public class ESP extends Module {
 
     @Override
     public void onFrame(float partialTicks) {
-        Ruby.threadManager.run(() -> playerList = mc.world.playerEntities);
+        final Runnable runnable = () -> playerList = mc.world.playerEntities;
+        Ruby.threadManager.run(runnable);
         camera.setPosition(Objects.requireNonNull(mc.getRenderViewEntity()).posX, mc.getRenderViewEntity().posY, mc.getRenderViewEntity().posZ);
         if (players.GetSwitch() && playerMoveCancel.GetSwitch()) {
             mc.world.playerEntities.stream().filter(entityPlayer -> !entityPlayer.equals(mc.player)).forEach(entityPlayer -> {

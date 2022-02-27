@@ -67,7 +67,7 @@ public class HudNotifications extends Module {
         }
         HashMap<String, Float> notificationMap1 = new HashMap<>(notificationMap);
         for (Map.Entry<String, Float> entry : notificationMap1.entrySet()) {
-            notificationMap1.put(entry.getKey(), entry.getValue() - removeSpeed.GetSlider());
+            notificationMap1.put(entry.getKey(), entry.getValue() - (entry.getValue() > 1.0f ? (entry.getValue() /  removeSpeed.GetSlider()) : removeSpeed.GetSlider()));
             if (entry.getValue() > 1.0f) {
                 RenderUtil.drawRect((screenWidth / 2f) - (Ruby.rubyFont.getStringWidth(entry.getKey()) / 2f) - 3, i += 17, ((screenWidth / 2f) - (Ruby.rubyFont.getStringWidth(entry.getKey()) / 2f) - 3) + entry.getValue(), i + 16, surroundColor.GetColor().getRGB());
                 RenderUtil.drawRect(screenWidth / 2f + (Ruby.rubyFont.getStringWidth(entry.getKey()) / 2f) - entry.getValue(), i, (screenWidth / 2f) + (Ruby.rubyFont.getStringWidth(entry.getKey()) / 2f) + 3, i + 16, surroundColor.GetColor().getRGB());
