@@ -35,6 +35,7 @@ public class ModuleManager {
         moduleList.add(new Aura().withSuper("Aura", Category.Combat));
         moduleList.add(new AutoCrystal().withSuper("AutoCrystal", Category.Combat));
         moduleList.add(new AutoEcMeMainFucker().withSuper("AutoEcMeMainFucker", Category.Combat));
+        moduleList.add(new AutoPiston().withSuper("AutoPiston", Category.Combat));
         moduleList.add(new AutoWeb().withSuper("AutoWeb", Category.Combat));
         moduleList.add(new CevBreaker().withSuper("CevBreaker", Category.Combat));
         moduleList.add(new FeetPlace().withSuper("FeetPlace", Category.Combat));

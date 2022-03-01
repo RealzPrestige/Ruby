@@ -34,6 +34,8 @@ public class FakePlayer extends Module {
 
     @Override
     public void onEnable() {
+        if (nullCheck())
+            return;
         fakePlayer = new EntityOtherPlayerMP(mc.world, new GameProfile(getUUIDByName("FakePlayer"), "FakePlayer"));
         fakePlayer.copyLocationAndAnglesFrom(mc.player);
         if (copyInventory.GetSwitch()) {

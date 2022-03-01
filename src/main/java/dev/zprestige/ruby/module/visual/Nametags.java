@@ -29,6 +29,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class Nametags extends Module {
     public static Nametags Instance;
+    public final Switch multiThreaded = Menu.Switch("Multi Threaded");
     public final Switch health = Menu.Switch("Health");
     public final Switch ping = Menu.Switch("Ping");
     public final Switch totemPops = Menu.Switch("Totem Pops");
@@ -36,7 +37,7 @@ public class Nametags extends Module {
     public List<EntityPlayer> entityPlayers = new ArrayList<>();
     public ICamera camera = new Frustum();
 
-    public Nametags(){
+    public Nametags() {
         Instance = this;
     }
 
@@ -50,7 +51,11 @@ public class Nametags extends Module {
 
     @Override
     public void onFrame(float partialTicks) {
+        if (multiThreaded.GetSwitch()) {
+            Ruby.threadManager.run(() -> entityPlayers = mc.world.playerEntities);
+        } else {
             entityPlayers = mc.world.playerEntities;
+        }
         if (!entityPlayers.isEmpty()) {
             if (inFrustum.GetSwitch())
                 camera.setPosition(Objects.requireNonNull(mc.getRenderViewEntity()).posX, mc.getRenderViewEntity().posY, mc.getRenderViewEntity().posZ);
