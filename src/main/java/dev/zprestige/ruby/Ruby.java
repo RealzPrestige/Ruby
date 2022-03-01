@@ -3,8 +3,6 @@ package dev.zprestige.ruby;
 import dev.zprestige.ruby.eventbus.EventBus;
 import dev.zprestige.ruby.events.listener.EventListener;
 import dev.zprestige.ruby.manager.*;
-import dev.zprestige.ruby.module.visual.Nametags;
-import dev.zprestige.ruby.ui.font.RubyFont;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -17,6 +15,7 @@ public class Ruby {
     public static HoleManager holeManager;
     public static ModuleManager moduleManager;
     public static EventListener eventListener;
+    public static FontManager fontManager;
     public static FriendManager friendManager;
     public static EnemyManager enemyManager;
     public static TickManager tickManager;
@@ -24,7 +23,6 @@ public class Ruby {
     public static TotemPopManager totemPopManager;
     public static CommandManager commandManager;
     public static ConfigManager configManager;
-    public static RubyFont rubyFont = new RubyFont("Font", 17.0f);
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
@@ -34,6 +32,7 @@ public class Ruby {
         holeManager = new HoleManager();
         moduleManager = new ModuleManager();
         eventListener = new EventListener();
+        fontManager = new FontManager();
         friendManager = new FriendManager();
         enemyManager = new EnemyManager();
         tickManager = new TickManager();

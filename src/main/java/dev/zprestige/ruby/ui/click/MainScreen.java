@@ -19,7 +19,6 @@ public class MainScreen extends GuiScreen {
     public ArrayList<GuiCategory> guiCategories = new ArrayList<>();
     public int deltaX;
     public HashMap<Float, String> copyPasteMap = new HashMap<>();
-    protected float scaled = 0.0f;
 
     public MainScreen() {
         deltaX = 26;
@@ -36,8 +35,6 @@ public class MainScreen extends GuiScreen {
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        scaled += (1.0f - scaled) / 25.0f;
-        GlStateManager.scale(scaled, scaled, scaled);
         final ScaledResolution scaledResolution = new ScaledResolution(mc);
         {
             GlStateManager.enableAlpha();
@@ -56,7 +53,7 @@ public class MainScreen extends GuiScreen {
                     continue;
                 }
                 final String entryValue = entry.getValue();
-                Ruby.rubyFont.drawStringWithShadow(entryValue, centerX - (Ruby.rubyFont.getStringWidth(entryValue) / 2f), deltaY -= Math.min(10, entry.getKey() / 5.0f), new Color(1, 1, 1, entry.getKey() / 255.0f).getRGB());
+                Ruby.fontManager.drawStringWithShadow(entryValue, centerX - (Ruby.fontManager.getStringWidth(entryValue) / 2f), deltaY -= Math.min(10, entry.getKey() / 5.0f), new Color(1, 1, 1, entry.getKey() / 255.0f).getRGB());
                 copyPasteMap.put(entry.getKey() - (entry.getKey() / 100.0f), entryValue);
                 copyPasteMap.remove(entry.getKey());
             }

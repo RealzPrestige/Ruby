@@ -23,7 +23,7 @@ public class ModuleManager {
 
     public ModuleManager() {
         moduleList.add(new ClickGui().withSuper("ClickGui", Category.Client));
-        moduleList.add(new Configs().withSuper("Configs", Category.Client));
+        moduleList.add(new CustomFont().withSuper("CustomFont", Category.Client));
         moduleList.add(new Enemies().withSuper("Enemies", Category.Client));
         moduleList.add(new Friends().withSuper("Friends", Category.Client));
         moduleList.add(new Hud().withSuper("Hud", Category.Client));

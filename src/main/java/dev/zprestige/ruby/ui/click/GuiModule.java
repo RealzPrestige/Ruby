@@ -5,8 +5,8 @@ import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.module.Module;
 import dev.zprestige.ruby.module.client.ClickGui;
 import dev.zprestige.ruby.settings.impl.*;
-import dev.zprestige.ruby.ui.click.setting.NewSetting;
-import dev.zprestige.ruby.ui.click.setting.newsettings.*;
+import dev.zprestige.ruby.ui.click.setting.Button;
+import dev.zprestige.ruby.ui.click.setting.impl.*;
 import dev.zprestige.ruby.util.AnimationUtil;
 import dev.zprestige.ruby.util.RenderUtil;
 
@@ -20,7 +20,7 @@ public class GuiModule {
     public int x, y, width, height, deltaY, animDeltaY;
     public boolean isOpened = false;
     public float animWidth, hoverAnimWidth;
-    public ArrayList<NewSetting> settings = new ArrayList<>();
+    public ArrayList<Button> settings = new ArrayList<>();
 
     public GuiModule(Module module, int x, int y, int width, int height) {
         this.module = module;
@@ -66,7 +66,7 @@ public class GuiModule {
                 animWidth = AnimationUtil.decreaseNumber(animWidth, 0, 1);
             if (animWidth > 0.0f)
                 RenderUtil.drawRect(x, y, x + animWidth, y + height, ClickGui.Instance.color.GetColor().getRGB());
-            Ruby.rubyFont.drawStringWithShadow(module.getName(), x + (isInside(mouseX, mouseY) ? 2 : 1), y + (height / 2f) - (Ruby.rubyFont.getHeight(module.getName()) / 2f), -1);
+            Ruby.fontManager.drawStringWithShadow(module.getName(), x + (isInside(mouseX, mouseY) ? 2 : 1), y + (height / 2f) - (Ruby.fontManager.getFontHeight() / 2f), -1);
             if (isInside(mouseX, mouseY))
                 hoverAnimWidth = AnimationUtil.increaseNumber(hoverAnimWidth, width, ClickGui.Instance.animationSpeed.GetSlider());
             else

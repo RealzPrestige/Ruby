@@ -57,12 +57,12 @@ public class Interactions extends Module {
             scale = 1;
         GlStateManager.scale(scale, scale, scale);
         String string = progress * 100 + "%";
-        GlStateManager.translate(-(Ruby.rubyFont.getStringWidth(string) / 2.0), 0, 0);
-        RenderUtil.drawUnfilledCircle(Ruby.rubyFont.getStringWidth(string) / 2.0f, 0, 23.0f, new Color(outlineColor.GetColor().getRed() / 255.0f, outlineColor.GetColor().getGreen() / 255.0f, outlineColor.GetColor().getBlue() / 255.0f, 1.0f).getRGB(), 5.0f, progress * 360);
-        RenderUtil.drawCircle(Ruby.rubyFont.getStringWidth(string) / 2.0f, 0, 22.0f, new Color(color.GetColor().getRed() / 255.0f, color.GetColor().getGreen() / 255.0f, color.GetColor().getBlue() / 255.0f, 1.0f).getRGB());
-        Ruby.rubyFont.drawString(string, 0, 6.0f, new Color(255, 255, 255).getRGB());
+        GlStateManager.translate(-(Ruby.fontManager.getStringWidth(string) / 2.0), 0, 0);
+        RenderUtil.drawUnfilledCircle(Ruby.fontManager.getStringWidth(string) / 2.0f, 0, 23.0f, new Color(outlineColor.GetColor().getRed() / 255.0f, outlineColor.GetColor().getGreen() / 255.0f, outlineColor.GetColor().getBlue() / 255.0f, 1.0f).getRGB(), 5.0f, progress * 360);
+        RenderUtil.drawCircle(Ruby.fontManager.getStringWidth(string) / 2.0f, 0, 22.0f, new Color(color.GetColor().getRed() / 255.0f, color.GetColor().getGreen() / 255.0f, color.GetColor().getBlue() / 255.0f, 1.0f).getRGB());
+        Ruby.fontManager.drawStringWithShadow(string, 0, 6.0f, new Color(255, 255, 255).getRGB());
         Minecraft.getMinecraft().getTextureManager().bindTexture(new ResourceLocation("textures/icons/pickaxe.png"));
-        Gui.drawScaledCustomSizeModalRect((int) (Ruby.rubyFont.getStringWidth(string) / 2.0f) - 10, -17, 0, 0, 12, 12, 22, 22, 12, 12);
+        Gui.drawScaledCustomSizeModalRect((int) (Ruby.fontManager.getStringWidth(string) / 2.0f) - 10, -17, 0, 0, 12, 12, 22, 22, 12, 12);
         GlStateManager.enableDepth();
         GlStateManager.disableBlend();
         GlStateManager.disablePolygonOffset();

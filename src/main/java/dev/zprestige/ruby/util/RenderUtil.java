@@ -394,7 +394,7 @@ public class RenderUtil {
 
     public static void drawNametag(String text, double x, double y, double z, double scale, int color) {
         double dist = ((mc.getRenderViewEntity() == null) ? mc.player : mc.getRenderViewEntity()).getDistance(x + mc.getRenderManager().viewerPosX, y + mc.getRenderManager().viewerPosY, z + mc.getRenderManager().viewerPosZ);
-        int textWidth = (int) (Ruby.rubyFont.getStringWidth(text) / 2);
+        int textWidth = (int) (Ruby.fontManager.getStringWidth(text) / 2);
         double scaling = dist <= 8.0 ? 0.0245 : 0.0018 + scale * dist;
         GlStateManager.pushMatrix();
         RenderHelper.enableStandardItemLighting();
@@ -573,8 +573,8 @@ public class RenderUtil {
         GlStateManager.pushMatrix();
         RenderUtil.glBillboardDistanceScaled((float) pos.getX() + 0.5f, (float) pos.getY() + 0.5f, (float) pos.getZ() + 0.5f, mc.player, 1.0f);
         GlStateManager.disableDepth();
-        GlStateManager.translate(-((double) Ruby.rubyFont.getStringWidth(text) / 2.0), 0.0, 0.0);
-        Ruby.rubyFont.drawStringWithShadow(text, 0.0f, 0.0f, -1);
+        GlStateManager.translate(-((double) Ruby.fontManager.getStringWidth(text) / 2.0), 0.0, 0.0);
+        Ruby.fontManager.drawStringWithShadow(text, 0.0f, 0.0f, -1);
         GlStateManager.popMatrix();
     }
 
@@ -582,7 +582,7 @@ public class RenderUtil {
         GlStateManager.pushMatrix();
         RenderUtil.glBillboardDistanceScaled((float) pos.getX() + 0.5f, (float) pos.getY() + 0.5f, (float) pos.getZ() + 0.5f, mc.player, 1.0f);
         GlStateManager.disableDepth();
-        GlStateManager.translate(-((double) Ruby.rubyFont.getStringWidth(text) / 2.0), 0.0, 0.0);
+        GlStateManager.translate(-((double) Ruby.fontManager.getStringWidth(text) / 2.0), 0.0, 0.0);
         mc.fontRenderer.drawStringWithShadow(text, 0.0f, 0.0f, -1);
         GlStateManager.popMatrix();
     }

@@ -4,7 +4,7 @@ import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
 import dev.zprestige.ruby.module.client.ClickGui;
-import dev.zprestige.ruby.ui.click.setting.NewSetting;
+import dev.zprestige.ruby.ui.click.setting.Button;
 import dev.zprestige.ruby.util.AnimationUtil;
 import dev.zprestige.ruby.util.RenderUtil;
 import net.minecraft.client.gui.GuiScreen;
@@ -67,7 +67,7 @@ public class GuiCategory {
                 deltaY += height + 1;
                 newModule.y = newModule.module.scrollY + deltaY;
                 if (newModule.isOpened) {
-                    for (NewSetting newSetting : newModule.settings) {
+                    for (Button newSetting : newModule.settings) {
                         if (newSetting.getSetting().openedParent()) {
                             deltaY += height + 1;
                         }
@@ -79,7 +79,7 @@ public class GuiCategory {
         }
         {
             RenderUtil.drawRect(x, y, x + width, y + height, ClickGui.Instance.color.GetColor().getRGB());
-            Ruby.rubyFont.drawStringWithShadow(category.toString(), x + (width / 2f) - (Ruby.rubyFont.getStringWidth(category.toString()) / 2f), y + (height / 2f) - (Ruby.rubyFont.getHeight(category.toString()) / 2f), -1);
+            Ruby.fontManager.drawStringWithShadow(category.toString(), x + (width / 2f) - (Ruby.fontManager.getStringWidth(category.toString()) / 2f), y + (height / 2f) - (Ruby.fontManager.getFontHeight() / 2f), -1);
         }
         {
             RenderUtil.drawRect(x, y + height, x + width, animHeight, ClickGui.Instance.backgroundColor.GetColor().getRGB());
@@ -179,7 +179,7 @@ public class GuiCategory {
         Ruby.mc.getTextureManager().bindTexture(new ResourceLocation("textures/icons/" + category.toString().toLowerCase() + ".png"));
         GlStateManager.color(1f, 1f, 1f);
         GL11.glPushMatrix();
-        GuiScreen.drawScaledCustomSizeModalRect((int) (x + (width / 2f) - (Ruby.rubyFont.getStringWidth(category.toString()) / 2f) - 14), y + 1, 0, 0, 13, 12, 13, 12, 13, 12);
+        GuiScreen.drawScaledCustomSizeModalRect((int) (x + (width / 2f) - (Ruby.fontManager.getStringWidth(category.toString()) / 2f) - 14), y + 1, 0, 0, 13, 12, 13, 12, 13, 12);
         GlStateManager.disableAlpha();
         GL11.glPopMatrix();
     }

@@ -14,14 +14,18 @@ public abstract class Shader {
     private Map<String, Integer> uniformsMap;
 
     public Shader(String fragmentShader) {
-        int vertexShaderID, fragmentShaderID;
+        int vertexShaderID = 0, fragmentShaderID = 0;
 
         try {
             InputStream vertexStream = getClass().getResourceAsStream("/assets/minecraft/textures/ruby/shader/vertex.vert");
-            vertexShaderID = createShader(IOUtils.toString(vertexStream), ARBVertexShader.GL_VERTEX_SHADER_ARB);
+            if (vertexStream != null) {
+                vertexShaderID = createShader(IOUtils.toString(vertexStream), ARBVertexShader.GL_VERTEX_SHADER_ARB);
+            }
             IOUtils.closeQuietly(vertexStream);
             InputStream fragmentStream = getClass().getResourceAsStream("/assets/minecraft/textures/ruby/shader/frags/" + fragmentShader);
-            fragmentShaderID = createShader(IOUtils.toString(fragmentStream), ARBFragmentShader.GL_FRAGMENT_SHADER_ARB);
+            if (fragmentStream != null) {
+                fragmentShaderID = createShader(IOUtils.toString(fragmentStream), ARBFragmentShader.GL_FRAGMENT_SHADER_ARB);
+            }
             IOUtils.closeQuietly(fragmentStream);
         } catch (Exception e) {
             e.printStackTrace();

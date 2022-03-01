@@ -120,7 +120,7 @@ public class Hud extends Module {
         if (packetGraph.GetSwitch()) {
             RenderUtil.drawRect(graphX.GetSlider(), graphY.GetSlider(), graphX.GetSlider() + 100, graphY.GetSlider() + 35, new Color(0, 0, 0, 100).getRGB());
             RenderUtil.drawOutlineRect(graphX.GetSlider(), graphY.GetSlider(), graphX.GetSlider() + 100, graphY.GetSlider() + 35, color.GetColor(), 1.0f);
-            Ruby.rubyFont.drawString("Packets", graphX.GetSlider() + 2, graphY.GetSlider(), -1);
+            Ruby.fontManager.drawStringWithShadow("Packets", graphX.GetSlider() + 2, graphY.GetSlider(), -1);
             makeGraph((int) graphX.GetSlider(), (int) graphY.GetSlider(), receivedPacketsList, receivedPackets.getCount(), false);
             makeGraph((int) graphX.GetSlider(), (int) graphY.GetSlider(), sentPacketsList, sentPackets.getCount(), true);
         }
@@ -134,17 +134,17 @@ public class Hud extends Module {
                     continue;
                 string = file.replace("-main.jar", "");
             }
-            RenderUtil.drawRect(1, i, 1 + Ruby.rubyFont.getStringWidth(string) + 2, i + 10, new Color(0, 0, 0, 100).getRGB());
-            Ruby.rubyFont.drawStringWithShadow("Ruby", 1, i, new Color(0x5D5D5D).getRGB());
-            Ruby.rubyFont.drawStringWithShadow(string.replace("ruby", ""), 1 + Ruby.rubyFont.getStringWidth("Ruby"), i, color.GetColor().getRGB());
+            RenderUtil.drawRect(1, i, 1 + Ruby.fontManager.getStringWidth(string) + 2, i + 10, new Color(0, 0, 0, 100).getRGB());
+            Ruby.fontManager.drawStringWithShadow("Ruby", 1, i, new Color(0x5D5D5D).getRGB());
+            Ruby.fontManager.drawStringWithShadow(string.replace("ruby", ""), 1 + Ruby.fontManager.getStringWidth("Ruby"), i, color.GetColor().getRGB());
             RenderUtil.drawRect(0, i, 1, i + 10, color.GetColor().getRGB());
         }
         if (ping.GetSwitch()) {
             i += 10;
             try {
-                RenderUtil.drawRect(1, i, 1 + Ruby.rubyFont.getStringWidth("Ping " + Objects.requireNonNull(mc.getConnection()).getPlayerInfo(mc.getConnection().getGameProfile().getId()).getResponseTime()) + 2, i + 10, new Color(0, 0, 0, 100).getRGB());
-                Ruby.rubyFont.drawStringWithShadow("Ping", 1, i, new Color(0x5D5D5D).getRGB());
-                Ruby.rubyFont.drawStringWithShadow(" " + mc.getConnection().getPlayerInfo(mc.getConnection().getGameProfile().getId()).getResponseTime(), 1 + Ruby.rubyFont.getStringWidth("Ping"), i, color.GetColor().getRGB());
+                RenderUtil.drawRect(1, i, 1 + Ruby.fontManager.getStringWidth("Ping " + Objects.requireNonNull(mc.getConnection()).getPlayerInfo(mc.getConnection().getGameProfile().getId()).getResponseTime()) + 2, i + 10, new Color(0, 0, 0, 100).getRGB());
+                Ruby.fontManager.drawStringWithShadow("Ping", 1, i, new Color(0x5D5D5D).getRGB());
+                Ruby.fontManager.drawStringWithShadow(" " + mc.getConnection().getPlayerInfo(mc.getConnection().getGameProfile().getId()).getResponseTime(), 1 + Ruby.fontManager.getStringWidth("Ping"), i, color.GetColor().getRGB());
                 RenderUtil.drawRect(0, i, 1, i + 10, color.GetColor().getRGB());
             } catch (Exception ignored) {
             }
@@ -152,47 +152,47 @@ public class Hud extends Module {
         if (tps.GetSwitch()) {
             i += 10;
             try {
-                RenderUtil.drawRect(1, i, 1 + Ruby.rubyFont.getStringWidth("Tps " + Ruby.tickManager.getTPS()) + 2, i + 10, new Color(0, 0, 0, 100).getRGB());
-                Ruby.rubyFont.drawStringWithShadow("Tps", 1, i, new Color(0x5D5D5D).getRGB());
-                Ruby.rubyFont.drawStringWithShadow(" " + Ruby.tickManager.getTPS(), 1 + Ruby.rubyFont.getStringWidth("Tps"), i, color.GetColor().getRGB());
+                RenderUtil.drawRect(1, i, 1 + Ruby.fontManager.getStringWidth("Tps " + Ruby.tickManager.getTPS()) + 2, i + 10, new Color(0, 0, 0, 100).getRGB());
+                Ruby.fontManager.drawStringWithShadow("Tps", 1, i, new Color(0x5D5D5D).getRGB());
+                Ruby.fontManager.drawStringWithShadow(" " + Ruby.tickManager.getTPS(), 1 + Ruby.fontManager.getStringWidth("Tps"), i, color.GetColor().getRGB());
                 RenderUtil.drawRect(0, i, 1, i + 10, color.GetColor().getRGB());
             } catch (Exception ignored) {
             }
         }
         if (fps.GetSwitch()) {
             i += 10;
-            RenderUtil.drawRect(1, i, 1 + Ruby.rubyFont.getStringWidth("Fps " + Minecraft.getDebugFPS()) + 2, i + 10, new Color(0, 0, 0, 100).getRGB());
-            Ruby.rubyFont.drawStringWithShadow("Fps", 1, i, new Color(0x5D5D5D).getRGB());
-            Ruby.rubyFont.drawStringWithShadow(" " + Minecraft.getDebugFPS(), 1 + Ruby.rubyFont.getStringWidth("Fps"), i, color.GetColor().getRGB());
+            RenderUtil.drawRect(1, i, 1 + Ruby.fontManager.getStringWidth("Fps " + Minecraft.getDebugFPS()) + 2, i + 10, new Color(0, 0, 0, 100).getRGB());
+            Ruby.fontManager.drawStringWithShadow("Fps", 1, i, new Color(0x5D5D5D).getRGB());
+            Ruby.fontManager.drawStringWithShadow(" " + Minecraft.getDebugFPS(), 1 + Ruby.fontManager.getStringWidth("Fps"), i, color.GetColor().getRGB());
             RenderUtil.drawRect(0, i, 1, i + 10, color.GetColor().getRGB());
         }
         if (coords.GetSwitch()) {
             boolean inNether = mc.world.getBiome(mc.player.getPosition()).getBiomeName().equals("Hell");
             int screenHeight = new ScaledResolution(mc).getScaledHeight() - (mc.currentScreen instanceof GuiChat ? 14 : 0);
-            RenderUtil.drawRect(1, screenHeight - 10, 1 + Ruby.rubyFont.getStringWidth("XYZ " + roundNumber(mc.player.posX, 1) + ", " + roundNumber(mc.player.posY, 1) + ", " + roundNumber(mc.player.posZ, 1) + " [" + roundNumber(inNether ? mc.player.posX * 8 : mc.player.posX / 8, 1) + ", " + roundNumber(inNether ? mc.player.posZ * 8 : mc.player.posZ / 8, 1) + "]"), screenHeight, new Color(0, 0, 0, 100).getRGB());
-            Ruby.rubyFont.drawStringWithShadow("XYZ", 1, screenHeight - 10, new Color(0x5D5D5D).getRGB());
-            Ruby.rubyFont.drawStringWithShadow(String.valueOf(roundNumber(mc.player.posX, 1)), 1 + Ruby.rubyFont.getStringWidth("XYZ "), screenHeight - 10, color.GetColor().getRGB());
-            Ruby.rubyFont.drawStringWithShadow(",", 1 + Ruby.rubyFont.getStringWidth("XYZ " + roundNumber(mc.player.posX, 1)), screenHeight - 10, new Color(0x5D5D5D).getRGB());
-            Ruby.rubyFont.drawStringWithShadow(String.valueOf(roundNumber(mc.player.posY, 1)), 1 + Ruby.rubyFont.getStringWidth("XYZ " + roundNumber(mc.player.posX, 1) + ", "), screenHeight - 10, color.GetColor().getRGB());
-            Ruby.rubyFont.drawStringWithShadow(",", 1 + Ruby.rubyFont.getStringWidth("XYZ " + roundNumber(mc.player.posX, 1) + ", " + roundNumber(mc.player.posY, 1)), screenHeight - 10, new Color(0x5D5D5D).getRGB());
-            Ruby.rubyFont.drawStringWithShadow(String.valueOf(roundNumber(mc.player.posZ, 1)), 1 + Ruby.rubyFont.getStringWidth("XYZ " + roundNumber(mc.player.posX, 1) + ", " + roundNumber(mc.player.posY, 1) + ", "), screenHeight - 10, color.GetColor().getRGB());
-            Ruby.rubyFont.drawStringWithShadow("[", 1 + Ruby.rubyFont.getStringWidth("XYZ " + roundNumber(mc.player.posX, 1) + ", " + roundNumber(mc.player.posY, 1) + ", " + roundNumber(mc.player.posZ, 1) + " "), screenHeight - 10, new Color(0x5D5D5D).getRGB());
-            Ruby.rubyFont.drawStringWithShadow(String.valueOf(roundNumber(inNether ? mc.player.posX * 8 : mc.player.posX / 8, 1)), 1 + Ruby.rubyFont.getStringWidth("XYZ " + roundNumber(mc.player.posX, 1) + ", " + roundNumber(mc.player.posY, 1) + ", " + roundNumber(mc.player.posZ, 1) + " ["), screenHeight - 10, color.GetColor().getRGB());
-            Ruby.rubyFont.drawStringWithShadow(",", 1 + Ruby.rubyFont.getStringWidth("XYZ " + roundNumber(mc.player.posX, 1) + ", " + roundNumber(mc.player.posY, 1) + ", " + roundNumber(mc.player.posZ, 1) + " [" + roundNumber(inNether ? mc.player.posX * 8 : mc.player.posX / 8, 1)), screenHeight - 10, new Color(0x5D5D5D).getRGB());
-            Ruby.rubyFont.drawStringWithShadow(String.valueOf(roundNumber(inNether ? mc.player.posZ * 8 : mc.player.posZ / 8, 1)), 1 + Ruby.rubyFont.getStringWidth("XYZ " + roundNumber(mc.player.posX, 1) + ", " + roundNumber(mc.player.posY, 1) + ", " + roundNumber(mc.player.posZ, 1) + " [" + roundNumber(inNether ? mc.player.posX * 8 : mc.player.posX / 8, 1) + ", "), screenHeight - 10, color.GetColor().getRGB());
-            Ruby.rubyFont.drawStringWithShadow("]", 1 + Ruby.rubyFont.getStringWidth("XYZ " + roundNumber(mc.player.posX, 1) + ", " + roundNumber(mc.player.posY, 1) + ", " + roundNumber(mc.player.posZ, 1) + " [" + roundNumber(inNether ? mc.player.posX * 8 : mc.player.posX / 8, 1) + ", " + roundNumber(inNether ? mc.player.posZ * 8 : mc.player.posZ / 8, 1)), screenHeight - 10, new Color(0x5D5D5D).getRGB());
-            RenderUtil.drawRect(1, screenHeight - 20, 1 + Ruby.rubyFont.getStringWidth("Facing " + (mc.player.getHorizontalFacing().equals(EnumFacing.NORTH) ? "North" : mc.player.getHorizontalFacing().equals(EnumFacing.EAST) ? "East" : mc.player.getHorizontalFacing().equals(EnumFacing.SOUTH) ? "South" : "West") + "  [" + (mc.player.getHorizontalFacing().equals(EnumFacing.NORTH) ? "-Z" : mc.player.getHorizontalFacing().equals(EnumFacing.EAST) ? "+X" : mc.player.getHorizontalFacing().equals(EnumFacing.SOUTH) ? "+Z" : "-X") + "]"), screenHeight - 10, new Color(0, 0, 0, 100).getRGB());
-            Ruby.rubyFont.drawStringWithShadow("Facing", 1, screenHeight - 20, new Color(0x5D5D5D).getRGB());
-            Ruby.rubyFont.drawStringWithShadow(mc.player.getHorizontalFacing().equals(EnumFacing.NORTH) ? "North" : mc.player.getHorizontalFacing().equals(EnumFacing.EAST) ? "East" : mc.player.getHorizontalFacing().equals(EnumFacing.SOUTH) ? "South" : "West", 1 + Ruby.rubyFont.getStringWidth("Facing "), screenHeight - 20, color.GetColor().getRGB());
-            Ruby.rubyFont.drawStringWithShadow("[", 1 + Ruby.rubyFont.getStringWidth("Facing " + (mc.player.getHorizontalFacing().equals(EnumFacing.NORTH) ? "North" : mc.player.getHorizontalFacing().equals(EnumFacing.EAST) ? "East" : mc.player.getHorizontalFacing().equals(EnumFacing.SOUTH) ? "South" : "West") + " "), screenHeight - 20, new Color(0x5D5D5D).getRGB());
-            Ruby.rubyFont.drawStringWithShadow(mc.player.getHorizontalFacing().equals(EnumFacing.NORTH) ? "-Z" : mc.player.getHorizontalFacing().equals(EnumFacing.EAST) ? "+X" : mc.player.getHorizontalFacing().equals(EnumFacing.SOUTH) ? "+Z" : "-X", 1 + Ruby.rubyFont.getStringWidth("Facing " + (mc.player.getHorizontalFacing().equals(EnumFacing.NORTH) ? "North" : mc.player.getHorizontalFacing().equals(EnumFacing.EAST) ? "East" : mc.player.getHorizontalFacing().equals(EnumFacing.SOUTH) ? "South" : "West") + "  ["), screenHeight - 20, color.GetColor().getRGB());
-            Ruby.rubyFont.drawStringWithShadow("]", 1 + Ruby.rubyFont.getStringWidth("Facing " + (mc.player.getHorizontalFacing().equals(EnumFacing.NORTH) ? "North" : mc.player.getHorizontalFacing().equals(EnumFacing.EAST) ? "East" : mc.player.getHorizontalFacing().equals(EnumFacing.SOUTH) ? "South" : "West") + "  [" + (mc.player.getHorizontalFacing().equals(EnumFacing.NORTH) ? "-Z" : mc.player.getHorizontalFacing().equals(EnumFacing.EAST) ? "+X" : mc.player.getHorizontalFacing().equals(EnumFacing.SOUTH) ? "+Z" : "-X")), screenHeight - 20, new Color(0x5D5D5D).getRGB());
+            RenderUtil.drawRect(1, screenHeight - 10, 1 + Ruby.fontManager.getStringWidth("XYZ " + roundNumber(mc.player.posX, 1) + ", " + roundNumber(mc.player.posY, 1) + ", " + roundNumber(mc.player.posZ, 1) + " [" + roundNumber(inNether ? mc.player.posX * 8 : mc.player.posX / 8, 1) + ", " + roundNumber(inNether ? mc.player.posZ * 8 : mc.player.posZ / 8, 1) + "]"), screenHeight, new Color(0, 0, 0, 100).getRGB());
+            Ruby.fontManager.drawStringWithShadow("XYZ", 1, screenHeight - 10, new Color(0x5D5D5D).getRGB());
+            Ruby.fontManager.drawStringWithShadow(String.valueOf(roundNumber(mc.player.posX, 1)), 1 + Ruby.fontManager.getStringWidth("XYZ "), screenHeight - 10, color.GetColor().getRGB());
+            Ruby.fontManager.drawStringWithShadow(",", 1 + Ruby.fontManager.getStringWidth("XYZ " + roundNumber(mc.player.posX, 1)), screenHeight - 10, new Color(0x5D5D5D).getRGB());
+            Ruby.fontManager.drawStringWithShadow(String.valueOf(roundNumber(mc.player.posY, 1)), 1 + Ruby.fontManager.getStringWidth("XYZ " + roundNumber(mc.player.posX, 1) + ", "), screenHeight - 10, color.GetColor().getRGB());
+            Ruby.fontManager.drawStringWithShadow(",", 1 + Ruby.fontManager.getStringWidth("XYZ " + roundNumber(mc.player.posX, 1) + ", " + roundNumber(mc.player.posY, 1)), screenHeight - 10, new Color(0x5D5D5D).getRGB());
+            Ruby.fontManager.drawStringWithShadow(String.valueOf(roundNumber(mc.player.posZ, 1)), 1 + Ruby.fontManager.getStringWidth("XYZ " + roundNumber(mc.player.posX, 1) + ", " + roundNumber(mc.player.posY, 1) + ", "), screenHeight - 10, color.GetColor().getRGB());
+            Ruby.fontManager.drawStringWithShadow("[", 1 + Ruby.fontManager.getStringWidth("XYZ " + roundNumber(mc.player.posX, 1) + ", " + roundNumber(mc.player.posY, 1) + ", " + roundNumber(mc.player.posZ, 1) + " "), screenHeight - 10, new Color(0x5D5D5D).getRGB());
+            Ruby.fontManager.drawStringWithShadow(String.valueOf(roundNumber(inNether ? mc.player.posX * 8 : mc.player.posX / 8, 1)), 1 + Ruby.fontManager.getStringWidth("XYZ " + roundNumber(mc.player.posX, 1) + ", " + roundNumber(mc.player.posY, 1) + ", " + roundNumber(mc.player.posZ, 1) + " ["), screenHeight - 10, color.GetColor().getRGB());
+            Ruby.fontManager.drawStringWithShadow(",", 1 + Ruby.fontManager.getStringWidth("XYZ " + roundNumber(mc.player.posX, 1) + ", " + roundNumber(mc.player.posY, 1) + ", " + roundNumber(mc.player.posZ, 1) + " [" + roundNumber(inNether ? mc.player.posX * 8 : mc.player.posX / 8, 1)), screenHeight - 10, new Color(0x5D5D5D).getRGB());
+            Ruby.fontManager.drawStringWithShadow(String.valueOf(roundNumber(inNether ? mc.player.posZ * 8 : mc.player.posZ / 8, 1)), 1 + Ruby.fontManager.getStringWidth("XYZ " + roundNumber(mc.player.posX, 1) + ", " + roundNumber(mc.player.posY, 1) + ", " + roundNumber(mc.player.posZ, 1) + " [" + roundNumber(inNether ? mc.player.posX * 8 : mc.player.posX / 8, 1) + ", "), screenHeight - 10, color.GetColor().getRGB());
+            Ruby.fontManager.drawStringWithShadow("]", 1 + Ruby.fontManager.getStringWidth("XYZ " + roundNumber(mc.player.posX, 1) + ", " + roundNumber(mc.player.posY, 1) + ", " + roundNumber(mc.player.posZ, 1) + " [" + roundNumber(inNether ? mc.player.posX * 8 : mc.player.posX / 8, 1) + ", " + roundNumber(inNether ? mc.player.posZ * 8 : mc.player.posZ / 8, 1)), screenHeight - 10, new Color(0x5D5D5D).getRGB());
+            RenderUtil.drawRect(1, screenHeight - 20, 1 + Ruby.fontManager.getStringWidth("Facing " + (mc.player.getHorizontalFacing().equals(EnumFacing.NORTH) ? "North" : mc.player.getHorizontalFacing().equals(EnumFacing.EAST) ? "East" : mc.player.getHorizontalFacing().equals(EnumFacing.SOUTH) ? "South" : "West") + "  [" + (mc.player.getHorizontalFacing().equals(EnumFacing.NORTH) ? "-Z" : mc.player.getHorizontalFacing().equals(EnumFacing.EAST) ? "+X" : mc.player.getHorizontalFacing().equals(EnumFacing.SOUTH) ? "+Z" : "-X") + "]"), screenHeight - 10, new Color(0, 0, 0, 100).getRGB());
+            Ruby.fontManager.drawStringWithShadow("Facing", 1, screenHeight - 20, new Color(0x5D5D5D).getRGB());
+            Ruby.fontManager.drawStringWithShadow(mc.player.getHorizontalFacing().equals(EnumFacing.NORTH) ? "North" : mc.player.getHorizontalFacing().equals(EnumFacing.EAST) ? "East" : mc.player.getHorizontalFacing().equals(EnumFacing.SOUTH) ? "South" : "West", 1 + Ruby.fontManager.getStringWidth("Facing "), screenHeight - 20, color.GetColor().getRGB());
+            Ruby.fontManager.drawStringWithShadow("[", 1 + Ruby.fontManager.getStringWidth("Facing " + (mc.player.getHorizontalFacing().equals(EnumFacing.NORTH) ? "North" : mc.player.getHorizontalFacing().equals(EnumFacing.EAST) ? "East" : mc.player.getHorizontalFacing().equals(EnumFacing.SOUTH) ? "South" : "West") + " "), screenHeight - 20, new Color(0x5D5D5D).getRGB());
+            Ruby.fontManager.drawStringWithShadow(mc.player.getHorizontalFacing().equals(EnumFacing.NORTH) ? "-Z" : mc.player.getHorizontalFacing().equals(EnumFacing.EAST) ? "+X" : mc.player.getHorizontalFacing().equals(EnumFacing.SOUTH) ? "+Z" : "-X", 1 + Ruby.fontManager.getStringWidth("Facing " + (mc.player.getHorizontalFacing().equals(EnumFacing.NORTH) ? "North" : mc.player.getHorizontalFacing().equals(EnumFacing.EAST) ? "East" : mc.player.getHorizontalFacing().equals(EnumFacing.SOUTH) ? "South" : "West") + "  ["), screenHeight - 20, color.GetColor().getRGB());
+            Ruby.fontManager.drawStringWithShadow("]", 1 + Ruby.fontManager.getStringWidth("Facing " + (mc.player.getHorizontalFacing().equals(EnumFacing.NORTH) ? "North" : mc.player.getHorizontalFacing().equals(EnumFacing.EAST) ? "East" : mc.player.getHorizontalFacing().equals(EnumFacing.SOUTH) ? "South" : "West") + "  [" + (mc.player.getHorizontalFacing().equals(EnumFacing.NORTH) ? "-Z" : mc.player.getHorizontalFacing().equals(EnumFacing.EAST) ? "+X" : mc.player.getHorizontalFacing().equals(EnumFacing.SOUTH) ? "+Z" : "-X")), screenHeight - 20, new Color(0x5D5D5D).getRGB());
             RenderUtil.drawRect(0, screenHeight - 20, 1, screenHeight, color.GetColor().getRGB());
         }
         if (welcomer.GetSwitch()) {
             int screenWidth = new ScaledResolution(mc).getScaledWidth();
-            Ruby.rubyFont.drawStringWithShadow("Welcome, ", (screenWidth / 2f) - (Ruby.rubyFont.getStringWidth("Welcome, " + mc.player.getName()) / 2f), 0, new Color(0x5D5D5D).getRGB());
-            Ruby.rubyFont.drawStringWithShadow(mc.player.getName(), (screenWidth / 2f) - (Ruby.rubyFont.getStringWidth("Welcome, " + mc.player.getName()) / 2f) + Ruby.rubyFont.getStringWidth("Welcome, "), 0, color.GetColor().getRGB());
+            Ruby.fontManager.drawStringWithShadow("Welcome, ", (screenWidth / 2f) - (Ruby.fontManager.getStringWidth("Welcome, " + mc.player.getName()) / 2f), 0, new Color(0x5D5D5D).getRGB());
+            Ruby.fontManager.drawStringWithShadow(mc.player.getName(), (screenWidth / 2f) - (Ruby.fontManager.getStringWidth("Welcome, " + mc.player.getName()) / 2f) + Ruby.fontManager.getStringWidth("Welcome, "), 0, color.GetColor().getRGB());
         }
         if (armor.GetSwitch())
             renderArmorHUD();

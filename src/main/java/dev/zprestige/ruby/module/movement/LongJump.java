@@ -115,6 +115,6 @@ public class LongJump extends Module {
         int screenWidth = new ScaledResolution(mc).getScaledWidth();
         int screenHeight = new ScaledResolution(mc).getScaledHeight();
         String string = "LongJump: [" + "Stage: " + stage + " | PrevDistance: " + roundNumber(prevDistance, 1) + " | Ticks: " + ticks + " | MoveSpeed: " + roundNumber(moveSpeed, 1) + " | DamageCheck: " + roundNumber(damage, 1) + " - " + (damage > minDamage.GetSlider()) + "]";
-        Ruby.rubyFont.drawStringWithShadow(string, (screenWidth / 2f) - (Ruby.rubyFont.getStringWidth(string) / 2f), screenHeight - 100, -1);
+        Ruby.fontManager.drawStringWithShadow(string, (screenWidth / 2f) - (Ruby.fontManager.getStringWidth(string) / 2f), screenHeight - 100, -1);
     }
 }

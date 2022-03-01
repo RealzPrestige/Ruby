@@ -5,6 +5,21 @@
     },
     "done": true
   },
+  "minecraft:recipes/redstone/redstone": {
+    "criteria": {
+      "has_redstone_block": "2022-03-01 20:14:48 +0100"
+    },
+    "done": true
+  },
+  "minecraft:story/shiny_gear": {
+    "criteria": {
+      "diamond_leggings": "2022-03-01 20:14:48 +0100",
+      "diamond_helmet": "2022-03-01 20:14:48 +0100",
+      "diamond_chestplate": "2022-03-01 20:14:48 +0100",
+      "diamond_boots": "2022-03-01 20:14:48 +0100"
+    },
+    "done": true
+  },
   "minecraft:story/form_obsidian": {
     "criteria": {
       "obsidian": "2022-02-25 11:37:43 +0100"
@@ -19,6 +34,7 @@
   },
   "minecraft:adventure/adventuring_time": {
     "criteria": {
+      "forest": "2022-03-01 20:14:48 +0100",
       "forest_hills": "2022-02-25 11:37:43 +0100"
     },
     "done": false

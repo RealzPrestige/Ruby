@@ -38,7 +38,7 @@ public class HudNotifications extends Module {
         else
             string = event.entityPlayer.getName() + " has popped " + pops + " totems";
 
-        notificationMap.put(string, Ruby.rubyFont.getStringWidth(string) / 2f);
+        notificationMap.put(string, Ruby.fontManager.getStringWidth(string) / 2f);
     }
 
     @RegisterListener
@@ -53,7 +53,7 @@ public class HudNotifications extends Module {
                 string = event.entityPlayer.getName() + " has died after popping 1 totem";
             else
                 string = event.entityPlayer.getName() + " has died after popping " + pops + " totems";
-            notificationMap.put(string, Ruby.rubyFont.getStringWidth(string) / 2f);
+            notificationMap.put(string, Ruby.fontManager.getStringWidth(string) / 2f);
         }
     }
 
@@ -69,10 +69,10 @@ public class HudNotifications extends Module {
         for (Map.Entry<String, Float> entry : notificationMap1.entrySet()) {
             notificationMap1.put(entry.getKey(), entry.getValue() - (entry.getValue() > 1.0f ? (entry.getValue() /  removeSpeed.GetSlider()) : removeSpeed.GetSlider()));
             if (entry.getValue() > 1.0f) {
-                RenderUtil.drawRect((screenWidth / 2f) - (Ruby.rubyFont.getStringWidth(entry.getKey()) / 2f) - 3, i += 17, ((screenWidth / 2f) - (Ruby.rubyFont.getStringWidth(entry.getKey()) / 2f) - 3) + entry.getValue(), i + 16, surroundColor.GetColor().getRGB());
-                RenderUtil.drawRect(screenWidth / 2f + (Ruby.rubyFont.getStringWidth(entry.getKey()) / 2f) - entry.getValue(), i, (screenWidth / 2f) + (Ruby.rubyFont.getStringWidth(entry.getKey()) / 2f) + 3, i + 16, surroundColor.GetColor().getRGB());
-                RenderUtil.drawRect((screenWidth / 2f) - (Ruby.rubyFont.getStringWidth(entry.getKey()) / 2f) - 2, i + 1, screenWidth / 2f + (Ruby.rubyFont.getStringWidth(entry.getKey()) / 2f) + 2, i + 15, backgroundColor.GetColor().getRGB());
-                Ruby.rubyFont.drawStringWithShadow(entry.getKey(), (screenWidth / 2f) - (Ruby.rubyFont.getStringWidth(entry.getKey()) / 2f), i + 7.5f - (Ruby.rubyFont.getHeight(entry.getKey()) / 2f), -1);
+                RenderUtil.drawRect((screenWidth / 2f) - (Ruby.fontManager.getStringWidth(entry.getKey()) / 2f) - 3, i += 17, ((screenWidth / 2f) - (Ruby.fontManager.getStringWidth(entry.getKey()) / 2f) - 3) + entry.getValue(), i + 16, surroundColor.GetColor().getRGB());
+                RenderUtil.drawRect(screenWidth / 2f + (Ruby.fontManager.getStringWidth(entry.getKey()) / 2f) - entry.getValue(), i, (screenWidth / 2f) + (Ruby.fontManager.getStringWidth(entry.getKey()) / 2f) + 3, i + 16, surroundColor.GetColor().getRGB());
+                RenderUtil.drawRect((screenWidth / 2f) - (Ruby.fontManager.getStringWidth(entry.getKey()) / 2f) - 2, i + 1, screenWidth / 2f + (Ruby.fontManager.getStringWidth(entry.getKey()) / 2f) + 2, i + 15, backgroundColor.GetColor().getRGB());
+                Ruby.fontManager.drawStringWithShadow(entry.getKey(), (screenWidth / 2f) - (Ruby.fontManager.getStringWidth(entry.getKey()) / 2f), i + 7.5f - (Ruby.fontManager.getFontHeight() / 2f), -1);
             } else if (entry.getValue() > -16.0)
                 i += 16 + entry.getValue();
             else {

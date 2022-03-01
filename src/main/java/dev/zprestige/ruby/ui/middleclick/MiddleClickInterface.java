@@ -35,7 +35,7 @@ public class MiddleClickInterface extends GuiScreen {
         GL11.glPushMatrix();
         GuiScreen.drawScaledCustomSizeModalRect((resolution.getScaledWidth() / 2) - 64, (resolution.getScaledHeight() / 2) - 64, 0, 128, 128, 128, 128, 128, 128, 128);
         GL11.glScaled(2.0f, 2.0f, 0.0f);
-        Ruby.rubyFont.drawStringWithShadow(entity.getName(), ((resolution.getScaledWidth() / 2f) - Ruby.rubyFont.getStringWidth(entity.getName())) / 2.0f, (((resolution.getScaledHeight() / 2f) - 64 - Ruby.rubyFont.getHeight(entity.getName())) / 2.0f) - 10, -1);
+        Ruby.fontManager.drawStringWithShadow(entity.getName(), ((resolution.getScaledWidth() / 2f) - Ruby.fontManager.getStringWidth(entity.getName())) / 2.0f, (((resolution.getScaledHeight() / 2f) - 64 - Ruby.fontManager.getFontHeight()) / 2.0f) - 10, -1);
         GL11.glPopMatrix();
         GlStateManager.disableAlpha();
         quadrants.forEach(quadrant -> quadrant.drawScreen(mouseX, mouseY, partialTicks));
@@ -92,7 +92,7 @@ public class MiddleClickInterface extends GuiScreen {
             GL11.glPushMatrix();
             if (isHovering(mouseX, mouseY)) {
                 GuiScreen.drawScaledCustomSizeModalRect(x + 20, y + 20, 0, 0, 34, 34, 34, 34, 34, 34);
-                Ruby.rubyFont.drawStringWithShadow(quadrantType.getName(), x + 37 - (Ruby.rubyFont.getStringWidth(quadrantType.getName()) / 2f), y + 54, -1);
+                Ruby.fontManager.drawStringWithShadow(quadrantType.getName(), x + 37 - (Ruby.fontManager.getStringWidth(quadrantType.getName()) / 2f), y + 54, -1);
             } else
                 GuiScreen.drawScaledCustomSizeModalRect(x + 22, y + 22, 0, 0, 32, 32, 32, 32, 32, 32);
             GL11.glPopMatrix();
