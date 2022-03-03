@@ -4,7 +4,6 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.command.Command;
 import dev.zprestige.ruby.command.impl.*;
-import dev.zprestige.ruby.eventbus.annotation.Priority;
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
 import dev.zprestige.ruby.events.PacketEvent;
 import net.minecraft.client.Minecraft;
@@ -41,7 +40,7 @@ public class CommandManager {
         this.prefix = prefix;
     }
 
-    @RegisterListener(priority = Priority.HIGHEST)
+    @RegisterListener
     public void onPacketSend(PacketEvent.PacketSendEvent event) {
         if (mc.world == null || mc.player == null || !(event.getPacket() instanceof CPacketChatMessage))
             return;

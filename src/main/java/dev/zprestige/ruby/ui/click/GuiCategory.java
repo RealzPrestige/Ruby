@@ -4,7 +4,6 @@ import dev.zprestige.ruby.Ruby;
 import dev.zprestige.ruby.module.Category;
 import dev.zprestige.ruby.module.Module;
 import dev.zprestige.ruby.module.client.ClickGui;
-import dev.zprestige.ruby.ui.click.setting.Button;
 import dev.zprestige.ruby.util.AnimationUtil;
 import dev.zprestige.ruby.util.RenderUtil;
 import net.minecraft.client.gui.GuiScreen;
@@ -61,20 +60,11 @@ public class GuiCategory {
             if (isInsideFull(mouseX, mouseY))
                 setScroll();
         }
+        deltaY = y + height + 1;
         {
-            deltaY = y;
             guiModules.forEach(newModule -> {
-                deltaY += height + 1;
                 newModule.y = newModule.module.scrollY + deltaY;
-                if (newModule.isOpened) {
-                    for (Button newSetting : newModule.settings) {
-                        if (newSetting.getSetting().openedParent()) {
-                            deltaY += height + 1;
-                        }
-                    }
-                } else {
-                    deltaY += (newModule.animDeltaY - (height + 1));
-                }
+                deltaY += newModule.getAnimHeight();
             });
         }
         {
@@ -83,7 +73,7 @@ public class GuiCategory {
         }
         {
             RenderUtil.drawRect(x, y + height, x + width, animHeight, ClickGui.Instance.backgroundColor.GetColor().getRGB());
-            RenderUtil.drawOutlineRect(x, y, x + width, animHeight, ClickGui.Instance.backgroundColor.GetColor(), 1f);
+            RenderUtil.drawOutlineRect(x, y, x + width,animHeight, ClickGui.Instance.backgroundColor.GetColor(), 1f);
         }
         {
             if (ClickGui.Instance.icons.GetSwitch())
@@ -91,7 +81,7 @@ public class GuiCategory {
         }
         {
             if (isOpened) {
-                targetAnim = deltaY + height + 1;
+                targetAnim = deltaY;
                 if (animHeight > targetAnim - ClickGui.Instance.animationSpeed.GetSlider() && animHeight < targetAnim)
                     animHeight = targetAnim;
                 else if (animHeight < targetAnim)

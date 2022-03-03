@@ -1,6 +1,7 @@
 package dev.zprestige.ruby.ui.click;
 
 import dev.zprestige.ruby.Ruby;
+import dev.zprestige.ruby.module.client.ClickGui;
 import dev.zprestige.ruby.util.RenderUtil;
 import dev.zprestige.ruby.util.Timer;
 import net.minecraft.client.gui.GuiScreen;
@@ -79,5 +80,9 @@ public class MainScreen extends GuiScreen {
     @Override
     public boolean doesGuiPauseGame() {
         return false;
+    }
+
+    public static float getAnimDelta(float target, float current){
+        return (target - current) / (100f / 20f - ClickGui.Instance.animationSpeed.GetSlider());
     }
 }

@@ -1,10 +1,7 @@
 package dev.zprestige.ruby.module.combat;
 
 import dev.zprestige.ruby.Ruby;
-import dev.zprestige.ruby.eventbus.annotation.Priority;
 import dev.zprestige.ruby.eventbus.annotation.RegisterListener;
-import dev.zprestige.ruby.events.ChorusEvent;
-import dev.zprestige.ruby.events.MoveEvent;
 import dev.zprestige.ruby.events.PacketEvent;
 import dev.zprestige.ruby.module.Module;
 import dev.zprestige.ruby.module.misc.RunDetect;
@@ -458,7 +455,7 @@ public class AutoCrystal extends Module {
         return null;
     }
 
-    @RegisterListener(priority = Priority.HIGHEST)
+    @RegisterListener
     public void onPacketReceive(PacketEvent.PacketReceiveEvent event) {
         if (nullCheck() || !isEnabled())
             return;
@@ -497,7 +494,7 @@ public class AutoCrystal extends Module {
         }
     }
 
-    @RegisterListener(priority = Priority.HIGHEST)
+    @RegisterListener
     public void onPacketSend(PacketEvent.PacketSendEvent event) {
         if (nullCheck() || !isEnabled())
             return;

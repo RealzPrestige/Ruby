@@ -15,11 +15,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class EventBus {
     protected final Set<Object> subscribers = Collections.synchronizedSet(new HashSet<>());
     protected final Map<Class<?>, List<Handler>> handlerMap = new ConcurrentHashMap<>();
-    protected final Class<? extends Handler> handlerType;
-
-    public EventBus() {
-        this.handlerType = LambdaHandler.class;
-    }
+    protected final Class<? extends Handler> handlerType = LambdaHandler.class;
 
     public void register(Object subscriber) {
         if (subscriber == null || subscribers.contains(subscriber))
@@ -63,7 +59,6 @@ public class EventBus {
                     }
                     List<Handler> handlers = handlerMap.computeIfAbsent(parameters[0], v -> new CopyOnWriteArrayList<>());
                     handlers.add(createHandler(method, subscriber));
-                    handlers.sort(Comparator.comparing(Handler::getPriority));
                 });
     }
 
