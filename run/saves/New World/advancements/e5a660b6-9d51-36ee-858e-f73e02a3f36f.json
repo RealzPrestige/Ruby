@@ -34,7 +34,8 @@
   },
   "minecraft:adventure/adventuring_time": {
     "criteria": {
-      "forest": "2022-03-01 08:21:53 +0100"
+      "forest": "2022-03-01 08:21:53 +0100",
+      "forest_hills": "2022-03-03 07:27:49 +0100"
     },
     "done": false
   }

@@ -3,6 +3,7 @@ package dev.zprestige.ruby;
 import dev.zprestige.ruby.eventbus.EventBus;
 import dev.zprestige.ruby.events.listener.EventListener;
 import dev.zprestige.ruby.manager.*;
+import dev.zprestige.ruby.ui.hudeditor.HudManager;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -16,6 +17,7 @@ public class Ruby {
     public static ModuleManager moduleManager;
     public static EventListener eventListener;
     public static FontManager fontManager;
+    public static HudManager hudManager;
     public static FriendManager friendManager;
     public static EnemyManager enemyManager;
     public static TickManager tickManager;
@@ -33,6 +35,7 @@ public class Ruby {
         moduleManager = new ModuleManager();
         eventListener = new EventListener();
         fontManager = new FontManager();
+        hudManager = new HudManager();
         friendManager = new FriendManager();
         enemyManager = new EnemyManager();
         tickManager = new TickManager();

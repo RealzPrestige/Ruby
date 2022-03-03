@@ -6,6 +6,7 @@ import dev.zprestige.ruby.settings.impl.ColorBox;
 import dev.zprestige.ruby.settings.impl.Slider;
 import dev.zprestige.ruby.settings.impl.Switch;
 import dev.zprestige.ruby.ui.click.MainScreen;
+import dev.zprestige.ruby.ui.hudeditor.HudEditorScreen;
 import org.lwjgl.input.Keyboard;
 
 import java.awt.*;
@@ -41,7 +42,7 @@ public class ClickGui extends Module {
 
     @Override
     public void onTick() {
-        if (!(mc.currentScreen instanceof MainScreen)) {
+        if (!(mc.currentScreen instanceof MainScreen) && !(mc.currentScreen instanceof HudEditorScreen)) {
             disableModule();
         }
     }

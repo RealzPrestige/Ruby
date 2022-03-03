@@ -15,7 +15,6 @@ public class FontManager {
 
     public FontManager() {
         loadFont(size = 17);
-
     }
 
     public void loadFont(int size) {

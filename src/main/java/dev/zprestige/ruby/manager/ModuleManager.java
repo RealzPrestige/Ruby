@@ -27,6 +27,7 @@ public class ModuleManager {
         moduleList.add(new Enemies().withSuper("Enemies", Category.Client));
         moduleList.add(new Friends().withSuper("Friends", Category.Client));
         moduleList.add(new Hud().withSuper("Hud", Category.Client));
+        moduleList.add(new HudEditor().withSuper("HudEditor", Category.Client));
         moduleList.add(new Notify().withSuper("Notify", Category.Client));
 
         moduleList.add(new AntiCity().withSuper("AntiCity", Category.Combat));

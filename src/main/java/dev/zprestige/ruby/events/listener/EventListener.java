@@ -7,6 +7,7 @@ import dev.zprestige.ruby.events.*;
 import dev.zprestige.ruby.module.Module;
 import dev.zprestige.ruby.module.client.ClickGui;
 import dev.zprestige.ruby.module.visual.Nametags;
+import dev.zprestige.ruby.ui.hudeditor.HudEditorScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -69,7 +70,7 @@ public class EventListener {
 
     @SubscribeEvent
     public void onRenderOverlay(RenderGameOverlayEvent event) {
-        if (ClickGui.Instance.isEnabled()){
+        if (ClickGui.Instance.isEnabled() && !(mc.currentScreen instanceof HudEditorScreen)){
             event.setCanceled(true);
         }
     }
