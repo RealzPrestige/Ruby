@@ -83,6 +83,12 @@ public class MainScreen extends GuiScreen {
     }
 
     public static float getAnimDelta(float target, float current){
-        return (target - current) / (100f / 20f - ClickGui.Instance.animationSpeed.GetSlider());
+        final float delta = target - current;
+        final float change = 100f / (20f - ClickGui.Instance.animationSpeed.GetSlider());
+        if (delta > 0) {
+            return (target - current) / change;
+        } else {
+            return current / change;
+        }
     }
 }

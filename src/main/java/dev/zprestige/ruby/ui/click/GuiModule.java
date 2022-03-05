@@ -17,7 +17,12 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class GuiModule {
     public Module module;
-    public int x, y, width, height, deltaY, animDeltaY;
+    public int x;
+    public int y;
+    public int width;
+    public int height;
+    public int deltaY;
+    public float animDeltaY;
     public boolean isOpened = false;
     public float animWidth, hoverAnimWidth;
     public ArrayList<Button> settings = new ArrayList<>();
@@ -61,16 +66,16 @@ public class GuiModule {
             RenderUtil.drawRect(x, y, x + width, y + height, ClickGui.Instance.backgroundColor.GetColor().getRGB());
             RenderUtil.drawOutlineRect(x, y, x + width, y + height, ClickGui.Instance.backgroundColor.GetColor(), 1f);
             if (module.isEnabled())
-                animWidth = AnimationUtil.increaseNumber(animWidth, width, 1);
+                animWidth = AnimationUtil.increaseNumber(animWidth, width, MainScreen.getAnimDelta(width, animWidth));
             else
-                animWidth = AnimationUtil.decreaseNumber(animWidth, 0, 1);
+                animWidth = AnimationUtil.decreaseNumber(animWidth, 0, MainScreen.getAnimDelta(0, animWidth));
             if (animWidth > 0.0f)
                 RenderUtil.drawRect(x, y, x + animWidth, y + height, ClickGui.Instance.color.GetColor().getRGB());
             Ruby.fontManager.drawStringWithShadow(module.getName(), x + (isInside(mouseX, mouseY) ? 2 : 1), y + (height / 2f) - (Ruby.fontManager.getFontHeight() / 2f), -1);
             if (isInside(mouseX, mouseY))
-                hoverAnimWidth = AnimationUtil.increaseNumber(hoverAnimWidth, width, ClickGui.Instance.animationSpeed.GetSlider());
+                hoverAnimWidth = AnimationUtil.increaseNumber(hoverAnimWidth, width, MainScreen.getAnimDelta(width, hoverAnimWidth));
             else
-                hoverAnimWidth = AnimationUtil.decreaseNumber(hoverAnimWidth, 0, ClickGui.Instance.animationSpeed.GetSlider());
+                hoverAnimWidth = AnimationUtil.decreaseNumber(hoverAnimWidth, 0, MainScreen.getAnimDelta(0, hoverAnimWidth));
             RenderUtil.drawRect(x, y, x + hoverAnimWidth, y + height, new Color(0, 0, 0, 50).getRGB());
         }
         {
@@ -83,20 +88,19 @@ public class GuiModule {
                     setting.setHeight(height);
                 });
                 deltaY += height + 1;
-                if (animDeltaY > deltaY - ClickGui.Instance.animationSpeed.GetSlider() && animDeltaY < deltaY)
-                    animDeltaY = deltaY;
                 if (animDeltaY < deltaY)
-                    animDeltaY = AnimationUtil.increaseNumber(animDeltaY, deltaY, (int) ClickGui.Instance.animationSpeed.GetSlider());
+                    animDeltaY = AnimationUtil.increaseNumber(animDeltaY, deltaY,  MainScreen.getAnimDelta(deltaY, animDeltaY));
                 else if (animDeltaY > deltaY)
-                    animDeltaY = AnimationUtil.decreaseNumber(animDeltaY, deltaY, (int) ClickGui.Instance.animationSpeed.GetSlider());
+                    animDeltaY = AnimationUtil.decreaseNumber(animDeltaY, deltaY,  MainScreen.getAnimDelta(deltaY, animDeltaY));
             } else {
-                animDeltaY = AnimationUtil.decreaseNumber(animDeltaY, height + 1, (int) ClickGui.Instance.animationSpeed.GetSlider());
+                animDeltaY = AnimationUtil.decreaseNumber(animDeltaY, height + 1, MainScreen.getAnimDelta(height + 1, animDeltaY));
             }
+            publicAnimHeight = animDeltaY;
             if (y + animDeltaY > y + height + 1) {
                 glPushMatrix();
                 glPushAttrib(GL_SCISSOR_BIT);
                 {
-                    RenderUtil.scissor(x, y + height, x + 1000, y + animDeltaY);
+                    RenderUtil.scissor(x, y + height, x + 1000, y + (int) animDeltaY);
                     glEnable(GL_SCISSOR_TEST);
                 }
                 RenderUtil.drawRect(x, y + height + 1, x + 1, y + animDeltaY, ClickGui.Instance.color.GetColor().getRGB());
@@ -145,5 +149,10 @@ public class GuiModule {
 
     public boolean isInside(int mouseX, int mouseY) {
         return mouseX > x && mouseX < x + width && mouseY > y && mouseY < y + height;
+    }
+    protected float publicAnimHeight;
+
+    public float getAnimHeight(){
+        return publicAnimHeight;
     }
 }

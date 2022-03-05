@@ -26,7 +26,7 @@ public class GuiCategory {
     public int dragY;
     public int deltaY;
     public int targetAnim;
-    public int animHeight;
+    public float animHeight;
     public boolean isDragging;
     public boolean isOpened = true;
     public ArrayList<GuiModule> guiModules = new ArrayList<>();
@@ -73,7 +73,7 @@ public class GuiCategory {
         }
         {
             RenderUtil.drawRect(x, y + height, x + width, animHeight, ClickGui.Instance.backgroundColor.GetColor().getRGB());
-            RenderUtil.drawOutlineRect(x, y, x + width,animHeight, ClickGui.Instance.backgroundColor.GetColor(), 1f);
+            RenderUtil.drawOutlineRect(x, y, x + width, animHeight, ClickGui.Instance.backgroundColor.GetColor(), 1f);
         }
         {
             if (ClickGui.Instance.icons.GetSwitch())
@@ -82,23 +82,18 @@ public class GuiCategory {
         {
             if (isOpened) {
                 targetAnim = deltaY;
-                if (animHeight > targetAnim - ClickGui.Instance.animationSpeed.GetSlider() && animHeight < targetAnim)
-                    animHeight = targetAnim;
-                else if (animHeight < targetAnim)
-                    animHeight = AnimationUtil.increaseNumber(animHeight, targetAnim, (int) ClickGui.Instance.animationSpeed.GetSlider());
+
+                if (animHeight < targetAnim)
+                    animHeight = AnimationUtil.increaseNumber(animHeight, targetAnim, MainScreen.getAnimDelta(targetAnim, animHeight));
                 else if (animHeight > targetAnim)
-                    animHeight = AnimationUtil.decreaseNumber(animHeight, targetAnim, (int) ClickGui.Instance.animationSpeed.GetSlider());
+                    animHeight = AnimationUtil.decreaseNumber(animHeight, targetAnim, MainScreen.getAnimDelta(targetAnim, animHeight));
             } else {
-                targetAnim = y + height;
-                animHeight = AnimationUtil.decreaseNumber(animHeight, targetAnim, (int) ClickGui.Instance.animationSpeed.GetSlider());
-            }
-            if (animHeight < y + height) {
-                animHeight = y + height;
+                animHeight = AnimationUtil.decreaseNumber(animHeight, targetAnim, MainScreen.getAnimDelta(targetAnim, animHeight));
             }
             glPushMatrix();
             glPushAttrib(GL_SCISSOR_BIT);
             {
-                RenderUtil.scissor(x, y + height, x + 1000, animHeight);
+                RenderUtil.scissor(x, y + height, x + 1000, (int) animHeight);
                 glEnable(GL_SCISSOR_TEST);
             }
             guiModules.forEach(newModule -> newModule.drawScreen(mouseX, mouseY));

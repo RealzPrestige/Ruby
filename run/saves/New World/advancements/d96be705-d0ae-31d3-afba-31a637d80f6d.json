@@ -11,6 +11,24 @@
     },
     "done": true
   },
+  "minecraft:recipes/redstone/noteblock": {
+    "criteria": {
+      "has_redstone": "2022-03-03 22:13:24 +0100"
+    },
+    "done": true
+  },
+  "minecraft:recipes/tools/clock": {
+    "criteria": {
+      "has_redstone": "2022-03-03 22:13:24 +0100"
+    },
+    "done": true
+  },
+  "minecraft:recipes/redstone/redstone_torch": {
+    "criteria": {
+      "has_redstone": "2022-03-03 22:13:24 +0100"
+    },
+    "done": true
+  },
   "minecraft:story/shiny_gear": {
     "criteria": {
       "diamond_leggings": "2022-03-01 08:18:41 +0100",
@@ -20,9 +38,15 @@
     },
     "done": true
   },
-  "minecraft:story/form_obsidian": {
+  "minecraft:recipes/tools/compass": {
     "criteria": {
-      "obsidian": "2022-03-01 08:18:41 +0100"
+      "has_redstone": "2022-03-03 22:13:24 +0100"
+    },
+    "done": true
+  },
+  "minecraft:recipes/decorations/chest": {
+    "criteria": {
+      "has_lots_of_items": "2022-03-03 22:13:24 +0100"
     },
     "done": true
   },
@@ -32,9 +56,28 @@
     },
     "done": true
   },
+  "minecraft:recipes/redstone/dropper": {
+    "criteria": {
+      "has_redstone": "2022-03-03 22:13:24 +0100"
+    },
+    "done": true
+  },
+  "minecraft:recipes/redstone/piston": {
+    "criteria": {
+      "has_redstone": "2022-03-03 22:13:24 +0100"
+    },
+    "done": true
+  },
+  "minecraft:story/form_obsidian": {
+    "criteria": {
+      "obsidian": "2022-03-01 08:18:41 +0100"
+    },
+    "done": true
+  },
   "minecraft:adventure/adventuring_time": {
     "criteria": {
-      "forest": "2022-03-01 08:18:41 +0100"
+      "forest": "2022-03-01 08:18:41 +0100",
+      "forest_hills": "2022-03-03 22:13:24 +0100"
     },
     "done": false
   }
