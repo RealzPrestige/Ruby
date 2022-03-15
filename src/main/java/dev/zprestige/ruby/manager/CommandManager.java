@@ -25,6 +25,7 @@ public class CommandManager {
         commands.add(new NotifyColorCommand());
         commands.add(new FriendCommand());
         commands.add(new FakeHackerCommand());
+        commands.add(new BindCommand());
         commands.add(new HelpCommand());
     }
 

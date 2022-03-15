@@ -27,7 +27,7 @@ public class Ruby {
     public static ConfigManager configManager;
 
     @Mod.EventHandler
-    public void init(FMLInitializationEvent event) {
+    public void init(FMLInitializationEvent ignoredEvent) {
         mc = Minecraft.getMinecraft();
         eventBus = new EventBus();
         threadManager = new ThreadManager();
